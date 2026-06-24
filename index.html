@@ -4867,40 +4867,45 @@ async function doLogin(){
     return;
   }
 
-  // Step 1: look up email by username in profiles
-  var {data:profile, error:profErr} = await db
-    .from('profiles')
-    .select('email, full_name, role, username')
-    .eq('username', username)
-    .maybeSingle();
+  // Step 1: look up email by username via RPC (bypasses RLS for anon users)
+  var {data:email, error:rpcErr} = await db.rpc('get_email_by_username', {p_username: username});
 
-  if(profErr){
-    console.error('Profile lookup error:', profErr);
-    showErr('Database error. Check console for details.'); return;
+  if(rpcErr){
+    console.error('Username lookup error:', rpcErr);
+    showErr('Database error — check console.'); return;
   }
-  if(!profile){
+  if(!email){
     showErr('Username not found. Check spelling or ask David to add you.'); return;
   }
-  if(!profile.email){
-    showErr('Account setup incomplete. Ask David to run the email patch SQL.'); return;
-  }
 
-  // Step 2: sign in with Supabase Auth
+  // Step 2: sign in with Supabase Auth using the resolved email
   var {data:authData, error:authErr} = await db.auth.signInWithPassword({
-    email: profile.email,
+    email: email,
     password: pw
   });
 
   if(authErr){
-    console.error('Auth error:', authErr);
-    showErr('Wrong password. Try again or reset via Supabase.'); return;
+    console.error('Auth error:', authErr.message);
+    showErr('Wrong password. Try again or reset your password.'); return;
   }
 
+  // Step 3: fetch full profile now that we are authenticated
+  var {data:profile} = await db
+    .from('profiles')
+    .select('full_name, role, username, email')
+    .eq('username', username)
+    .single();
+
   // Success
-  CURRENT_MEMBER={name:profile.full_name,username:profile.username,email:profile.email,role:profile.role};
-  CURRENT_ROLE=profile.role;
+  CURRENT_MEMBER={
+    name: (profile&&profile.full_name)||username,
+    username: username,
+    email: email,
+    role: (profile&&profile.role)||'staff'
+  };
+  CURRENT_ROLE = CURRENT_MEMBER.role;
   if(errEl)errEl.style.display='none';
-  if(profile.role==='admin')go('frontend');else go('production');
+  if(CURRENT_ROLE==='admin')go('frontend');else go('production');
   applyRoleUI();
   loadBoard();
 }
@@ -5823,40 +5828,45 @@ async function doLogin(){
     return;
   }
 
-  // Step 1: look up email by username in profiles
-  var {data:profile, error:profErr} = await db
-    .from('profiles')
-    .select('email, full_name, role, username')
-    .eq('username', username)
-    .maybeSingle();
+  // Step 1: look up email by username via RPC (bypasses RLS for anon users)
+  var {data:email, error:rpcErr} = await db.rpc('get_email_by_username', {p_username: username});
 
-  if(profErr){
-    console.error('Profile lookup error:', profErr);
-    showErr('Database error. Check console for details.'); return;
+  if(rpcErr){
+    console.error('Username lookup error:', rpcErr);
+    showErr('Database error — check console.'); return;
   }
-  if(!profile){
+  if(!email){
     showErr('Username not found. Check spelling or ask David to add you.'); return;
   }
-  if(!profile.email){
-    showErr('Account setup incomplete. Ask David to run the email patch SQL.'); return;
-  }
 
-  // Step 2: sign in with Supabase Auth
+  // Step 2: sign in with Supabase Auth using the resolved email
   var {data:authData, error:authErr} = await db.auth.signInWithPassword({
-    email: profile.email,
+    email: email,
     password: pw
   });
 
   if(authErr){
-    console.error('Auth error:', authErr);
-    showErr('Wrong password. Try again or reset via Supabase.'); return;
+    console.error('Auth error:', authErr.message);
+    showErr('Wrong password. Try again or reset your password.'); return;
   }
 
+  // Step 3: fetch full profile now that we are authenticated
+  var {data:profile} = await db
+    .from('profiles')
+    .select('full_name, role, username, email')
+    .eq('username', username)
+    .single();
+
   // Success
-  CURRENT_MEMBER={name:profile.full_name,username:profile.username,email:profile.email,role:profile.role};
-  CURRENT_ROLE=profile.role;
+  CURRENT_MEMBER={
+    name: (profile&&profile.full_name)||username,
+    username: username,
+    email: email,
+    role: (profile&&profile.role)||'staff'
+  };
+  CURRENT_ROLE = CURRENT_MEMBER.role;
   if(errEl)errEl.style.display='none';
-  if(profile.role==='admin')go('frontend');else go('production');
+  if(CURRENT_ROLE==='admin')go('frontend');else go('production');
   applyRoleUI();
   loadBoard();
 }
