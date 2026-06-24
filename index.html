@@ -938,6 +938,7 @@ td.thumb-cell{padding:6px 4px 6px 8px!important;width:44px}
 .team-empty{text-align:center;padding:20px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink-3)}
 
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -958,20 +959,7 @@ td.thumb-cell{padding:6px 4px 6px 8px!important;width:44px}
       Incorrect username or password.
     </div>
     <button class="btn-navy" onclick="doLogin()">Sign in →</button>
-
-    <!-- Demo quick-access -->
-    <div style="margin-top:20px;border-top:1px solid var(--line);padding-top:16px">
-      <div style="font-family:'Inter Tight',sans-serif;font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);text-align:center;margin-bottom:10px">Prototype — quick sign in</div>
-      <div style="display:flex;gap:8px">
-        <button onclick="loginAs('admin')" style="flex:1;background:var(--navy);color:#fff;border:none;border-radius:10px;padding:11px;font-family:'Inter Tight',sans-serif;font-weight:700;font-size:13px;cursor:pointer">
-          👤 Admin<br><span style="font-size:10px;font-weight:400;opacity:.7">Full access</span>
-        </button>
-        <button onclick="loginAs('staff')" style="flex:1;background:var(--paper);color:var(--ink);border:1.5px solid var(--line);border-radius:10px;padding:11px;font-family:'Inter Tight',sans-serif;font-weight:700;font-size:13px;cursor:pointer">
-          🛠 Staff<br><span style="font-size:10px;font-weight:400;color:var(--ink-3)">Production only</span>
-        </button>
-      </div>
-    </div>
-
+    
   </div>
 </div>
 </section>
@@ -4841,11 +4829,20 @@ function removeTeamMember(idx){
 // ============================================================
 const SUPABASE_URL  = 'https://irwgxtnlsssmkjiofhgq.supabase.co';
 const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlyd2d4dG5sc3NzbWtqaW9maGdxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyOTI3MzQsImV4cCI6MjA5Nzg2ODczNH0.38oYSKXw3TiP4VP9g9A3Ghn43f8z8Mt8NYF_zKdwkm0';
-const db = window.supabase ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON) : null;
+var _db = null;
+function getDB(){
+  if(!_db){
+    if(window.supabase){
+      _db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+    }
+  }
+  return _db;
+}
+var db = null; // set after DOM ready
 
 // ── Auth ────────────────────────────────────────────────────
 async function doLogin(){
-  if(!db){ console.warn('Supabase not loaded — using prototype mode'); doLoginPrototype(); return; }
+  db = getDB(); if(!db){ doLoginPrototype(); return; }
   var username = (document.getElementById('loginUsername').value||'').toLowerCase().trim();
   var pw       = document.getElementById('loginPw').value||'';
   var errEl    = document.getElementById('loginErr');
@@ -4903,7 +4900,7 @@ function doLoginPrototype(){
 
 async function doLogout(){
   document.querySelectorAll('.avatar-menu').forEach(function(m){m.classList.remove('show');});
-  if(db) await db.auth.signOut();
+  db = getDB(); if(db) await db.auth.signOut();
   CURRENT_ROLE='admin'; CURRENT_MEMBER=null;
   document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('show');});
   document.getElementById('login').classList.add('show');
@@ -4913,7 +4910,7 @@ async function doLogout(){
 
 // Check for existing session on page load
 window.addEventListener('load', async function(){
-  if(!db) return;
+  db = getDB(); if(!db) return;
   var {data:{session}} = await db.auth.getSession();
   if(session){
     var {data:profile} = await db.from('profiles')
@@ -5040,7 +5037,7 @@ function buildJobCard(job){
 }
 
 async function loadBoard(){
-  if(!db) return;
+  db = getDB(); if(!db) return;
   var {data:jobs, error} = await db
     .from('active_jobs')
     .select('*, job_items(*)')
@@ -5099,7 +5096,7 @@ async function loadBoard(){
 
 // ── Realtime subscription ─────────────────────────────────────────────
 function subscribeRealtime(){
-  if(!db) return;
+  db = getDB(); if(!db) return;
   db.channel('board-changes')
     .on('postgres_changes', {event:'INSERT', schema:'public', table:'jobs'}, function(payload){
       loadBoard(); showToast('New job on the board');
@@ -5125,7 +5122,7 @@ function subscribeRealtime(){
 var _origChangeJobStatus = changeJobStatus;
 async function changeJobStatus(newStatus){
   _origChangeJobStatus(newStatus); // update UI immediately
-  if(db && window._currentJobId){
+  db = getDB(); if(db && window._currentJobId){
     var {error} = await db.from('jobs')
       .update({status: newStatus})
       .eq('id', window._currentJobId);
@@ -5137,7 +5134,7 @@ async function changeJobStatus(newStatus){
 var _origLogNote = logInternalNote;
 async function logInternalNote(text){
   _origLogNote(text); // update UI immediately
-  if(db && window._currentJobId && CURRENT_MEMBER){
+  db = getDB(); if(db && window._currentJobId && CURRENT_MEMBER){
     await db.from('job_notes').insert({
       job_id:      window._currentJobId,
       author_name: CURRENT_MEMBER.name + (CURRENT_ROLE==='admin' ? ' (Admin)' : ' (Staff)'),
@@ -5766,11 +5763,20 @@ setTimeout(subscribeRealtime, 2000);
 // ============================================================
 const SUPABASE_URL  = 'https://irwgxtnlsssmkjiofhgq.supabase.co';
 const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlyd2d4dG5sc3NzbWtqaW9maGdxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyOTI3MzQsImV4cCI6MjA5Nzg2ODczNH0.38oYSKXw3TiP4VP9g9A3Ghn43f8z8Mt8NYF_zKdwkm0';
-const db = window.supabase ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON) : null;
+var _db = null;
+function getDB(){
+  if(!_db){
+    if(window.supabase){
+      _db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+    }
+  }
+  return _db;
+}
+var db = null; // set after DOM ready
 
 // ── Auth ────────────────────────────────────────────────────
 async function doLogin(){
-  if(!db){ console.warn('Supabase not loaded — using prototype mode'); doLoginPrototype(); return; }
+  db = getDB(); if(!db){ doLoginPrototype(); return; }
   var username = (document.getElementById('loginUsername').value||'').toLowerCase().trim();
   var pw       = document.getElementById('loginPw').value||'';
   var errEl    = document.getElementById('loginErr');
@@ -5828,7 +5834,7 @@ function doLoginPrototype(){
 
 async function doLogout(){
   document.querySelectorAll('.avatar-menu').forEach(function(m){m.classList.remove('show');});
-  if(db) await db.auth.signOut();
+  db = getDB(); if(db) await db.auth.signOut();
   CURRENT_ROLE='admin'; CURRENT_MEMBER=null;
   document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('show');});
   document.getElementById('login').classList.add('show');
@@ -5838,7 +5844,7 @@ async function doLogout(){
 
 // Check for existing session on page load
 window.addEventListener('load', async function(){
-  if(!db) return;
+  db = getDB(); if(!db) return;
   var {data:{session}} = await db.auth.getSession();
   if(session){
     var {data:profile} = await db.from('profiles')
@@ -5965,7 +5971,7 @@ function buildJobCard(job){
 }
 
 async function loadBoard(){
-  if(!db) return;
+  db = getDB(); if(!db) return;
   var {data:jobs, error} = await db
     .from('active_jobs')
     .select('*, job_items(*)')
@@ -6024,7 +6030,7 @@ async function loadBoard(){
 
 // ── Realtime subscription ─────────────────────────────────────────────
 function subscribeRealtime(){
-  if(!db) return;
+  db = getDB(); if(!db) return;
   db.channel('board-changes')
     .on('postgres_changes', {event:'INSERT', schema:'public', table:'jobs'}, function(payload){
       loadBoard(); showToast('New job on the board');
@@ -6050,7 +6056,7 @@ function subscribeRealtime(){
 var _origChangeJobStatus = changeJobStatus;
 async function changeJobStatus(newStatus){
   _origChangeJobStatus(newStatus); // update UI immediately
-  if(db && window._currentJobId){
+  db = getDB(); if(db && window._currentJobId){
     var {error} = await db.from('jobs')
       .update({status: newStatus})
       .eq('id', window._currentJobId);
@@ -6062,7 +6068,7 @@ async function changeJobStatus(newStatus){
 var _origLogNote = logInternalNote;
 async function logInternalNote(text){
   _origLogNote(text); // update UI immediately
-  if(db && window._currentJobId && CURRENT_MEMBER){
+  db = getDB(); if(db && window._currentJobId && CURRENT_MEMBER){
     await db.from('job_notes').insert({
       job_id:      window._currentJobId,
       author_name: CURRENT_MEMBER.name + (CURRENT_ROLE==='admin' ? ' (Admin)' : ' (Staff)'),
