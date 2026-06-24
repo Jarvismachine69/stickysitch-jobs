@@ -899,6 +899,9 @@ td.thumb-cell{padding:6px 4px 6px 8px!important;width:44px}
 .jf-ac-badge.repeat{background:var(--lilac-soft);color:var(--lilac)}
 .jf-ac-badge.new{background:var(--green-soft);color:#007A4A}
 .jf-ac-contact{font-weight:400;color:var(--ink-3)}
+.job-id-label{font-family:'Inter Tight',sans-serif;font-size:11px;font-weight:700;color:var(--lilac)}
+.fc-dispatch{font-family:'Inter Tight',sans-serif;font-size:11px;color:var(--ink-2)}
+.empty-board-cell{text-align:center;padding:40px;color:var(--ink-3);font-family:'DM Sans',sans-serif}
 .jf-returning-tag{background:var(--green-soft);border:1px solid var(--green);border-radius:8px;padding:7px 12px;font-family:'DM Sans',sans-serif;font-size:12.5px;color:#007A4A;display:none;align-items:center;gap:7px;margin-top:6px}
 .jf-returning-tag.show{display:flex}
 
@@ -4832,6 +4835,321 @@ function removeTeamMember(idx){
   showToast('Access removed for '+m.name);
 }
 
+
+// ============================================================
+// SUPABASE — Auth + Live Board
+// ============================================================
+const SUPABASE_URL  = 'https://irwgxtnlsssmkjiofhgq.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlyd2d4dG5sc3NzbWtqaW9maGdxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyOTI3MzQsImV4cCI6MjA5Nzg2ODczNH0.38oYSKXw3TiP4VP9g9A3Ghn43f8z8Mt8NYF_zKdwkm0';
+const db = window.supabase ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON) : null;
+
+// ── Auth ────────────────────────────────────────────────────
+async function doLogin(){
+  if(!db){ console.warn('Supabase not loaded — using prototype mode'); doLoginPrototype(); return; }
+  var username = (document.getElementById('loginUsername').value||'').toLowerCase().trim();
+  var pw       = document.getElementById('loginPw').value||'';
+  var errEl    = document.getElementById('loginErr');
+  if(!username||!pw){if(errEl)errEl.style.display='block';return;}
+
+  // Look up email by username
+  var {data:profile, error:profErr} = await db
+    .from('profiles')
+    .select('email, full_name, role, username')
+    .eq('username', username)
+    .maybeSingle();
+
+  if(profErr||!profile){
+    if(errEl)errEl.style.display='block'; return;
+  }
+
+  // Sign in with Supabase Auth
+  var {data:authData, error:authErr} = await db.auth.signInWithPassword({
+    email: profile.email, password: pw
+  });
+
+  if(authErr){
+    if(errEl)errEl.style.display='block'; return;
+  }
+
+  // Set current member and role
+  CURRENT_MEMBER = {
+    name: profile.full_name,
+    username: profile.username,
+    email: profile.email,
+    role: profile.role
+  };
+  CURRENT_ROLE = profile.role;
+  if(errEl)errEl.style.display='none';
+  if(profile.role==='admin') go('frontend');
+  else go('production');
+  applyRoleUI();
+  loadBoard();
+}
+
+function doLoginPrototype(){
+  var username = (document.getElementById('loginUsername').value||'').toLowerCase().trim();
+  var pw = document.getElementById('loginPw').value||'';
+  var member = TEAM.find(function(m){return m.username.toLowerCase()===username&&m.password===pw;});
+  var errEl = document.getElementById('loginErr');
+  if(member){
+    CURRENT_MEMBER=member; CURRENT_ROLE=member.role;
+    if(errEl)errEl.style.display='none';
+    if(member.role==='admin') go('frontend'); else go('production');
+    applyRoleUI();
+  } else {
+    if(errEl)errEl.style.display='block';
+  }
+}
+
+async function doLogout(){
+  document.querySelectorAll('.avatar-menu').forEach(function(m){m.classList.remove('show');});
+  if(db) await db.auth.signOut();
+  CURRENT_ROLE='admin'; CURRENT_MEMBER=null;
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('show');});
+  document.getElementById('login').classList.add('show');
+  var un=document.getElementById('loginUsername'); if(un)un.value='';
+  var pw=document.getElementById('loginPw');       if(pw)pw.value='';
+}
+
+// Check for existing session on page load
+window.addEventListener('load', async function(){
+  if(!db) return;
+  var {data:{session}} = await db.auth.getSession();
+  if(session){
+    var {data:profile} = await db.from('profiles')
+      .select('full_name, role, username, email')
+      .eq('id', session.user.id)
+      .single();
+    if(profile){
+      CURRENT_MEMBER={name:profile.full_name, username:profile.username, email:profile.email, role:profile.role};
+      CURRENT_ROLE=profile.role;
+      if(profile.role==='admin') go('frontend'); else go('production');
+      applyRoleUI();
+      loadBoard();
+    }
+  }
+});
+
+// ── Live board ──────────────────────────────────────────────
+var PRODUCT_LABELS = {
+  rolls:'Roll labels', sheets:'Sticker sheets',
+  individual:'Individual stickers', bumper:'Bumper stickers', large:'Large format'
+};
+var PRODUCT_THUMBS = {
+  rolls:{emoji:'🏷️',cls:'rolls'}, sheets:{emoji:'📋',cls:'sheets'},
+  individual:{emoji:'⭐',cls:'individual'}, bumper:{emoji:'🚗',cls:'bumper'},
+  large:{emoji:'🖼️',cls:'large'}
+};
+
+function fmtDate(d){
+  if(!d)return '—';
+  var dt=new Date(d);
+  return dt.getDate()+' '+'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split(' ')[dt.getMonth()];
+}
+function fmtSize(w,h){
+  if(w&&h) return w+' × '+h+' mm';
+  if(w)    return w+' mm';
+  return '—';
+}
+function fmtDispatch(method, courier){
+  var m = method==='road'?'Road dispatch':method==='same-day'?'Same day courier':method==='pickup'?'Pickup':'—';
+  return courier ? m+' · '+courier : m;
+}
+function chipClass(status){
+  var map={new:'new',prepress:'prepress',awaiting:'awaiting',revision:'revision',
+    print:'print',lam:'lam',cut:'cut',qa:'qa',outsource:'outsource',
+    pickup:'pickup',pickedup:'pickedup',hold:'hold',dispatched:'dispatched'};
+  return map[status]||'new';
+}
+function chipLabel(status){
+  return (STATUS_META[status]||[status])[0]||status;
+}
+
+function buildJobRow(job){
+  var items   = job.job_items||[];
+  var item    = items[0]||{};
+  var ptype   = item.product_type||'individual';
+  var thumb   = PRODUCT_THUMBS[ptype]||PRODUCT_THUMBS.individual;
+  var size    = fmtSize(item.width_mm, item.height_mm);
+  var qty     = item.quantity ? item.quantity.toLocaleString() : '—';
+  var prodLbl = ptype==='large'&&item.product_subtype ? item.product_subtype : (PRODUCT_LABELS[ptype]||ptype);
+  var src     = job.source||'shopify';
+  var status  = job.status||'new';
+  var due     = fmtDate(job.due_date);
+  var placed  = fmtDate(job.placed_at);
+  var dueAlert= job.due_date && new Date(job.due_date) < new Date() && status!=='dispatched'&&status!=='pickedup';
+
+  return '<tr data-status="'+status+'" data-station="'+status+'" data-product="'+ptype+'"'
+    +' data-placed="'+placed+'" onclick="openJobFromRow(this)">'
+    +'<td onclick="event.stopPropagation()"><input type="checkbox" class="row-check" onchange="rowCheckAuto(this)"></td>'
+    +'<td><button class="prio-btn prio-off" onclick="event.stopPropagation();togglePrio(this)" title="Set priority">⚡</button></td>'
+    +'<td class="thumb-cell"><div class="row-thumb '+thumb.cls+'" onclick="event.stopPropagation();downloadArtwork(this)">'
+    +thumb.emoji+'<span class="thumb-dl">⬇</span><span class="proof-tick">✓</span></div></td>'
+    +'<td class="tbl-id">'+job.id+'</td>'
+    +'<td class="tbl-cust"><div style="font-weight:600;font-size:14px;color:var(--navy)">'+(job.business_name||'Unknown')+'</div>'
+    +(job.contact_name?'<div class="tbl-id" style="font-size:11px;margin-top:1px">'+job.contact_name+'</div>':'')+'</td>'
+    +'<td><span class="src '+src+'">'+src.charAt(0).toUpperCase()+src.slice(1)+'</span></td>'
+    +'<td>'+prodLbl+'</td>'
+    +'<td>'+size+'</td>'
+    +'<td>'+qty+'</td>'
+    +'<td>'+placed+'</td>'
+    +'<td><span class="chip '+chipClass(status)+'" data-statkey="'+status+'">'+chipLabel(status)+'</span>'
+    +'<button class="nav-stat" onclick="event.stopPropagation();navStat(this,-1)">‹</button>'
+    +'<button class="nav-stat" onclick="event.stopPropagation();navStat(this,1)">›</button></td>'
+    +'<td>'+(dueAlert?'<span style="color:var(--red)">⚡ '+due+'</span>':due)+'</td>'
+    +'<td>'+fmtDispatch(job.dispatch_method, job.courier)+'</td>'
+    +'</tr>';
+}
+
+function buildJobCard(job){
+  var items  = job.job_items||[];
+  var item   = items[0]||{};
+  var ptype  = item.product_type||'individual';
+  var thumb  = PRODUCT_THUMBS[ptype]||PRODUCT_THUMBS.individual;
+  var size   = fmtSize(item.width_mm, item.height_mm);
+  var qty    = item.quantity ? item.quantity.toLocaleString() : '—';
+  var prodLbl= ptype==='large'&&item.product_subtype?item.product_subtype:(PRODUCT_LABELS[ptype]||ptype);
+  var status = job.status||'new';
+  var src    = job.source||'shopify';
+  var due    = fmtDate(job.due_date);
+  var dueAlert = job.due_date && new Date(job.due_date) < new Date() && status!=='dispatched'&&status!=='pickedup';
+  var mat    = item.material||'';
+  var lam    = item.laminate||'';
+
+  return '<div class="fcard" data-status="'+status+'" data-station="'+status+'" data-product="'+ptype+'" onclick="openJobFromRow(this)">'
+    +'<div class="fc-head">'
+    +'<div class="fc-thumb" style="background:linear-gradient(135deg,#6B5CE7,#2C2545)">'+thumb.emoji+'</div>'
+    +'<div class="fc-headtext">'
+    +'<div style="display:flex;gap:6px;align-items:center;margin-bottom:3px;flex-wrap:wrap">'
+    +'<span class="job-id-label">'+job.id+'</span>'
+    +'<span class="chip '+chipClass(status)+'" style="font-size:10px">'+chipLabel(status)+'</span>'
+    +'<span class="src '+src+'">'+src.charAt(0).toUpperCase()+src.slice(1)+'</span>'
+    +'</div>'
+    +'<div class="fc-make">'+qty+' · '+prodLbl+'</div>'
+    +'<div class="fc-cust">'+(job.business_name||'Unknown')+'</div>'
+    +'</div></div>'
+    +'<div class="fc-sg">'
+    +'<div><div class="k">Size</div><div class="v">'+size+'</div></div>'
+    +(mat?'<div><div class="k">Material</div><div class="v">'+mat+'</div></div>':'')
+    +(lam?'<div><div class="k">Laminate</div><div class="v">'+lam+'</div></div>':'')
+    +'</div>'
+    +'<div class="fc-foot">'
+    +'<span class="fc-due'+(dueAlert?' late':'')+'">'+( dueAlert?'⚡ Overdue · ':'📅 Due ')+due+'</span>'
+    +'<span class="fc-dispatch">'+fmtDispatch(job.dispatch_method, job.courier)+'</span>'
+    +'</div></div>';
+}
+
+async function loadBoard(){
+  if(!db) return;
+  var {data:jobs, error} = await db
+    .from('active_jobs')
+    .select('*, job_items(*)')
+    .order('due_date', {ascending:true});
+
+  if(error){console.error('loadBoard error:', error); return;}
+
+  // ── Populate JOB_DATA for job detail lookups ─────────────────────
+  jobs.forEach(function(job){
+    var item = (job.job_items||[])[0]||{};
+    JOB_DATA[job.id] = {
+      id: job.id, shopify: job.shopify_order_number||null, paid: job.paid,
+      src: job.source, srcLabel: (job.source||'').charAt(0).toUpperCase()+(job.source||'').slice(1),
+      name: job.business_name||'Unknown', contact: job.contact_name||'—',
+      email: job.customer_email||'', phone: job.customer_phone||'',
+      address: job.address_full||'', addr: job.address_full||'',
+      product: PRODUCT_LABELS[item.product_type]||item.product_type||'',
+      qty: item.quantity ? item.quantity.toLocaleString() : '—',
+      shape: item.shape||'', size: fmtSize(item.width_mm, item.height_mm),
+      material: item.material||'', lam: item.laminate||'',
+      dispatch: fmtDispatch(job.dispatch_method, job.courier), courier: job.courier||'',
+      placed: fmtDate(job.placed_at), due: fmtDate(job.due_date),
+      dueAlert: job.due_date && new Date(job.due_date)<new Date(),
+      artFile: job.artwork_filename||'artwork.pdf', artSize: job.artwork_size_bytes
+        ? Math.round(job.artwork_size_bytes/1024/1024*10)/10+' MB' : '',
+      status: job.status, statusLabel: chipLabel(job.status),
+      productKey: item.product_type||'individual',
+      outsourceSupplier: job.outsource_supplier||'TBC',
+      outsourceDest: job.outsource_dest||'Our factory'
+    };
+  });
+
+  // ── Render tables ─────────────────────────────────────────────────
+  var fTbody = document.querySelector('#fTable tbody');
+  var pTbody = document.querySelector('#pTable tbody');
+  if(fTbody){
+    fTbody.innerHTML = jobs.length ? jobs.map(buildJobRow).join('') : '<tr><td colspan="13" class="empty-board-cell">No active jobs</td></tr>';
+  }
+  if(pTbody){
+    pTbody.innerHTML = jobs.length ? jobs.map(buildJobRow).join('') : '<tr><td colspan="13" class="empty-board-cell">No active jobs</td></tr>';
+  }
+
+  // ── Render card views ─────────────────────────────────────────────
+  var fCards = document.getElementById('fCardView');
+  var pCards = document.getElementById('pCardView');
+  var cardHtml = jobs.length ? jobs.map(buildJobCard).join('') : '<p class="empty-board-cell">No active jobs</p>';
+  if(fCards) fCards.innerHTML = cardHtml;
+  if(pCards) pCards.innerHTML = cardHtml;
+
+  // Re-apply filters and scorecard
+  applyFrontFilters();
+  applyProdFilters();
+  updateScorecard();
+  refreshAllThumbs();
+}
+
+// ── Realtime subscription ─────────────────────────────────────────────
+function subscribeRealtime(){
+  if(!db) return;
+  db.channel('board-changes')
+    .on('postgres_changes', {event:'INSERT', schema:'public', table:'jobs'}, function(payload){
+      loadBoard(); showToast('New job on the board');
+    })
+    .on('postgres_changes', {event:'UPDATE', schema:'public', table:'jobs'}, function(payload){
+      // Update just the changed row without full reload
+      var job = payload.new;
+      if(!job||!job.id) return;
+      document.querySelectorAll('#fTable tbody tr, #pTable tbody tr').forEach(function(row){
+        var idEl=row.querySelector('.tbl-id');
+        if(!idEl||idEl.textContent.trim()!==job.id) return;
+        row.dataset.status=job.status;
+        row.dataset.station=job.status;
+        var chip=row.querySelector('.chip');
+        if(chip){chip.textContent=chipLabel(job.status);chip.className='chip '+chipClass(job.status);chip.dataset.statkey=job.status;}
+      });
+      updateScorecard();
+    })
+    .subscribe();
+}
+
+// ── Persist status change to Supabase ────────────────────────────────
+var _origChangeJobStatus = changeJobStatus;
+async function changeJobStatus(newStatus){
+  _origChangeJobStatus(newStatus); // update UI immediately
+  if(db && window._currentJobId){
+    var {error} = await db.from('jobs')
+      .update({status: newStatus})
+      .eq('id', window._currentJobId);
+    if(error) console.error('Status update failed:', error.message);
+  }
+}
+
+// ── Persist internal notes to Supabase ───────────────────────────────
+var _origLogNote = logInternalNote;
+async function logInternalNote(text){
+  _origLogNote(text); // update UI immediately
+  if(db && window._currentJobId && CURRENT_MEMBER){
+    await db.from('job_notes').insert({
+      job_id:      window._currentJobId,
+      author_name: CURRENT_MEMBER.name + (CURRENT_ROLE==='admin' ? ' (Admin)' : ' (Staff)'),
+      content:     text,
+      source:      'team'
+    });
+  }
+}
+
+// Start realtime after a short delay to ensure auth is settled
+setTimeout(subscribeRealtime, 2000);
+
 </script>
 
 <!-- QUICK VIEW MODAL -->
@@ -5442,5 +5760,321 @@ function removeTeamMember(idx){
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+// ============================================================
+// SUPABASE — Auth + Live Board
+// ============================================================
+const SUPABASE_URL  = 'https://irwgxtnlsssmkjiofhgq.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlyd2d4dG5sc3NzbWtqaW9maGdxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyOTI3MzQsImV4cCI6MjA5Nzg2ODczNH0.38oYSKXw3TiP4VP9g9A3Ghn43f8z8Mt8NYF_zKdwkm0';
+const db = window.supabase ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON) : null;
+
+// ── Auth ────────────────────────────────────────────────────
+async function doLogin(){
+  if(!db){ console.warn('Supabase not loaded — using prototype mode'); doLoginPrototype(); return; }
+  var username = (document.getElementById('loginUsername').value||'').toLowerCase().trim();
+  var pw       = document.getElementById('loginPw').value||'';
+  var errEl    = document.getElementById('loginErr');
+  if(!username||!pw){if(errEl)errEl.style.display='block';return;}
+
+  // Look up email by username
+  var {data:profile, error:profErr} = await db
+    .from('profiles')
+    .select('email, full_name, role, username')
+    .eq('username', username)
+    .maybeSingle();
+
+  if(profErr||!profile){
+    if(errEl)errEl.style.display='block'; return;
+  }
+
+  // Sign in with Supabase Auth
+  var {data:authData, error:authErr} = await db.auth.signInWithPassword({
+    email: profile.email, password: pw
+  });
+
+  if(authErr){
+    if(errEl)errEl.style.display='block'; return;
+  }
+
+  // Set current member and role
+  CURRENT_MEMBER = {
+    name: profile.full_name,
+    username: profile.username,
+    email: profile.email,
+    role: profile.role
+  };
+  CURRENT_ROLE = profile.role;
+  if(errEl)errEl.style.display='none';
+  if(profile.role==='admin') go('frontend');
+  else go('production');
+  applyRoleUI();
+  loadBoard();
+}
+
+function doLoginPrototype(){
+  var username = (document.getElementById('loginUsername').value||'').toLowerCase().trim();
+  var pw = document.getElementById('loginPw').value||'';
+  var member = TEAM.find(function(m){return m.username.toLowerCase()===username&&m.password===pw;});
+  var errEl = document.getElementById('loginErr');
+  if(member){
+    CURRENT_MEMBER=member; CURRENT_ROLE=member.role;
+    if(errEl)errEl.style.display='none';
+    if(member.role==='admin') go('frontend'); else go('production');
+    applyRoleUI();
+  } else {
+    if(errEl)errEl.style.display='block';
+  }
+}
+
+async function doLogout(){
+  document.querySelectorAll('.avatar-menu').forEach(function(m){m.classList.remove('show');});
+  if(db) await db.auth.signOut();
+  CURRENT_ROLE='admin'; CURRENT_MEMBER=null;
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('show');});
+  document.getElementById('login').classList.add('show');
+  var un=document.getElementById('loginUsername'); if(un)un.value='';
+  var pw=document.getElementById('loginPw');       if(pw)pw.value='';
+}
+
+// Check for existing session on page load
+window.addEventListener('load', async function(){
+  if(!db) return;
+  var {data:{session}} = await db.auth.getSession();
+  if(session){
+    var {data:profile} = await db.from('profiles')
+      .select('full_name, role, username, email')
+      .eq('id', session.user.id)
+      .single();
+    if(profile){
+      CURRENT_MEMBER={name:profile.full_name, username:profile.username, email:profile.email, role:profile.role};
+      CURRENT_ROLE=profile.role;
+      if(profile.role==='admin') go('frontend'); else go('production');
+      applyRoleUI();
+      loadBoard();
+    }
+  }
+});
+
+// ── Live board ──────────────────────────────────────────────
+var PRODUCT_LABELS = {
+  rolls:'Roll labels', sheets:'Sticker sheets',
+  individual:'Individual stickers', bumper:'Bumper stickers', large:'Large format'
+};
+var PRODUCT_THUMBS = {
+  rolls:{emoji:'🏷️',cls:'rolls'}, sheets:{emoji:'📋',cls:'sheets'},
+  individual:{emoji:'⭐',cls:'individual'}, bumper:{emoji:'🚗',cls:'bumper'},
+  large:{emoji:'🖼️',cls:'large'}
+};
+
+function fmtDate(d){
+  if(!d)return '—';
+  var dt=new Date(d);
+  return dt.getDate()+' '+'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split(' ')[dt.getMonth()];
+}
+function fmtSize(w,h){
+  if(w&&h) return w+' × '+h+' mm';
+  if(w)    return w+' mm';
+  return '—';
+}
+function fmtDispatch(method, courier){
+  var m = method==='road'?'Road dispatch':method==='same-day'?'Same day courier':method==='pickup'?'Pickup':'—';
+  return courier ? m+' · '+courier : m;
+}
+function chipClass(status){
+  var map={new:'new',prepress:'prepress',awaiting:'awaiting',revision:'revision',
+    print:'print',lam:'lam',cut:'cut',qa:'qa',outsource:'outsource',
+    pickup:'pickup',pickedup:'pickedup',hold:'hold',dispatched:'dispatched'};
+  return map[status]||'new';
+}
+function chipLabel(status){
+  return (STATUS_META[status]||[status])[0]||status;
+}
+
+function buildJobRow(job){
+  var items   = job.job_items||[];
+  var item    = items[0]||{};
+  var ptype   = item.product_type||'individual';
+  var thumb   = PRODUCT_THUMBS[ptype]||PRODUCT_THUMBS.individual;
+  var size    = fmtSize(item.width_mm, item.height_mm);
+  var qty     = item.quantity ? item.quantity.toLocaleString() : '—';
+  var prodLbl = ptype==='large'&&item.product_subtype ? item.product_subtype : (PRODUCT_LABELS[ptype]||ptype);
+  var src     = job.source||'shopify';
+  var status  = job.status||'new';
+  var due     = fmtDate(job.due_date);
+  var placed  = fmtDate(job.placed_at);
+  var dueAlert= job.due_date && new Date(job.due_date) < new Date() && status!=='dispatched'&&status!=='pickedup';
+
+  return '<tr data-status="'+status+'" data-station="'+status+'" data-product="'+ptype+'"'
+    +' data-placed="'+placed+'" onclick="openJobFromRow(this)">'
+    +'<td onclick="event.stopPropagation()"><input type="checkbox" class="row-check" onchange="rowCheckAuto(this)"></td>'
+    +'<td><button class="prio-btn prio-off" onclick="event.stopPropagation();togglePrio(this)" title="Set priority">⚡</button></td>'
+    +'<td class="thumb-cell"><div class="row-thumb '+thumb.cls+'" onclick="event.stopPropagation();downloadArtwork(this)">'
+    +thumb.emoji+'<span class="thumb-dl">⬇</span><span class="proof-tick">✓</span></div></td>'
+    +'<td class="tbl-id">'+job.id+'</td>'
+    +'<td class="tbl-cust"><div style="font-weight:600;font-size:14px;color:var(--navy)">'+(job.business_name||'Unknown')+'</div>'
+    +(job.contact_name?'<div class="tbl-id" style="font-size:11px;margin-top:1px">'+job.contact_name+'</div>':'')+'</td>'
+    +'<td><span class="src '+src+'">'+src.charAt(0).toUpperCase()+src.slice(1)+'</span></td>'
+    +'<td>'+prodLbl+'</td>'
+    +'<td>'+size+'</td>'
+    +'<td>'+qty+'</td>'
+    +'<td>'+placed+'</td>'
+    +'<td><span class="chip '+chipClass(status)+'" data-statkey="'+status+'">'+chipLabel(status)+'</span>'
+    +'<button class="nav-stat" onclick="event.stopPropagation();navStat(this,-1)">‹</button>'
+    +'<button class="nav-stat" onclick="event.stopPropagation();navStat(this,1)">›</button></td>'
+    +'<td>'+(dueAlert?'<span style="color:var(--red)">⚡ '+due+'</span>':due)+'</td>'
+    +'<td>'+fmtDispatch(job.dispatch_method, job.courier)+'</td>'
+    +'</tr>';
+}
+
+function buildJobCard(job){
+  var items  = job.job_items||[];
+  var item   = items[0]||{};
+  var ptype  = item.product_type||'individual';
+  var thumb  = PRODUCT_THUMBS[ptype]||PRODUCT_THUMBS.individual;
+  var size   = fmtSize(item.width_mm, item.height_mm);
+  var qty    = item.quantity ? item.quantity.toLocaleString() : '—';
+  var prodLbl= ptype==='large'&&item.product_subtype?item.product_subtype:(PRODUCT_LABELS[ptype]||ptype);
+  var status = job.status||'new';
+  var src    = job.source||'shopify';
+  var due    = fmtDate(job.due_date);
+  var dueAlert = job.due_date && new Date(job.due_date) < new Date() && status!=='dispatched'&&status!=='pickedup';
+  var mat    = item.material||'';
+  var lam    = item.laminate||'';
+
+  return '<div class="fcard" data-status="'+status+'" data-station="'+status+'" data-product="'+ptype+'" onclick="openJobFromRow(this)">'
+    +'<div class="fc-head">'
+    +'<div class="fc-thumb" style="background:linear-gradient(135deg,#6B5CE7,#2C2545)">'+thumb.emoji+'</div>'
+    +'<div class="fc-headtext">'
+    +'<div style="display:flex;gap:6px;align-items:center;margin-bottom:3px;flex-wrap:wrap">'
+    +'<span class="job-id-label">'+job.id+'</span>'
+    +'<span class="chip '+chipClass(status)+'" style="font-size:10px">'+chipLabel(status)+'</span>'
+    +'<span class="src '+src+'">'+src.charAt(0).toUpperCase()+src.slice(1)+'</span>'
+    +'</div>'
+    +'<div class="fc-make">'+qty+' · '+prodLbl+'</div>'
+    +'<div class="fc-cust">'+(job.business_name||'Unknown')+'</div>'
+    +'</div></div>'
+    +'<div class="fc-sg">'
+    +'<div><div class="k">Size</div><div class="v">'+size+'</div></div>'
+    +(mat?'<div><div class="k">Material</div><div class="v">'+mat+'</div></div>':'')
+    +(lam?'<div><div class="k">Laminate</div><div class="v">'+lam+'</div></div>':'')
+    +'</div>'
+    +'<div class="fc-foot">'
+    +'<span class="fc-due'+(dueAlert?' late':'')+'">'+( dueAlert?'⚡ Overdue · ':'📅 Due ')+due+'</span>'
+    +'<span class="fc-dispatch">'+fmtDispatch(job.dispatch_method, job.courier)+'</span>'
+    +'</div></div>';
+}
+
+async function loadBoard(){
+  if(!db) return;
+  var {data:jobs, error} = await db
+    .from('active_jobs')
+    .select('*, job_items(*)')
+    .order('due_date', {ascending:true});
+
+  if(error){console.error('loadBoard error:', error); return;}
+
+  // ── Populate JOB_DATA for job detail lookups ─────────────────────
+  jobs.forEach(function(job){
+    var item = (job.job_items||[])[0]||{};
+    JOB_DATA[job.id] = {
+      id: job.id, shopify: job.shopify_order_number||null, paid: job.paid,
+      src: job.source, srcLabel: (job.source||'').charAt(0).toUpperCase()+(job.source||'').slice(1),
+      name: job.business_name||'Unknown', contact: job.contact_name||'—',
+      email: job.customer_email||'', phone: job.customer_phone||'',
+      address: job.address_full||'', addr: job.address_full||'',
+      product: PRODUCT_LABELS[item.product_type]||item.product_type||'',
+      qty: item.quantity ? item.quantity.toLocaleString() : '—',
+      shape: item.shape||'', size: fmtSize(item.width_mm, item.height_mm),
+      material: item.material||'', lam: item.laminate||'',
+      dispatch: fmtDispatch(job.dispatch_method, job.courier), courier: job.courier||'',
+      placed: fmtDate(job.placed_at), due: fmtDate(job.due_date),
+      dueAlert: job.due_date && new Date(job.due_date)<new Date(),
+      artFile: job.artwork_filename||'artwork.pdf', artSize: job.artwork_size_bytes
+        ? Math.round(job.artwork_size_bytes/1024/1024*10)/10+' MB' : '',
+      status: job.status, statusLabel: chipLabel(job.status),
+      productKey: item.product_type||'individual',
+      outsourceSupplier: job.outsource_supplier||'TBC',
+      outsourceDest: job.outsource_dest||'Our factory'
+    };
+  });
+
+  // ── Render tables ─────────────────────────────────────────────────
+  var fTbody = document.querySelector('#fTable tbody');
+  var pTbody = document.querySelector('#pTable tbody');
+  if(fTbody){
+    fTbody.innerHTML = jobs.length ? jobs.map(buildJobRow).join('') : '<tr><td colspan="13" class="empty-board-cell">No active jobs</td></tr>';
+  }
+  if(pTbody){
+    pTbody.innerHTML = jobs.length ? jobs.map(buildJobRow).join('') : '<tr><td colspan="13" class="empty-board-cell">No active jobs</td></tr>';
+  }
+
+  // ── Render card views ─────────────────────────────────────────────
+  var fCards = document.getElementById('fCardView');
+  var pCards = document.getElementById('pCardView');
+  var cardHtml = jobs.length ? jobs.map(buildJobCard).join('') : '<p class="empty-board-cell">No active jobs</p>';
+  if(fCards) fCards.innerHTML = cardHtml;
+  if(pCards) pCards.innerHTML = cardHtml;
+
+  // Re-apply filters and scorecard
+  applyFrontFilters();
+  applyProdFilters();
+  updateScorecard();
+  refreshAllThumbs();
+}
+
+// ── Realtime subscription ─────────────────────────────────────────────
+function subscribeRealtime(){
+  if(!db) return;
+  db.channel('board-changes')
+    .on('postgres_changes', {event:'INSERT', schema:'public', table:'jobs'}, function(payload){
+      loadBoard(); showToast('New job on the board');
+    })
+    .on('postgres_changes', {event:'UPDATE', schema:'public', table:'jobs'}, function(payload){
+      // Update just the changed row without full reload
+      var job = payload.new;
+      if(!job||!job.id) return;
+      document.querySelectorAll('#fTable tbody tr, #pTable tbody tr').forEach(function(row){
+        var idEl=row.querySelector('.tbl-id');
+        if(!idEl||idEl.textContent.trim()!==job.id) return;
+        row.dataset.status=job.status;
+        row.dataset.station=job.status;
+        var chip=row.querySelector('.chip');
+        if(chip){chip.textContent=chipLabel(job.status);chip.className='chip '+chipClass(job.status);chip.dataset.statkey=job.status;}
+      });
+      updateScorecard();
+    })
+    .subscribe();
+}
+
+// ── Persist status change to Supabase ────────────────────────────────
+var _origChangeJobStatus = changeJobStatus;
+async function changeJobStatus(newStatus){
+  _origChangeJobStatus(newStatus); // update UI immediately
+  if(db && window._currentJobId){
+    var {error} = await db.from('jobs')
+      .update({status: newStatus})
+      .eq('id', window._currentJobId);
+    if(error) console.error('Status update failed:', error.message);
+  }
+}
+
+// ── Persist internal notes to Supabase ───────────────────────────────
+var _origLogNote = logInternalNote;
+async function logInternalNote(text){
+  _origLogNote(text); // update UI immediately
+  if(db && window._currentJobId && CURRENT_MEMBER){
+    await db.from('job_notes').insert({
+      job_id:      window._currentJobId,
+      author_name: CURRENT_MEMBER.name + (CURRENT_ROLE==='admin' ? ' (Admin)' : ' (Staff)'),
+      content:     text,
+      source:      'team'
+    });
+  }
+}
+
+// Start realtime after a short delay to ensure auth is settled
+setTimeout(subscribeRealtime, 2000);
+
+</script>
 </body>
 </html>
