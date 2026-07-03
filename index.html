@@ -1522,10 +1522,10 @@ async function navStatSelect(sel){
           <div class="spec-cell"><div class="k">Size</div><div class="v" id="sv-size"></div></div>
           <div class="spec-cell"><div class="k">Material</div><div class="v" id="sv-material"></div></div>
           <div class="spec-cell"><div class="k">Laminate</div><div class="v" id="sv-lam"></div></div>
-          <div class="spec-cell"><div class="k">Dispatch · Courier</div><div class="v" id="sv-dispatch">Road dispatch · StarTrack</div></div>
-          <div class="spec-cell"><div class="k">Delivery to</div><div class="v" id="sv-addr">12 Bay St, Port Melbourne VIC 3207</div></div>
-          <div class="spec-cell"><div class="k">Order placed</div><div class="v" id="sv-placed">10 Jun</div></div>
-          <div class="spec-cell due"><div class="k">Due date</div><div class="v" id="sv-due">13 Jun ⚡</div></div>
+          <div class="spec-cell"><div class="k">Dispatch · Courier</div><div class="v" id="sv-dispatch"></div></div>
+          <div class="spec-cell"><div class="k">Delivery to</div><div class="v" id="sv-addr"></div></div>
+          <div class="spec-cell"><div class="k">Order placed</div><div class="v" id="sv-placed"></div></div>
+          <div class="spec-cell due"><div class="k">Due date</div><div class="v" id="sv-due"></div></div>
         </div>
         <p class="hintline">Due date auto-set: rolls = 3 days, all others = 2 days. Editable for rush jobs.</p>
       </div>
@@ -1554,8 +1554,8 @@ async function navStatSelect(sel){
         <div class="artthumb">🖼️</div>
         <div>
           <b style="font-size:13px;color:var(--navy)" id="jdArtFile"></b>
-          <span style="font-size:11px;color:var(--ink-2);display:block;margin-top:2px" id="jdArtSize">4.2 MB · PDF · auto-linked at checkout</span>
-          <span style="font-size:11px;color:var(--green);display:block;margin-top:1px">✓ Linked automatically</span>
+          <span style="font-size:11px;color:var(--ink-2);display:block;margin-top:2px" id="jdArtSize"></span>
+          
         </div>
       </div>
       <button class="btn btn-ghost" style="width:100%;margin-bottom:4px" onclick="alert('Downloads print-ready file.')">⬇ Download artwork</button>
@@ -1664,12 +1664,10 @@ async function navStatSelect(sel){
       <div class="seclabel">Internal notes</div>
       <div id="notesList" style="margin-bottom:10px">
         <div class="note-entry">
-          <div class="note-meta"><b>Emmanuel</b><span>10 Jun · 9:31am</span></div>
-          <div class="note-body">Match Pantone 1805 C on red. Customer confirmed colour via email.</div>
+          
         </div>
         <div class="note-entry">
-          <div class="note-meta"><b>David</b><span>10 Jun · 11:45am</span></div>
-          <div class="note-body">Customer is a repeat — always ships to same address. Priority if they ask.</div>
+          </div>
         </div>
       </div>
       <div style="background:#fff;border:1.5px solid var(--line);border-radius:12px;overflow:hidden">
@@ -1720,7 +1718,7 @@ async function navStatSelect(sel){
         </div>
         <div class="pvrow">
           <span class="pv-v">v1</span>
-          <div class="pv-body"><b>Proof v1 · customer rejected</b><span>"Colour too dark, logo blurry" · 10 Jun</span></div>
+          
           <span class="pv-stat rej">Rejected</span>
         </div>
       </div>
@@ -1803,8 +1801,8 @@ async function navStatSelect(sel){
         <h3>Your StickySitch order</h3>
         <p>2,000 roll labels · 90×60mm · matte laminate</p>
         <div class="tline">
-          <div class="tstep done"><b>Order received</b><span>10 Jun · 9:14am</span></div>
-          <div class="tstep done"><b>Proof prepared</b><span>10 Jun · 11:02am</span></div>
+          
+          
           <div class="tstep now"><b>Your proof is ready</b><span>Please review below</span></div>
           <div class="tstep future"><b>In production</b><span>Printing, laminating &amp; cutting</span></div>
           <div class="tstep future" id="cvFinalStep"><b>Dispatched</b><span>Tracking emailed to you</span></div>
@@ -4038,17 +4036,19 @@ async function sendOutsourceTrackingToCustomer(){
 
 // Show outsource section when job is outsourced
 var _origPopulate=populateJobDetail;
-function populateJobDetail(jobId){
-  _origPopulate(jobId);
+async function populateJobDetail(jobId){
+  await _origPopulate(jobId);
+  // After async load, d will be in JOB_DATA
   var d=JOB_DATA[jobId];
   var sec=document.getElementById('outsourceSection');
-  if(sec&&d){
-    sec.style.display=(d.productKey==='rolls')?'block':'none';
-    // Populate outsource details
-    var sup=document.getElementById('outSupplierDisplay');
-    var dest=document.getElementById('outDestDisplay');
-    if(sup)sup.textContent=d.outsourceSupplier||'To be confirmed';
-    if(dest)dest.textContent=d.outsourceDest||'Our factory';
+  if(sec){
+    sec.style.display=(d&&d.productKey==='rolls')?'block':'none';
+    if(d&&d.productKey==='rolls'){
+      var sup=document.getElementById('outSupplierDisplay');
+      var dest=document.getElementById('outDestDisplay');
+      if(sup)sup.textContent=d.outsourceSupplier||'To be confirmed';
+      if(dest)dest.textContent=d.outsourceDest||'Our factory';
+    }
   }
 }
 
@@ -5986,7 +5986,7 @@ async function navStatSelect(sel){
       <table class="cp-jobs-table">
         <thead><tr><th>Order</th><th>Date</th><th>Product</th><th>Qty</th><th>Value</th><th>Status</th></tr></thead>
         <tbody>
-          <tr><td style="font-family:'Inter Tight',sans-serif;font-weight:600;color:var(--lilac)">#4042</td><td style="color:var(--ink-2)">10 Jun 2024</td><td>Roll labels + stickers</td><td>2,500</td><td style="font-weight:700">$680</td><td><span class="chip new">New</span></td></tr>
+          
           <tr><td style="font-family:'Inter Tight',sans-serif;font-weight:600;color:var(--lilac)">#3891</td><td style="color:var(--ink-2)">14 Apr 2024</td><td>Roll labels</td><td>2,000</td><td style="font-weight:700">$520</td><td><span class="chip dispatched">Dispatched</span></td></tr>
           <tr><td style="font-family:'Inter Tight',sans-serif;font-weight:600;color:var(--lilac)">#3744</td><td style="color:var(--ink-2)">2 Feb 2024</td><td>Roll labels</td><td>1,500</td><td style="font-weight:700">$440</td><td><span class="chip dispatched">Dispatched</span></td></tr>
           <tr><td style="font-family:'Inter Tight',sans-serif;font-weight:600;color:var(--lilac)">#3512</td><td style="color:var(--ink-2)">19 Nov 2023</td><td>Roll labels</td><td>3,000</td><td style="font-weight:700">$720</td><td><span class="chip dispatched">Dispatched</span></td></tr>
