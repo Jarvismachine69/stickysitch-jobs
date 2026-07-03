@@ -15,17 +15,22 @@ const SHOPIFY_TOKEN = process.env.SHOPIFY_ACCESS_TOKEN;
 
 // ── Product type detection (same as webhook handler) ─────────────────
 function detectProductType(item) {
-  const text = [
-    item.title,
-    item.product_type,
-    item.vendor,
-    (item.properties || []).map(p => `${p.name} ${p.value}`).join(' ')
-  ].join(' ').toLowerCase();
+  const title = (item.title || '').toLowerCase().trim();
+  const ptype = (item.product_type || '').toLowerCase();
+  const text  = title + ' ' + ptype + ' ' + (item.vendor || '').toLowerCase();
 
-  if (text.includes('roll') || text.includes('roll label'))   return 'rolls';
+  // Check if title STARTS WITH the product type (StickySitch format: "sheets | circle | ...")
+  if (/^rolls?\b|^roll.?label/i.test(title))           return 'rolls';
+  if (/^sheets?\b|^sticker.?sheet/i.test(title))        return 'sheets';
+  if (/^bumper/i.test(title))                            return 'bumper';
+  if (/^large.?format|^banner|^pull.?up/i.test(title))  return 'large';
+  if (/^individual|^die.?cut|^custom.?sticker/i.test(title)) return 'individual';
+
+  // Fallback: search anywhere in combined text
+  if (text.includes('roll label') || text.includes('roll labels')) return 'rolls';
   if (text.includes('sticker sheet') || text.includes('sheet label')) return 'sheets';
-  if (text.includes('bumper'))                                return 'bumper';
-  if (text.includes('large format') || text.includes('banner') || text.includes('pull up')) return 'large';
+  if (text.includes('bumper'))        return 'bumper';
+  if (text.includes('large format') || text.includes('banner')) return 'large';
   return 'individual';
 }
 
@@ -63,8 +68,6 @@ function parseTitleSpecs(item) {
            qty: qty || item.quantity, artworkUrl: artProp ? artProp.value.trim() : null };
 }
 
-// Legacy alias
-function parseProps(item) { return { width_mm: parseTitleSpecs(item).widthMm, height_mm: parseTitleSpecs(item).heightMm, qty_override: null, artwork_url: parseTitleSpecs(item).artworkUrl, shape: parseTitleSpecs(item).shape, material: parseTitleSpecs(item).material, laminate: parseTitleSpecs(item).laminate }; }
 function parsePropsReal(item) {
   const props = (item.properties || []);
   const find = (pattern) => {
