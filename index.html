@@ -936,6 +936,69 @@ td.thumb-cell{padding:6px 4px 6px 8px!important;width:44px}
 .team-role-pill.sel{background:var(--navy);color:#fff;border-color:var(--navy)}
 .team-add-btn{width:100%;background:var(--lilac);color:#fff;border:none;border-radius:10px;padding:12px;font-family:'Inter Tight',sans-serif;font-weight:700;font-size:14px;cursor:pointer;margin-top:4px}
 .team-empty{text-align:center;padding:20px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink-3)}
+.team-you-tag{font-size:10px;color:var(--ink-3);font-weight:400}
+
+
+/* Shopify order reference in table */
+.shopify-ref{font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;color:var(--green);background:var(--green-soft);padding:2px 6px;border-radius:5px;display:inline-block;margin-top:2px}
+
+/* Sibling job panel in job detail */
+.sibling-panel{background:#fff;border:1.5px solid var(--lilac-line);border-radius:12px;padding:13px 14px;margin-bottom:10px}
+.sibling-title{font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px}
+.sibling-card{display:flex;align-items:center;gap:12px;background:var(--paper);border-radius:10px;padding:10px 13px;cursor:pointer;border:1.5px solid var(--line);transition:.15s}
+.sibling-card:hover{border-color:var(--lilac);background:var(--lilac-soft)}
+.sibling-id{font-family:'Inter Tight',sans-serif;font-weight:800;font-size:14px;color:var(--lilac)}
+.sibling-info{flex:1}
+.sibling-product{font-family:'Inter Tight',sans-serif;font-size:12.5px;font-weight:600;color:var(--ink)}
+.sibling-arrow{color:var(--ink-3);font-size:18px}
+
+
+/* Invoice / reference section */
+.jf-file-drop{border:2px dashed var(--line);border-radius:12px;padding:18px;text-align:center;background:var(--paper);cursor:pointer;transition:.15s;position:relative}
+.jf-file-drop:hover,.jf-file-drop.drag{border-color:var(--lilac);background:var(--lilac-soft)}
+.jf-file-drop input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.jf-file-drop-icon{font-size:28px;margin-bottom:6px}
+.jf-file-drop-label{font-family:'Inter Tight',sans-serif;font-size:13px;font-weight:600;color:var(--ink-2)}
+.jf-file-drop-sub{font-family:'DM Sans',sans-serif;font-size:12px;color:var(--ink-3);margin-top:3px}
+.jf-file-selected{display:none;align-items:center;gap:10px;background:var(--green-soft);border:1.5px solid var(--green);border-radius:10px;padding:10px 13px;margin-top:8px}
+.jf-file-selected.show{display:flex}
+.jf-file-name{font-family:'Inter Tight',sans-serif;font-size:13px;font-weight:600;color:#007A4A;flex:1}
+.jf-file-clear{background:none;border:none;cursor:pointer;color:var(--ink-3);font-size:16px;padding:2px}
+
+/* Invoice display in job detail */
+.jd-ref-block{background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:13px 14px;margin-bottom:10px}
+.jd-ref-title{font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px}
+.jd-ref-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.jd-ref-row:last-child{margin-bottom:0}
+.jd-ref-icon{font-size:20px;flex-shrink:0}
+.jd-ref-info{flex:1;min-width:0}
+.jd-ref-name{font-family:'Inter Tight',sans-serif;font-size:13px;font-weight:600;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.jd-ref-sub{font-family:'DM Sans',sans-serif;font-size:11.5px;color:var(--ink-3);margin-top:1px}
+.jd-ref-btn{font-family:'Inter Tight',sans-serif;font-size:11.5px;font-weight:700;padding:6px 12px;border-radius:8px;border:1.5px solid var(--line);background:#fff;cursor:pointer;color:var(--ink-2);white-space:nowrap;text-decoration:none;display:inline-block}
+.jd-ref-btn:hover{border-color:var(--lilac);color:var(--lilac)}
+
+
+/* Cancelled / Refunded chips */
+.chip.cancelled{background:#FEE2E2;color:#7F1D1D;border:1.5px solid #DC262633}
+.chip.refunded{background:#FEF3C7;color:#78350F;border:1.5px solid #D9770633}
+.jd-status-badge.cancelled{background:#7F1D1D;color:#fff}
+.jd-status-badge.refunded{background:#92400E;color:#fff}
+.jd-status-pill.current.cancelled{background:#7F1D1D;color:#fff;opacity:1}
+.jd-status-pill.current.refunded{background:#92400E;color:#fff;opacity:1}
+.sc-card[data-sc="cancelled"] .sc-card-count{color:#7F1D1D}
+.sc-card[data-sc="refunded"] .sc-card-count{color:#92400E}
+
+/* Cancellation / refund banner in job detail */
+.cancel-banner{border-radius:12px;padding:14px 16px;margin-bottom:10px;display:none}
+.cancel-banner.show{display:block}
+.cancel-banner.cancelled{background:#FEE2E2;border:1.5px solid #DC2626}
+.cancel-banner.refunded{background:#FEF3C7;border:1.5px solid #D97706}
+.cancel-banner-title{font-family:'Inter Tight',sans-serif;font-size:13px;font-weight:800;margin-bottom:4px}
+.cancel-banner.cancelled .cancel-banner-title{color:#7F1D1D}
+.cancel-banner.refunded .cancel-banner-title{color:#78350F}
+.cancel-banner-detail{font-family:'DM Sans',sans-serif;font-size:13px;line-height:1.5}
+.cancel-banner.cancelled .cancel-banner-detail{color:#991B1B}
+.cancel-banner.refunded .cancel-banner-detail{color:#92400E}
 
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -1000,57 +1063,42 @@ td.thumb-cell{padding:6px 4px 6px 8px!important;width:44px}
 
       <!-- This week: jobs -->
       <div style="background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:16px 16px 14px">
-        <div style="font-family:'Inter Tight',sans-serif;font-size:32px;font-weight:800;line-height:1;color:var(--lilac);margin-bottom:6px">18</div>
+        <div id="scJobsWeekCount" style="font-family:'Inter Tight',sans-serif;font-size:32px;font-weight:800;line-height:1;color:var(--lilac);margin-bottom:6px">—</div>
         <div style="font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-bottom:7px">Jobs this week</div>
-        <div style="display:flex;align-items:center;gap:5px">
-          <span style="font-family:'Inter Tight',sans-serif;font-size:12px;font-weight:700;color:var(--green);display:flex;align-items:center;gap:2px">
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 10V2M6 2L2 6M6 2L10 6" stroke="#00C27A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            +29%
-          </span>
-          <span style="font-family:'DM Sans',sans-serif;font-size:11px;color:var(--ink-3)">vs 14 last week</span>
+        <div style="display:flex;align-items:center;gap:5px" id="scJobsWeekTrend">
+          <span style="font-family:'DM Sans',sans-serif;font-size:11px;color:var(--ink-3)">Loading…</span>
         </div>
       </div>
 
       <!-- This week: revenue -->
       <div style="background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:16px 16px 14px">
-        <div style="font-family:'Inter Tight',sans-serif;font-size:32px;font-weight:800;line-height:1;color:var(--green);margin-bottom:6px">$4,820</div>
+        <div id="scRevWeekCount" style="font-family:'Inter Tight',sans-serif;font-size:32px;font-weight:800;line-height:1;color:var(--green);margin-bottom:6px">—</div>
         <div style="font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-bottom:7px">Revenue this week</div>
-        <div style="display:flex;align-items:center;gap:5px">
-          <span style="font-family:'Inter Tight',sans-serif;font-size:12px;font-weight:700;color:var(--green);display:flex;align-items:center;gap:2px">
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 10V2M6 2L2 6M6 2L10 6" stroke="#00C27A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            +32%
-          </span>
-          <span style="font-family:'DM Sans',sans-serif;font-size:11px;color:var(--ink-3)">vs $3,650 last week</span>
+        <div style="display:flex;align-items:center;gap:5px" id="scRevWeekTrend">
+          <span style="font-family:'DM Sans',sans-serif;font-size:11px;color:var(--ink-3)">Loading…</span>
         </div>
       </div>
 
       <!-- This month: jobs tally -->
       <div style="background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:16px 16px 14px">
-        <div style="font-family:'Inter Tight',sans-serif;font-size:32px;font-weight:800;line-height:1;color:#C8970A;margin-bottom:6px">47</div>
+        <div id="scJobsMonthCount" style="font-family:'Inter Tight',sans-serif;font-size:32px;font-weight:800;line-height:1;color:#C8970A;margin-bottom:6px">—</div>
         <div style="font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-bottom:7px">Jobs this month</div>
-        <div style="display:flex;align-items:center;gap:5px">
-          <span style="font-family:'Inter Tight',sans-serif;font-size:12px;font-weight:700;color:var(--green);display:flex;align-items:center;gap:2px">
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 10V2M6 2L2 6M6 2L10 6" stroke="#00C27A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            +18%
-          </span>
-          <span style="font-family:'DM Sans',sans-serif;font-size:11px;color:var(--ink-3)">vs 40 last month</span>
+        <div style="display:flex;align-items:center;gap:5px" id="scJobsMonthTrend">
+          <span style="font-family:'DM Sans',sans-serif;font-size:11px;color:var(--ink-3)">Loading…</span>
         </div>
       </div>
 
       <!-- This month: revenue -->
       <div style="background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:16px 16px 14px">
-        <div style="font-family:'Inter Tight',sans-serif;font-size:32px;font-weight:800;line-height:1;color:#4433CC;margin-bottom:6px">$12,400</div>
+        <div id="scRevMonthCount" style="font-family:'Inter Tight',sans-serif;font-size:32px;font-weight:800;line-height:1;color:#4433CC;margin-bottom:6px">—</div>
         <div style="font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-bottom:7px">Revenue this month</div>
-        <div style="display:flex;align-items:center;gap:5px">
-          <span style="font-family:'Inter Tight',sans-serif;font-size:12px;font-weight:700;color:var(--red);display:flex;align-items:center;gap:2px">
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 2V10M6 10L2 6M6 10L10 6" stroke="#D92B4B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            −4%
-          </span>
-          <span style="font-family:'DM Sans',sans-serif;font-size:11px;color:var(--ink-3)">vs $12,900 last month</span>
+        <div style="display:flex;align-items:center;gap:5px" id="scRevMonthTrend">
+          <span style="font-family:'DM Sans',sans-serif;font-size:11px;color:var(--ink-3)">Loading…</span>
         </div>
       </div>
 
     </div>
+
 
     <div class="controls">
       <input class="search" id="fSearch" placeholder="Search order #, customer, email…" oninput="applyFrontFilters()">
@@ -1070,6 +1118,8 @@ td.thumb-cell{padding:6px 4px 6px 8px!important;width:44px}
         <option value="pickedup">Picked Up</option>
         <option value="hold">On Hold</option>
         <option value="dispatched">Dispatched</option>
+        <option value="cancelled">Cancelled</option>
+        <option value="refunded">Refunded</option>
       </select>
       <select class="fsel grow" id="fProduct" onchange="applyFrontFilters()">
         <option value="">All products</option>
@@ -1082,6 +1132,7 @@ td.thumb-cell{padding:6px 4px 6px 8px!important;width:44px}
       <select class="fsel" id="fSort" onchange="applyFrontFilters()">
         <option value="grouped" selected>Group by due date</option>
         <option value="due">Due: soonest</option>
+        <option value="product">Sort by product</option>
         <option value="newest">Newest first</option>
         <option value="oldest">Oldest first</option>
         <option value="priority">Priority first</option>
@@ -1131,324 +1182,17 @@ td.thumb-cell{padding:6px 4px 6px 8px!important;width:44px}
             </tr>
           </thead>
           <tbody>
-            <!-- GROUP PARENT: Order #4042 (2 jobs) -->
-            <tr class="grp-parent prio-auto" data-status="new" data-product="rolls" data-placed="20240610" data-due="20240613" data-dueday="thu" onclick="toggleGroup('4042')">
-              <td onclick="event.stopPropagation()"><input type="checkbox" class="row-check" onchange="rowCheckAuto(this)"></td>
-              <td><button class="prio-btn prio-red" onclick="event.stopPropagation();togglePrio(this)" title="Auto-priority: overdue">⚡</button></td>
-              <td class="thumb-cell"><div class="row-thumb rolls" onclick="event.stopPropagation();downloadArtwork(this)">🏷️<span class="thumb-dl">⬇</span><span class="proof-tick">✓</span></div></td>
-              <td class="tbl-id"><button class="grp-toggle" id="grp-toggle-4042">▶</button>#4042</td>
-              <td class="tbl-cust">Bayside Brewing Co.<span class="grp-badge">2 jobs</span><span class="tbl-note">2nd order</span></td>
-              <td><span class="src shopify">Shopify</span></td>
-              <td>Mixed</td><td>—</td><td>2,500 total</td>
-              <td>10 Jun</td><td style="color:#B23E27;font-weight:700">⚡ 13 Jun</td><td>Road</td>
-              <td><span class="chip new">New</span></td>
-            </tr>
-
-            <!-- CHILD 1: Roll labels -->
-            <tr class="grp-child prio-auto" data-group="4042" data-status="new" data-product="rolls" data-placed="20240610" data-due="20240613" data-dueday="thu" onclick="openJobFromRow(this,'production')">
-              <td onclick="event.stopPropagation()"><input type="checkbox" class="row-check grp-check" data-group="4042" onchange="rowCheckAuto(this)"></td>
-              <td><button class="prio-btn prio-red" onclick="event.stopPropagation();togglePrio(this)" title="Auto-priority">⚡</button></td>
-              <td class="thumb-cell"><div class="row-thumb rolls" onclick="event.stopPropagation();downloadArtwork(this)">🏷️<span class="thumb-dl">⬇</span><span class="proof-tick">✓</span></div></td>
-              <td class="tbl-id"><span class="indent">↳</span>SS-1042</td>
-              <td class="tbl-cust">Roll labels</td>
-              <td><span class="src shopify">Shopify</span></td>
-              <td>Labels on rolls</td><td>90 × 60 mm</td><td>2,000</td>
-              <td>10 Jun</td><td style="color:#B23E27;font-weight:700">13 Jun</td><td>Road</td>
-              <td><span class="chip new">New</span></td>
-            </tr>
-
-            <!-- CHILD 2: Individual stickers -->
-            <tr class="grp-child" data-group="4042" data-status="new" data-product="individual" data-placed="20240610" data-due="20240613" data-dueday="thu" onclick="openJobFromRow(this,'production')">
-              <td onclick="event.stopPropagation()"><input type="checkbox" class="row-check grp-check" data-group="4042" onchange="rowCheckAuto(this)"></td>
-              <td><button class="prio-btn prio-off" onclick="event.stopPropagation();togglePrio(this)" title="Set priority">⚡</button></td>
-              <td class="thumb-cell"><div class="row-thumb individual" onclick="event.stopPropagation();downloadArtwork(this)">⭐<span class="thumb-dl">⬇</span><span class="proof-tick">✓</span></div></td>
-              <td class="tbl-id"><span class="indent">↳</span>SS-1042b</td>
-              <td class="tbl-cust">Individual stickers</td>
-              <td><span class="src shopify">Shopify</span></td>
-              <td>Individual stickers</td><td>70 mm</td><td>500</td>
-              <td>10 Jun</td><td>13 Jun</td><td>Road</td>
-              <td><span class="chip new">New</span></td>
-            </tr>
-
-            <!-- GROUP ACTION ROW -->
-            <tr class="grp-action-row" data-group="4042">
-              <td colspan="12">
-                <div class="grp-actions">
-                  <span class="grp-label">Order #4042 · 2 jobs · 2,500 total units</span>
-                  <button class="btn-pack" onclick="event.stopPropagation();bulkPackGroup('4042',2)">📦 Pack all 2 jobs</button>
-                  <button class="btn-grp-status" onclick="event.stopPropagation();changeGroupStatus('4042','qa',2)">Move all → QA &amp; Packing</button>
-                  <button class="btn-grp-status" onclick="event.stopPropagation();changeGroupStatus('4042','print',2)">Move all → Print</button>
-                </div>
-              </td>
-            </tr>
-            <tr class="prio-auto" data-status="revision" data-product="rolls" data-placed="20240608" data-due="20240611" data-dueday="tue" onclick="openJobFromRow(this,'production')">
-              <td onclick="event.stopPropagation()"><input type="checkbox" class="row-check" onchange="rowCheckAuto(this)"></td>
-              <td><button class="prio-btn prio-red" onclick="event.stopPropagation();togglePrio(this)" title="Auto-priority: overdue">⚡</button></td>
-              <td class="thumb-cell"><div class="row-thumb rolls" onclick="event.stopPropagation();downloadArtwork(this)">🏷️<span class="thumb-dl">⬇</span><span class="proof-tick">✓</span></div></td>
-              <td class="tbl-id">SS-1039</td>
-              <td class="tbl-cust">Hartley Hot Sauce</td>
-              <td><span class="src ig">Instagram</span></td>
-              <td>Roll labels</td><td>80×80mm</td><td>1,500</td>
-              <td>8 Jun</td><td style="color:#B23E27;font-weight:700">⚠ 11 Jun</td><td>Road</td>
-              <td><span class="chip revision">Artwork Revision</span></td>
-            </tr>
-            <tr class="prio-manual" data-status="print" data-product="rolls" data-placed="20240605" data-due="20240613" data-dueday="thu" onclick="openJobFromRow(this,'production')">
-              <td onclick="event.stopPropagation()"><input type="checkbox" class="row-check" onchange="rowCheckAuto(this)"></td>
-              <td><button class="prio-btn prio-on" onclick="event.stopPropagation();togglePrio(this)" title="Priority on · click to remove">⚡</button></td>
-              <td class="thumb-cell"><div class="row-thumb rolls" onclick="event.stopPropagation();downloadArtwork(this)">🏷️<span class="thumb-dl">⬇</span><span class="proof-tick">✓</span></div></td>
-              <td class="tbl-id">SS-1028</td>
-              <td class="tbl-cust">Sunday Roasters</td>
-              <td><span class="src shopify">Shopify</span></td>
-              <td>Roll labels</td><td>90×60mm</td><td>4,000</td>
-              <td>5 Jun</td><td>13 Jun</td><td>Road</td>
-              <td><span class="chip print">Print</span></td>
-
-            </tr>
-            <tr data-status="prepress" data-product="individual" data-placed="20240610" data-due="20240612" data-dueday="wed" onclick="openJobFromRow(this,'production')">
-              <td onclick="event.stopPropagation()"><input type="checkbox" class="row-check" onchange="rowCheckAuto(this)"></td>
-              <td><button class="prio-btn prio-off" onclick="event.stopPropagation();togglePrio(this)" title="Set as priority">⚡</button></td>
-              <td class="thumb-cell"><div class="row-thumb individual" onclick="event.stopPropagation();downloadArtwork(this)">⭐<span class="thumb-dl">⬇</span><span class="proof-tick">✓</span></div></td>
-              <td class="tbl-id">SS-1041</td>
-              <td class="tbl-cust">Tilly's Candles</td>
-              <td><span class="src email">Email</span></td>
-              <td>Individual stickers</td><td>70mm</td><td>500</td>
-              <td>10 Jun</td><td>12 Jun</td><td>Courier</td>
-              <td><span class="chip prepress">Prepress</span></td>
-            </tr>
-            <tr data-status="awaiting" data-product="sheets" data-placed="20240610" data-due="20240612" data-dueday="wed" onclick="openJobFromRow(this,'production')">
-              <td onclick="event.stopPropagation()"><input type="checkbox" class="row-check" onchange="rowCheckAuto(this)"></td>
-              <td><button class="prio-btn prio-off" onclick="event.stopPropagation();togglePrio(this)" title="Set as priority">⚡</button></td>
-              <td class="thumb-cell"><div class="row-thumb sheets" onclick="event.stopPropagation();downloadArtwork(this)">📋<span class="thumb-dl">⬇</span><span class="proof-tick">✓</span></div></td>
-              <td class="tbl-id">SS-1040</td>
-              <td class="tbl-cust">North St Coffee</td>
-              <td><span class="src shopify">Shopify</span></td>
-              <td>Sticker sheets</td><td>A5</td><td>1,000</td>
-              <td>10 Jun</td><td>12 Jun</td><td>Road</td>
-              <td><span class="chip awaiting">Awaiting Approval</span></td>
-            </tr>
-            <tr data-status="cut" data-product="sheets" data-placed="20240608" data-due="20240612" data-dueday="wed" onclick="openJobFromRow(this,'production')">
-              <td onclick="event.stopPropagation()"><input type="checkbox" class="row-check" onchange="rowCheckAuto(this)"></td>
-              <td><button class="prio-btn prio-off" onclick="event.stopPropagation();togglePrio(this)" title="Set as priority">⚡</button></td>
-              <td class="thumb-cell"><div class="row-thumb sheets" onclick="event.stopPropagation();downloadArtwork(this)">📋<span class="thumb-dl">⬇</span><span class="proof-tick">✓</span></div></td>
-              <td class="tbl-id">SS-1027</td>
-              <td class="tbl-cust">Vela Studio</td>
-              <td><span class="src fb">Facebook</span></td>
-              <td>Sticker sheets</td><td>A4</td><td>600</td>
-              <td>8 Jun</td><td>12 Jun</td><td>Road</td>
-              <td><span class="chip cut">Cut</span></td>
-            </tr>
-            <tr data-status="qa" data-product="individual" data-placed="20240606" data-due="20240614" data-dueday="fri" onclick="openJobFromRow(this,'production')">
-              <td onclick="event.stopPropagation()"><input type="checkbox" class="row-check" onchange="rowCheckAuto(this)"></td>
-              <td><button class="prio-btn prio-off" onclick="event.stopPropagation();togglePrio(this)" title="Set as priority">⚡</button></td>
-              <td class="thumb-cell"><div class="row-thumb individual" onclick="event.stopPropagation();downloadArtwork(this)">⭐<span class="thumb-dl">⬇</span><span class="proof-tick">✓</span></div></td>
-              <td class="tbl-id">SS-1022</td>
-              <td class="tbl-cust">Ridgeline Apparel</td>
-              <td><span class="src email">Email</span></td>
-              <td>Individual stickers</td><td>60mm</td><td>2,500</td>
-              <td>6 Jun</td><td>14 Jun</td><td>Pickup</td>
-              <td><span class="chip qa">QA & Packing</span></td>
-            </tr>
-            <tr data-status="outsource" data-product="rolls" data-placed="20240604" data-due="20240615" data-dueday="sat" onclick="openJobFromRow(this,'production')">
-              <td onclick="event.stopPropagation()"><input type="checkbox" class="row-check" onchange="rowCheckAuto(this)"></td>
-              <td><button class="prio-btn prio-off" onclick="event.stopPropagation();togglePrio(this)" title="Set as priority">⚡</button></td>
-              <td class="thumb-cell"><div class="row-thumb rolls" onclick="event.stopPropagation();downloadArtwork(this)">🏷️<span class="thumb-dl">⬇</span><span class="proof-tick">✓</span></div></td>
-              <td class="tbl-id">SS-1020</td>
-              <td class="tbl-cust">Coastal Print Co.</td>
-              <td><span class="src shopify">Shopify</span></td>
-              <td>Roll labels</td><td>100×70mm</td><td>5,000</td>
-              <td>4 Jun</td><td>15 Jun</td><td>Courier</td>
-              <td><span class="chip outsource">Outsource</span></td>
-            </tr>
-            <tr data-status="pickup" data-product="rolls" data-placed="20240603" data-due="20240605" data-dueday="tue" onclick="openJobFromRow(this,'production')">
-              <td onclick="event.stopPropagation()"><input type="checkbox" class="row-check" onchange="rowCheckAuto(this)"></td>
-              <td><button class="prio-btn prio-off" onclick="event.stopPropagation();togglePrio(this)" title="Set as priority">⚡</button></td>
-              <td class="thumb-cell"><div class="row-thumb rolls" onclick="event.stopPropagation();downloadArtwork(this)">🏷️<span class="thumb-dl">⬇</span><span class="proof-tick">✓</span></div></td>
-              <td class="tbl-id">SS-1018</td>
-              <td class="tbl-cust">Blue Mountain Oils</td>
-              <td><span class="src shopify">Shopify</span></td>
-              <td>Roll labels</td><td>80×50mm</td><td>800</td>
-              <td>3 Jun</td><td>5 Jun</td><td>Pickup</td>
-              <td><span class="chip pickup">Awaiting Pickup</span></td>
-            </tr>
-            <tr style="opacity:.65" data-status="dispatched" data-product="rolls" data-placed="20240602" data-due="20240611" data-dueday="tue" onclick="openJobFromRow(this,'production')">
-              <td onclick="event.stopPropagation()"><input type="checkbox" class="row-check" onchange="rowCheckAuto(this)"></td>
-              <td>—</td>
-              <td class="tbl-id">SS-1015</td>
-              <td class="tbl-cust">Coastal Candle Co.</td>
-              <td><span class="src shopify">Shopify</span></td>
-              <td>Roll labels</td><td>70×50mm</td><td>1,000</td>
-              <td>2 Jun</td><td>11 Jun</td><td>Road</td>
-              <td><span class="chip dispatched">Dispatched</span></td>
-            </tr>
+            <tr><td colspan="14" style="text-align:center;padding:48px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink-3)">
+              <div style="margin-bottom:8px;font-size:24px">⏳</div>
+              Connecting to board…
+            </td></tr>
           </tbody>
         </table>
       </div>
       </div>
 
     <!-- FRONTEND CARDS (mobile) -->
-    <div id="fCardView" class="auto-cards" style="display:none">
-
-      <div class="grouplabel" style="color:var(--red)">🔴 Priority · action needed</div>
-
-      <div class="fcard prio-auto" data-status="revision" data-product="rolls" onclick="openJobFromRow(this)">
-        <div class="fc-head">
-          <div class="fc-thumb" style="background:linear-gradient(135deg,#C84B2A,#7A2010)">🌶️</div>
-          <div class="fc-headtext">
-            <div style="display:flex;gap:6px;align-items:center;margin-bottom:3px;flex-wrap:wrap">
-              <span style="font-family:'Inter Tight';font-size:11px;font-weight:700;color:var(--lilac)">SS-1039</span>
-              <span class="chip revision" style="font-size:10px">Artwork Revision</span>
-              <span class="src ig">Instagram</span>
-            </div>
-            <div class="fc-make">1,500 · Roll labels</div>
-            <div class="fc-cust">Hartley Hot Sauce</div>
-          </div>
-        </div>
-        <div class="fc-sg">
-          <div><div class="k">Size</div><div class="v">80 × 80 mm</div></div>
-          <div><div class="k">Material</div><div class="v">Gloss paper</div></div>
-          <div><div class="k">Shape</div><div class="v">Rectangle</div></div>
-          <div><div class="k">Laminate</div><div class="v">Matte</div></div>
-        </div>
-        <div class="fc-foot"><span class="fc-due late">⚡ Overdue · 11 Jun</span><span style="font-family:'Inter Tight';font-size:11px;color:var(--ink-2)">Road · StarTrack</span></div>
-      </div>
-
-      <div class="fcard prio-manual" data-status="print" data-product="rolls" onclick="openJobFromRow(this)">
-        <div class="fc-head">
-          <div class="fc-thumb" style="background:linear-gradient(135deg,#5C3A22,#2D1A0E)">☕</div>
-          <div class="fc-headtext">
-            <div style="display:flex;gap:6px;align-items:center;margin-bottom:3px;flex-wrap:wrap">
-              <span style="font-family:'Inter Tight';font-size:11px;font-weight:700;color:var(--lilac)">SS-1028</span>
-              <span class="chip print" style="font-size:10px">Print</span>
-              <span class="src shopify">Shopify</span>
-            </div>
-            <div class="fc-make">4,000 · Roll labels</div>
-            <div class="fc-cust">Sunday Roasters</div>
-          </div>
-        </div>
-        <div class="fc-sg">
-          <div><div class="k">Size</div><div class="v">90 × 60 mm</div></div>
-          <div><div class="k">Material</div><div class="v">Gloss paper</div></div>
-          <div><div class="k">Shape</div><div class="v">Rounded rect</div></div>
-          <div><div class="k">Laminate</div><div class="v">Matte</div></div>
-        </div>
-        <div class="fc-foot"><span class="fc-due">📅 Due 13 Jun</span><span style="font-family:'Inter Tight';font-size:11px;color:var(--ink-2)">Road · StarTrack</span></div>
-      </div>
-
-      <div class="grouplabel">Needs attention</div>
-
-      <div class="fcard prio-auto" data-status="new" data-product="rolls" onclick="openJobFromRow(this)">
-        <div class="fc-head">
-          <div class="fc-thumb" style="background:linear-gradient(135deg,#9A6B45,#5C3A22)">🍺</div>
-          <div class="fc-headtext">
-            <div style="display:flex;gap:6px;align-items:center;margin-bottom:3px;flex-wrap:wrap">
-              <span style="font-family:'Inter Tight';font-size:11px;font-weight:700;color:var(--lilac)">SS-1042</span>
-              <span class="chip new" style="font-size:10px">New</span>
-              <span class="src shopify">Shopify</span>
-            </div>
-            <div class="fc-make">2,000 · Roll labels</div>
-            <div class="fc-cust">Bayside Brewing Co.</div>
-          </div>
-        </div>
-        <div class="fc-sg">
-          <div><div class="k">Size</div><div class="v">90 × 60 mm</div></div>
-          <div><div class="k">Material</div><div class="v">Gloss paper</div></div>
-          <div><div class="k">Shape</div><div class="v">Rounded rect</div></div>
-          <div><div class="k">Laminate</div><div class="v">Matte</div></div>
-        </div>
-        <div class="fc-foot"><span class="fc-due late">⚡ Due 13 Jun</span><span style="font-family:'Inter Tight';font-size:11px;color:var(--ink-2)">Road · StarTrack</span></div>
-      </div>
-
-      <div class="fcard" data-status="prepress" data-product="individual" onclick="openJobFromRow(this)">
-        <div class="fc-head">
-          <div class="fc-thumb" style="background:linear-gradient(135deg,#E8B4D0,#9E4A72)">🕯️</div>
-          <div class="fc-headtext">
-            <div style="display:flex;gap:6px;align-items:center;margin-bottom:3px;flex-wrap:wrap">
-              <span style="font-family:'Inter Tight';font-size:11px;font-weight:700;color:var(--lilac)">SS-1041</span>
-              <span class="chip prepress" style="font-size:10px">Prepress</span>
-              <span class="src email">Email</span>
-            </div>
-            <div class="fc-make">500 · Individual stickers</div>
-            <div class="fc-cust">Tilly's Candles</div>
-          </div>
-        </div>
-        <div class="fc-sg">
-          <div><div class="k">Size</div><div class="v">70 mm</div></div>
-          <div><div class="k">Material</div><div class="v">White vinyl</div></div>
-          <div><div class="k">Shape</div><div class="v">Circle</div></div>
-          <div><div class="k">Laminate</div><div class="v">Gloss</div></div>
-        </div>
-        <div class="fc-foot"><span class="fc-due">📅 Due 12 Jun</span><span style="font-family:'Inter Tight';font-size:11px;color:var(--ink-2)">Courier · Titan</span></div>
-      </div>
-
-      <div class="grouplabel">In progress</div>
-
-      <div class="fcard" data-status="awaiting" data-product="sheets" onclick="openJobFromRow(this)">
-        <div class="fc-head">
-          <div class="fc-thumb" style="background:linear-gradient(135deg,#3A2C1A,#7A5A28)">☕</div>
-          <div class="fc-headtext">
-            <div style="display:flex;gap:6px;align-items:center;margin-bottom:3px;flex-wrap:wrap">
-              <span style="font-family:'Inter Tight';font-size:11px;font-weight:700;color:var(--lilac)">SS-1040</span>
-              <span class="chip awaiting" style="font-size:10px">Awaiting Approval</span>
-              <span class="src shopify">Shopify</span>
-            </div>
-            <div class="fc-make">1,000 · Sticker sheets</div>
-            <div class="fc-cust">North St Coffee</div>
-          </div>
-        </div>
-        <div class="fc-sg">
-          <div><div class="k">Size</div><div class="v">A5</div></div>
-          <div><div class="k">Material</div><div class="v">Paper</div></div>
-          <div><div class="k">Shape</div><div class="v">Rectangle</div></div>
-          <div><div class="k">Laminate</div><div class="v">None</div></div>
-        </div>
-        <div class="fc-foot"><span class="fc-due">📅 Due 12 Jun</span><span style="font-family:'Inter Tight';font-size:11px;color:var(--ink-2)">Road · StarTrack</span></div>
-      </div>
-
-      <div class="fcard" data-status="cut" data-product="sheets" onclick="openJobFromRow(this)">
-        <div class="fc-head">
-          <div class="fc-thumb" style="background:linear-gradient(135deg,#2C3E50,#8E44AD)">🎨</div>
-          <div class="fc-headtext">
-            <div style="display:flex;gap:6px;align-items:center;margin-bottom:3px;flex-wrap:wrap">
-              <span style="font-family:'Inter Tight';font-size:11px;font-weight:700;color:var(--lilac)">SS-1027</span>
-              <span class="chip cut" style="font-size:10px">Cut</span>
-              <span class="src fb">Facebook</span>
-            </div>
-            <div class="fc-make">600 · Sticker sheets</div>
-            <div class="fc-cust">Vela Studio</div>
-          </div>
-        </div>
-        <div class="fc-sg">
-          <div><div class="k">Size</div><div class="v">A4</div></div>
-          <div><div class="k">Material</div><div class="v">Paper</div></div>
-          <div><div class="k">Shape</div><div class="v">Rectangle</div></div>
-          <div><div class="k">Laminate</div><div class="v">Matte</div></div>
-        </div>
-        <div class="fc-foot"><span class="fc-due">📅 Due 12 Jun</span><span style="font-family:'Inter Tight';font-size:11px;color:var(--ink-2)">Road · StarTrack</span></div>
-      </div>
-
-      <div class="fcard" data-status="qa" data-product="individual" onclick="openJobFromRow(this)">
-        <div class="fc-head">
-          <div class="fc-thumb" style="background:linear-gradient(135deg,#1A3A2A,#2E7D52)">🏔️</div>
-          <div class="fc-headtext">
-            <div style="display:flex;gap:6px;align-items:center;margin-bottom:3px;flex-wrap:wrap">
-              <span style="font-family:'Inter Tight';font-size:11px;font-weight:700;color:var(--lilac)">SS-1022</span>
-              <span class="chip qa" style="font-size:10px">QA & Packing</span>
-              <span class="src email">Email</span>
-            </div>
-            <div class="fc-make">2,500 · Individual stickers</div>
-            <div class="fc-cust">Ridgeline Apparel</div>
-          </div>
-        </div>
-        <div class="fc-sg">
-          <div><div class="k">Size</div><div class="v">60 mm</div></div>
-          <div><div class="k">Material</div><div class="v">White vinyl</div></div>
-          <div><div class="k">Shape</div><div class="v">Custom</div></div>
-          <div><div class="k">Laminate</div><div class="v">Gloss</div></div>
-        </div>
-        <div class="fc-foot"><span class="fc-due">📅 Due 14 Jun</span><span style="font-family:'Inter Tight';font-size:11px;color:#007A4A;font-weight:700">📦 Pickup</span></div>
-      </div>
-
-    </div>
+        <div id="fCardView" class="fcard-grid" style="display:none"></div>
 </section>
 
 <!-- ====== PRODUCTION ====== -->
@@ -1558,9 +1302,12 @@ td.thumb-cell{padding:6px 4px 6px 8px!important;width:44px}
         <option value="pickedup">Picked Up</option>
         <option value="hold">On Hold</option>
         <option value="dispatched">Dispatched</option>
+        <option value="cancelled">Cancelled</option>
+        <option value="refunded">Refunded</option>
       </select>
       <select class="fsel" id="pSort" onchange="applyProdFilters()">
         <option value="due" selected>Due: soonest</option>
+        <option value="product">Sort by product</option>
         <option value="newest">Newest first</option>
         <option value="oldest">Oldest first</option>
         <option value="priority">Priority first</option>
@@ -1610,182 +1357,17 @@ td.thumb-cell{padding:6px 4px 6px 8px!important;width:44px}
             </tr>
           </thead>
           <tbody>
-            <!-- GROUP PARENT: Order #4042 (production) -->
-            <tr class="grp-parent prio-auto" data-product="rolls" data-status="prepress" data-station="prepress" data-due="20240613" data-placed="20240610" data-dueday="thu" onclick="toggleGroup('p4042')">
-              <td onclick="event.stopPropagation()"><input type="checkbox" class="row-check" onchange="rowCheck(this,'pTable')"></td>
-              <td><button class="prio-btn prio-red" onclick="event.stopPropagation();togglePrio(this)" title="Auto-priority">⚡</button></td>
-              <td class="thumb-cell"><div class="row-thumb rolls" onclick="event.stopPropagation();downloadArtwork(this)">🏷️<span class="thumb-dl">⬇</span><span class="proof-tick">✓</span></div></td>
-              <td class="tbl-id"><button class="grp-toggle" id="grp-toggle-p4042">▶</button>#4042</td>
-              <td class="tbl-cust">Bayside Brewing<span class="grp-badge">2 jobs</span></td>
-              <td>Mixed</td><td>—</td><td>—</td><td>2,500 total</td>
-              <td>—</td><td>—</td><td style="color:#B23E27;font-weight:700">⚡ 13 Jun</td><td>Road</td>
-              <td><span class="chip new" style="font-size:10px">2 statuses</span></td>
-            </tr>
-
-            <!-- CHILD 1: Roll labels (Prepress) -->
-            <tr class="grp-child prio-auto" data-group="p4042" data-product="rolls" data-status="prepress" data-station="prepress" data-due="20240613" data-placed="20240610" data-dueday="thu" onclick="openJobFromRow(this,'production')">
-              <td onclick="event.stopPropagation()"><input type="checkbox" class="row-check grp-check" data-group="p4042" onchange="rowCheck(this,'pTable')"></td>
-              <td><button class="prio-btn prio-red" onclick="event.stopPropagation();togglePrio(this)" title="Auto-priority">⚡</button></td>
-              <td class="thumb-cell"><div class="row-thumb rolls" onclick="event.stopPropagation();downloadArtwork(this)">🏷️<span class="thumb-dl">⬇</span><span class="proof-tick">✓</span></div></td>
-              <td class="tbl-id"><span class="indent">↳</span>SS-1042</td>
-              <td class="tbl-cust">Roll labels</td>
-              <td>Labels on rolls</td><td>Rounded rect</td><td>90×60mm</td><td>2,000</td>
-              <td>Gloss paper</td><td>Matte</td><td style="color:#B23E27;font-weight:700">13 Jun</td><td>Road</td>
-              <td><div class="stat-wrap"><button class="snav" onclick="event.stopPropagation();navStat(this,-1)">&#8249;</button><span class="chip prepress" data-statkey="prepress">Prepress</span><button class="snav" onclick="event.stopPropagation();navStat(this,1)">&#8250;</button></div></td>
-            </tr>
-
-            <!-- CHILD 2: Individual stickers (New) -->
-            <tr class="grp-child" data-group="p4042" data-product="individual" data-status="new" data-station="new" data-due="20240613" data-placed="20240610" data-dueday="thu" onclick="openJobFromRow(this,'production')">
-              <td onclick="event.stopPropagation()"><input type="checkbox" class="row-check grp-check" data-group="p4042" onchange="rowCheck(this,'pTable')"></td>
-              <td><button class="prio-btn prio-off" onclick="event.stopPropagation();togglePrio(this)" title="Set priority">⚡</button></td>
-              <td class="thumb-cell"><div class="row-thumb individual" onclick="event.stopPropagation();downloadArtwork(this)">⭐<span class="thumb-dl">⬇</span><span class="proof-tick">✓</span></div></td>
-              <td class="tbl-id"><span class="indent">↳</span>SS-1042b</td>
-              <td class="tbl-cust">Individual stickers</td>
-              <td>Individual stickers</td><td>Circle</td><td>70mm</td><td>500</td>
-              <td>White vinyl</td><td>Gloss</td><td>13 Jun</td><td>Road</td>
-              <td><div class="stat-wrap"><button class="snav" onclick="event.stopPropagation();navStat(this,-1)">&#8249;</button><span class="chip new" data-statkey="new">New</span><button class="snav" onclick="event.stopPropagation();navStat(this,1)">&#8250;</button></div></td>
-            </tr>
-
-            <!-- GROUP ACTION ROW (production) -->
-            <tr class="grp-action-row" data-group="p4042">
-              <td colspan="13">
-                <div class="grp-actions">
-                  <span class="grp-label">Order #4042 · 2 jobs · 2,500 total units</span>
-                  <button class="btn-pack" onclick="event.stopPropagation();bulkPackGroup('p4042',2)">📦 Pack all 2 jobs</button>
-                  <button class="btn-grp-status" onclick="event.stopPropagation();changeGroupStatus('p4042','print',2)">Move all → Print</button>
-                  <button class="btn-grp-status" onclick="event.stopPropagation();changeGroupStatus('p4042','qa',2)">Move all → QA &amp; Pack</button>
-                </div>
-              </td>
-            </tr>
-            <tr class="prio-auto" data-product="rolls" data-status="revision" data-station="revision" data-due="20240611" data-placed="20240608" data-dueday="tue" onclick="openJobFromRow(this,'production')">
-              <td onclick="event.stopPropagation()"><input type="checkbox" class="row-check" onchange="rowCheck(this,'pTable')"></td>
-              <td><button class="prio-btn prio-red" onclick="event.stopPropagation();togglePrio(this)" title="Auto-priority: overdue">⚡</button></td>
-              <td class="thumb-cell"><div class="row-thumb rolls" onclick="event.stopPropagation();downloadArtwork(this)">🏷️<span class="thumb-dl">⬇</span><span class="proof-tick">✓</span></div></td>
-              <td class="tbl-id">SS-1039</td><td class="tbl-cust">Hartley Hot Sauce</td>
-              <td>Roll labels</td><td>Rectangle</td><td>80×80mm</td><td>1,500</td>
-              <td>Gloss paper</td><td>Matte</td><td style="color:#B23E27;font-weight:700">⚠ 11 Jun</td><td>Road</td>
-              <td><div class="stat-wrap"><button class="snav" onclick="event.stopPropagation();navStat(this,-1)" title="Previous status">&#8249;</button><span class="chip revision" data-statkey="revision">Artwork Revision</span><button class="snav" onclick="event.stopPropagation();navStat(this,1)" title="Next status">&#8250;</button></div></td>
-            </tr>
-            <tr class="prio-manual" data-product="rolls" data-status="print" data-station="print" data-due="20240613" data-placed="20240605" data-dueday="thu" onclick="openJobFromRow(this,'production')">
-              <td onclick="event.stopPropagation()"><input type="checkbox" class="row-check" onchange="rowCheck(this,'pTable')"></td>
-              <td><button class="prio-btn prio-on" onclick="event.stopPropagation();togglePrio(this)" title="Priority on · click to remove">⚡</button></td>
-              <td class="thumb-cell"><div class="row-thumb rolls" onclick="event.stopPropagation();downloadArtwork(this)">🏷️<span class="thumb-dl">⬇</span><span class="proof-tick">✓</span></div></td>
-              <td class="tbl-id">SS-1028</td><td class="tbl-cust">Sunday Roasters</td>
-              <td>Roll labels</td><td>Rounded rect</td><td>90×60mm</td><td>4,000</td>
-              <td>Gloss paper</td><td>Matte</td><td>13 Jun</td><td>Road</td>
-              <td><div class="stat-wrap"><button class="snav" onclick="event.stopPropagation();navStat(this,-1)" title="Previous status">&#8249;</button><span class="chip print" data-statkey="print">Print</span><button class="snav" onclick="event.stopPropagation();navStat(this,1)" title="Next status">&#8250;</button></div></td>
-            </tr>
-            <tr data-product="sheets" data-status="awaiting" data-station="awaiting" data-due="20240612" data-placed="20240610" data-dueday="wed" onclick="openJobFromRow(this,'production')">
-              <td onclick="event.stopPropagation()"><input type="checkbox" class="row-check" onchange="rowCheck(this,'pTable')"></td>
-              <td><button class="prio-btn prio-off" onclick="event.stopPropagation();togglePrio(this)" title="Set as priority">⚡</button></td>
-              <td class="thumb-cell"><div class="row-thumb sheets" onclick="event.stopPropagation();downloadArtwork(this)">📋<span class="thumb-dl">⬇</span><span class="proof-tick">✓</span></div></td>
-              <td class="tbl-id">SS-1040</td><td class="tbl-cust">North St Coffee</td>
-              <td>Sticker sheets</td><td>Rectangle</td><td>A5</td><td>1,000</td>
-              <td>Paper</td><td>None</td><td>12 Jun</td><td>Road</td>
-              <td><div class="stat-wrap"><button class="snav" onclick="event.stopPropagation();navStat(this,-1)" title="Previous status">&#8249;</button><span class="chip awaiting" data-statkey="awaiting">Awaiting</span><button class="snav" onclick="event.stopPropagation();navStat(this,1)" title="Next status">&#8250;</button></div></td>
-            </tr>
-            <tr data-product="sheets" data-status="cut" data-station="cut" data-due="20240612" data-placed="20240608" data-dueday="wed" onclick="openJobFromRow(this,'production')">
-              <td onclick="event.stopPropagation()"><input type="checkbox" class="row-check" onchange="rowCheck(this,'pTable')"></td>
-              <td><button class="prio-btn prio-off" onclick="event.stopPropagation();togglePrio(this)" title="Set as priority">⚡</button></td>
-              <td class="thumb-cell"><div class="row-thumb sheets" onclick="event.stopPropagation();downloadArtwork(this)">📋<span class="thumb-dl">⬇</span><span class="proof-tick">✓</span></div></td>
-              <td class="tbl-id">SS-1027</td><td class="tbl-cust">Vela Studio</td>
-              <td>Sticker sheets</td><td>Rectangle</td><td>A4</td><td>600</td>
-              <td>Paper</td><td>Matte</td><td>12 Jun</td><td>Road</td>
-              <td><div class="stat-wrap"><button class="snav" onclick="event.stopPropagation();navStat(this,-1)" title="Previous status">&#8249;</button><span class="chip cut" data-statkey="cut">Cut</span><button class="snav" onclick="event.stopPropagation();navStat(this,1)" title="Next status">&#8250;</button></div></td>
-            </tr>
-            <tr data-product="individual" data-status="qa" data-station="qa" data-due="20240614" data-placed="20240606" data-dueday="fri" onclick="openJobFromRow(this,'production')">
-              <td onclick="event.stopPropagation()"><input type="checkbox" class="row-check" onchange="rowCheck(this,'pTable')"></td>
-              <td><button class="prio-btn prio-off" onclick="event.stopPropagation();togglePrio(this)" title="Set as priority">⚡</button></td>
-              <td class="thumb-cell"><div class="row-thumb individual" onclick="event.stopPropagation();downloadArtwork(this)">⭐<span class="thumb-dl">⬇</span><span class="proof-tick">✓</span></div></td>
-              <td class="tbl-id">SS-1022</td><td class="tbl-cust">Ridgeline Apparel</td>
-              <td>Individual stickers</td><td>Custom</td><td>60mm</td><td>2,500</td>
-              <td>White vinyl</td><td>Gloss</td><td>14 Jun</td><td>Pickup</td>
-              <td><div class="stat-wrap"><button class="snav" onclick="event.stopPropagation();navStat(this,-1)" title="Previous status">&#8249;</button><span class="chip qa" data-statkey="qa">QA & Pack</span><button class="snav" onclick="event.stopPropagation();navStat(this,1)" title="Next status">&#8250;</button></div></td>
-            </tr>
-            <tr data-product="rolls" data-status="outsource" data-station="outsource" data-due="20240615" data-placed="20240604" data-dueday="sat" onclick="openJobFromRow(this,'production')">
-              <td onclick="event.stopPropagation()"><input type="checkbox" class="row-check" onchange="rowCheck(this,'pTable')"></td>
-              <td><button class="prio-btn prio-off" onclick="event.stopPropagation();togglePrio(this)" title="Set as priority">⚡</button></td>
-              <td class="thumb-cell"><div class="row-thumb rolls" onclick="event.stopPropagation();downloadArtwork(this)">🏷️<span class="thumb-dl">⬇</span><span class="proof-tick">✓</span></div></td>
-              <td class="tbl-id">SS-1020</td><td class="tbl-cust">Coastal Print Co.</td>
-              <td>Roll labels</td><td>Rectangle</td><td>100×70mm</td><td>5,000</td>
-              <td>Clear vinyl</td><td>None</td><td>15 Jun</td><td>Courier</td>
-              <td><div class="stat-wrap"><button class="snav" onclick="event.stopPropagation();navStat(this,-1)" title="Previous status">&#8249;</button><span class="chip outsource" data-statkey="outsource">Outsource</span><button class="snav" onclick="event.stopPropagation();navStat(this,1)" title="Next status">&#8250;</button></div></td>
-            </tr>
+            <tr><td colspan="14" style="text-align:center;padding:48px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink-3)">
+              <div style="margin-bottom:8px;font-size:24px">⏳</div>
+              Connecting to board…
+            </td></tr>
           </tbody>
         </table>
       </div>
       </div>
 
     <!-- PRODUCTION CARDS (mobile) -->
-    <div id="pCardView" class="auto-cards" style="display:none">
-      <div class="grouplabel">🔴 Priority · action needed</div>
-      <div class="fcard prio-auto" data-status="prepress" data-station="prepress" data-product="rolls" onclick="openJobFromRow(this,'production')">
-        <div class="fc-head">
-          <div class="fc-thumb" style="background:linear-gradient(135deg,#9A6B45,#5C3A22)">☕</div>
-          <div class="fc-headtext">
-            <div style="display:flex;gap:6px;align-items:center;margin-bottom:3px;flex-wrap:wrap">
-              <span style="font-family:'Inter Tight';font-size:11px;font-weight:700;color:var(--lilac)">SS-1042</span>
-              <span class="chip prepress" style="font-size:10px">Prepress</span>
-            </div>
-            <div class="fc-make">2,000 · Roll labels</div>
-            <div class="fc-cust">Bayside Brewing Co.</div>
-          </div>
-        </div>
-        <div class="fc-sg">
-          <div><div class="k">Size</div><div class="v">90 × 60 mm</div></div>
-          <div><div class="k">Material</div><div class="v">Gloss paper</div></div>
-          <div><div class="k">Shape</div><div class="v">Rounded rect</div></div>
-          <div><div class="k">Laminate</div><div class="v">Matte</div></div>
-        </div>
-        <div class="fc-foot"><span class="fc-due late">⚡ Due 13 Jun</span><span class="src shopify">Shopify</span></div>
-        <div class="fc-acts">
-          <button class="btn btn-ghost small" onclick="event.stopPropagation();alert('Download artwork')">⬇ Artwork</button>
-          <button class="btn btn-ghost small" onclick="event.stopPropagation();alert('Show cutline layer')">✂ Cutline</button>
-        </div>
-        <button class="btn btn-honey big" onclick="event.stopPropagation();openJob()">Upload proof & send →</button>
-      </div>
-
-      <div class="grouplabel">QA & Packing</div>
-      <div class="fcard" data-status="qa" data-station="qa" data-product="individual" onclick="openJobFromRow(this,'production')">
-        <div class="fc-head">
-          <div class="fc-thumb" style="background:linear-gradient(135deg,#3FA76A,#1B3A2E)">🏔️</div>
-          <div class="fc-headtext">
-            <div style="display:flex;gap:6px;align-items:center;margin-bottom:3px;flex-wrap:wrap">
-              <span style="font-family:'Inter Tight';font-size:11px;font-weight:700;color:var(--lilac)">SS-1022</span>
-              <span class="chip qa" style="font-size:10px">QA & Pack</span>
-            </div>
-            <div class="fc-make">2,500 · Individual stickers</div>
-            <div class="fc-cust">Ridgeline Apparel</div>
-          </div>
-        </div>
-        <div class="fc-sg">
-          <div><div class="k">Size</div><div class="v">60 mm</div></div>
-          <div><div class="k">Material</div><div class="v">White vinyl</div></div>
-          <div><div class="k">Shape</div><div class="v">Custom</div></div>
-          <div><div class="k">Laminate</div><div class="v">Gloss</div></div>
-        </div>
-        <div class="fc-foot"><span class="fc-due">📅 Due 14 Jun</span><span class="src email">Email</span></div>
-        <div class="fc-acts">
-          <button class="btn btn-ghost small" onclick="event.stopPropagation();alert('Flag reprint: qty + reason → P&L')">⚑ Flag reprint</button>
-          <button class="btn btn-ghost small" onclick="event.stopPropagation();alert('Download artwork')">⬇ Artwork</button>
-        </div>
-        <div style="background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:12px;margin-top:4px">
-          <p style="font-family:'Inter Tight';font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);margin-bottom:9px">Dispatch</p>
-          <div class="dispatch-tabs">
-            <button class="active" onclick="event.stopPropagation();setDispatch2('delivery',this)">Road / Courier</button>
-            <button onclick="event.stopPropagation();setDispatch2('pickup',this)">Pickup</button>
-          </div>
-          <div id="dForm2">
-            <div class="rr"><label>Tracking number</label><input type="text" placeholder="e.g. 7C9F3A0012240"></div>
-            <button class="btn btn-honey big" onclick="event.stopPropagation();alert('Tracking pushed to Shopify → customer emailed → Dispatched')">Add tracking & dispatch →</button>
-          </div>
-          <div id="pForm2" style="display:none">
-            <div class="note amber"><b>AUTO EMAIL:</b> Customer emailed with pickup address and hours.</div>
-            <button class="btn btn-honey big" onclick="event.stopPropagation();alert('Customer emailed → Awaiting Pickup status')">Confirm ready for pickup →</button>
-          </div>
-        </div>
-      </div>
-    </div>
+        <div id="pCardView" class="fcard-grid" style="display:none"></div>
   </div>
 </div>
 </section>
@@ -1816,7 +1398,7 @@ td.thumb-cell{padding:6px 4px 6px 8px!important;width:44px}
   <div class="app-body">
     <button class="back-btn" onclick="go('frontend')">← Back to board</button>
 
-    <div class="jd-id" id="jdId">SS-1042 · Shopify #4042 · <span style="color:var(--green)">Paid ✓</span> · <span class="src shopify">Shopify</span></div>
+    <div class="jd-id" id="jdId"></div>
     <div class="jd-name" id="jdName">Bayside Brewing Co.</div>
 
     <!-- Customer details block -->
@@ -1847,7 +1429,19 @@ td.thumb-cell{padding:6px 4px 6px 8px!important;width:44px}
       </div>
     </div>
 
-    <div class="note purple" id="jdPartNote" style="margin-top:6px"><b>PART 1 OF 2 · ORDER #4042</b> · Sibling: 500 individual stickers (SS-1042b) · split by product</div>
+    <!-- Cancellation / refund banner -->
+    <div class="cancel-banner" id="cancelBanner">
+      <div class="cancel-banner-title" id="cancelBannerTitle">🚫 Order cancelled</div>
+      <div class="cancel-banner-detail" id="cancelBannerDetail"></div>
+    </div>
+
+    <!-- Sibling jobs panel — shows for split orders -->
+    <div class="sibling-panel" id="siblingPanel" style="display:none">
+      <div class="sibling-title">🔗 Split order — sibling jobs</div>
+      <div id="siblingCards"></div>
+    </div>
+
+    <div class="note purple" id="jdPartNote" style="display:none;margin-top:6px"></div>
 
     <div class="jd-status-wrap">
       <span class="jd-status-label">Status</span>
@@ -1871,6 +1465,8 @@ td.thumb-cell{padding:6px 4px 6px 8px!important;width:44px}
         <button class="jd-status-pill pickedup"  onclick="changeJobStatus('pickedup')">Picked Up</button>
         <button class="jd-status-pill hold"      onclick="changeJobStatus('hold')">On Hold</button>
         <button class="jd-status-pill dispatched" onclick="changeJobStatus('dispatched')">Dispatched</button>
+        <button class="jd-status-pill cancelled" onclick="manualCancelJob()">🚫 Cancelled</button>
+        <button class="jd-status-pill refunded" onclick="manualRefundJob()">💰 Refunded</button>
       </div>
     </div>
 
@@ -1975,6 +1571,28 @@ td.thumb-cell{padding:6px 4px 6px 8px!important;width:44px}
           <div style="font-family:'DM Sans',sans-serif;font-size:12px;color:#007A4A;margin-top:7px">Ready for pickup → notify customer. Picked up → mark collected, archived after 5 days.</div>
         </div>
       </div>
+
+      <!-- Road dispatch tracking panel — shown for road dispatch jobs -->
+      <div id="roadDispatchActions" style="display:none;margin-bottom:10px">
+        <div style="background:#EFF6FF;border:1.5px solid #3B82F6;border-radius:11px;padding:12px 14px">
+          <div style="font-family:'Inter Tight',sans-serif;font-size:11px;font-weight:700;color:#1D4ED8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">🚚 Road dispatch</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+            <input id="roadTrackingInput" type="text" placeholder="Tracking number"
+              style="padding:9px 11px;border:1.5px solid #BFDBFE;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;background:#fff">
+            <select id="roadCourierSelect" style="padding:9px 11px;border:1.5px solid #BFDBFE;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;background:#fff">
+              <option value="">Select courier…</option>
+              <option value="StarTrack">StarTrack</option>
+              <option value="TNT">TNT</option>
+              <option value="Titan Couriers">Titan Couriers</option>
+              <option value="NTS">NTS</option>
+              <option value="Uber Courier">Uber Courier</option>
+            </select>
+          </div>
+          <button onclick="sendRoadTracking()" style="width:100%;background:#3B82F6;color:#fff;border:none;border-radius:9px;padding:10px 14px;font-family:'Inter Tight',sans-serif;font-weight:700;font-size:13px;cursor:pointer">Send tracking → mark dispatched</button>
+          <div style="font-family:'DM Sans',sans-serif;font-size:12px;color:#1D4ED8;margin-top:7px">Emails customer with tracking and auto-fulfils the Shopify order.</div>
+        </div>
+      </div>
+
 
       <!-- On Hold panel -->
       <div id="holdPanel" style="display:none;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:14px;margin-bottom:10px">
@@ -2280,7 +1898,7 @@ td.thumb-cell{padding:6px 4px 6px 8px!important;width:44px}
     <div class="arch-row">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
         <div>
-          <div style="font-family:'Inter Tight';font-size:11px;font-weight:700;color:var(--lilac)">SS-1042</div>
+          <div style="font-family:'Inter Tight',sans-serif;font-size:11px;font-weight:700;color:var(--lilac)" id="previewJobId"></div>
           <div style="font-weight:600;font-size:14.5px;color:var(--navy);margin:2px 0">Bayside Brewing Co.</div>
           <div style="font-size:12px;color:var(--ink-2)">2,000 roll labels · 90×60mm · 2nd order</div>
           <div style="font-family:'Inter Tight';font-size:11px;color:var(--ink-3);margin-top:3px">Dispatched 14 Jun · AusPost 7C9F…2240</div>
@@ -2488,6 +2106,14 @@ function applyFrontFilters(){
   } else if(sort==='oldest'){
     visible.sort(function(a,b){return (a.dataset.placed||'').localeCompare(b.dataset.placed||'');});
     visible.forEach(function(r){tbody.appendChild(r);});
+  } else if(sort==='product'){
+    visible.sort(function(a,b){
+      var diff = productSortKey(a)-productSortKey(b);
+      if(diff!==0)return diff;
+      return (a.dataset.due||'').localeCompare(b.dataset.due||'');
+    });
+    visible.forEach(function(r){tbody.appendChild(r);});
+    insertProductDividers(tbody, visible);
   } else {
     visible.sort(function(a,b){return (b.dataset.placed||'').localeCompare(a.dataset.placed||'');});
     visible.forEach(function(r){tbody.appendChild(r);});
@@ -2535,6 +2161,14 @@ function applyProdFilters(){
   } else if(sort==='oldest'){
     visible.sort(function(a,b){return (a.dataset.placed||'').localeCompare(b.dataset.placed||'');});
     visible.forEach(function(r){tbody.appendChild(r);});
+  } else if(sort==='product'){
+    visible.sort(function(a,b){
+      var diff = productSortKey(a)-productSortKey(b);
+      if(diff!==0)return diff;
+      return (a.dataset.due||'').localeCompare(b.dataset.due||'');
+    });
+    visible.forEach(function(r){tbody.appendChild(r);});
+    insertProductDividers(tbody, visible);
   } else {
     visible.sort(function(a,b){return (a.dataset.due||'').localeCompare(b.dataset.due||'');});
     visible.forEach(function(r){tbody.appendChild(r);});
@@ -2544,6 +2178,26 @@ function applyProdFilters(){
     var cs=c.dataset.station||c.dataset.status||'';
     var stMatch=!station||(station==='active'?(cs!=='dispatched'&&cs!=='pickedup'):(cs===station));
     c.style.display=((!product||cp===product)&&stMatch)?'':'none';
+  });
+}
+
+
+// Product type sort order and divider helper
+var PRODUCT_SORT_ORDER = {rolls:0, sheets:1, individual:2, bumper:3, large:4};
+function productSortKey(r){ return PRODUCT_SORT_ORDER[r.dataset.product||'']||99; }
+var PRODUCT_LABELS_MAP = {rolls:'Labels on Rolls', sheets:'Sticker Sheets', individual:'Individual Stickers', bumper:'Bumper Stickers', large:'Large Format'};
+function insertProductDividers(tbody, rows){
+  Array.from(tbody.querySelectorAll('.product-div')).forEach(function(d){d.remove();});
+  var lastProduct = null;
+  rows.forEach(function(r){
+    var p = r.dataset.product||'';
+    if(p !== lastProduct){
+      var div = document.createElement('tr');
+      div.className = 'product-div date-div';
+      div.innerHTML = '<td colspan="14" style="background:var(--paper);padding:7px 14px;font-family:\'Inter Tight\',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)">'+(PRODUCT_LABELS_MAP[p]||p)+'</td>';
+      tbody.insertBefore(div, r);
+      lastProduct = p;
+    }
   });
 }
 
@@ -2588,7 +2242,8 @@ var STATUS_META={
   'print':['Print','print'],'lam':['Laminate','lam'],
   'cut':['Cut','cut'],'qa':['QA & Packing','qa'],
   'dispatched':['Dispatched','dispatched'],'outsource':['Outsource','outsource'],
-  'pickup':['Awaiting Pickup','pickup'],'pickedup':['Picked Up','pickedup'],'hold':['On Hold','hold']
+  'pickup':['Awaiting Pickup','pickup'],'pickedup':['Picked Up','pickedup'],'hold':['On Hold','hold'],
+  'cancelled':['Cancelled','cancelled'],'refunded':['Refunded','refunded']
 };
 
 // ── Priority toggle ───────────────────────────────────────────────────
@@ -2736,17 +2391,8 @@ function setCut(mode,btn){
   btn.classList.add('active');
 }
 
-// ── Quick view popup ──────────────────────────────────────────────────
-var QV_DATA={
-  'SS-1042':{id:'SS-1042 · Shopify #4042',name:'Bayside Brewing Co.',meta:'hello@baysidebrewing.com · 2nd order',status:'new',statusLabel:'New',src:'shopify',art:'bayside-label-v3.pdf · 4.2 MB',grid:[['Product','Roll labels'],['Qty','2,000'],['Size','90 × 60 mm'],['Shape','Rounded rect'],['Material','Gloss paper'],['Laminate','Matte'],['Dispatch','Road'],['Due','13 Jun']]},
-  'SS-1039':{id:'SS-1039 · Instagram',name:'Hartley Hot Sauce',meta:'hartley@hotsauce.com.au',status:'revision',statusLabel:'Artwork Revision',src:'ig',art:'hartley-label-v1.pdf · 3.1 MB',grid:[['Product','Roll labels'],['Qty','1,500'],['Size','80 × 80 mm'],['Shape','Rectangle'],['Material','Gloss paper'],['Laminate','Matte'],['Dispatch','Road'],['Due','⚠ 11 Jun']]},
-  'SS-1028':{id:'SS-1028 · Shopify #4028',name:'Sunday Roasters',meta:'hello@sundayroasters.com.au',status:'print',statusLabel:'Print',src:'shopify',art:'sunday-coffee-label.pdf · 5.8 MB',grid:[['Product','Roll labels'],['Qty','4,000'],['Size','90 × 60 mm'],['Shape','Rounded rect'],['Material','Gloss paper'],['Laminate','Matte'],['Dispatch','Road'],['Due','13 Jun']]},
-  'SS-1041':{id:'SS-1041 · Email',name:"Tilly's Candles",meta:'tilly@tillyscandles.com',status:'prepress',statusLabel:'Prepress',src:'email',art:'tilly-candle-sticker.pdf · 2.2 MB',grid:[['Product','Individual stickers'],['Qty','500'],['Size','70 mm'],['Shape','Circle'],['Material','White vinyl'],['Laminate','Gloss'],['Dispatch','Courier'],['Due','12 Jun']]},
-  'SS-1040':{id:'SS-1040 · Shopify #4040',name:'North St Coffee',meta:'orders@northstcoffee.com.au',status:'awaiting',statusLabel:'Awaiting Approval',src:'shopify',art:'northst-sheet-v2.pdf · 4.0 MB',grid:[['Product','Sticker sheets'],['Qty','1,000'],['Size','A5'],['Shape','Rectangle'],['Material','Paper'],['Laminate','None'],['Dispatch','Road'],['Due','12 Jun']]},
-  'SS-1027':{id:'SS-1027 · Facebook',name:'Vela Studio',meta:'hello@velastudio.com.au',status:'cut',statusLabel:'Cut',src:'fb',art:'vela-sheet-print.pdf · 3.7 MB',grid:[['Product','Sticker sheets'],['Qty','600'],['Size','A4'],['Shape','Rectangle'],['Material','Paper'],['Laminate','Matte'],['Dispatch','Road'],['Due','12 Jun']]},
-  'SS-1022':{id:'SS-1022 · Email',name:'Ridgeline Apparel',meta:'studio@ridgeline.com.au',status:'qa',statusLabel:'QA & Packing',src:'email',art:'ridgeline-sticker.pdf · 2.9 MB',grid:[['Product','Individual stickers'],['Qty','2,500'],['Size','60 mm'],['Shape','Custom'],['Material','White vinyl'],['Laminate','Gloss'],['Dispatch','Pickup'],['Due','14 Jun']]},
-  'SS-1020':{id:'SS-1020 · Shopify #4020',name:'Coastal Print Co.',meta:'orders@coastalprint.com.au',status:'outsource',statusLabel:'Outsource',src:'shopify',art:'coastal-labels.pdf · 6.1 MB',grid:[['Product','Roll labels'],['Qty','5,000'],['Size','100 × 70 mm'],['Shape','Rectangle'],['Material','Clear vinyl'],['Laminate','None'],['Dispatch','Courier'],['Due','15 Jun']]},
-};
+// Quick view data drawn from JOB_DATA (populated by loadBoard)
+var QV_DATA={};
 var SRC_LABEL={'shopify':'Shopify','email':'Email','fb':'Facebook','ig':'Instagram'};
 var SRC_CLASS={'shopify':'shopify','email':'email','fb':'fb','ig':'ig'};
 
@@ -3142,159 +2788,216 @@ function validateJobForm(){
   return ok;
 }
 
-function submitJob(){
+async function submitJob(){
   if(!validateJobForm()){
     document.querySelector('.jf-body').scrollTo({top:0,behavior:'smooth'});
     return;
   }
-  var custName=document.getElementById('jfCustName').value.trim();
-  var custEmail=document.getElementById('jfCustEmail').value.trim();
-  var src=document.getElementById('jfSource').value;
-  var dispatch=document.getElementById('jfDispatch').value||'road';
-  var dueDateRaw=document.getElementById('jfDueDate').value;
-  var notes=document.getElementById('jfNotes').value.trim();
-  var srcLabels={'email':'Email','facebook':'Facebook','instagram':'Instagram','phone':'Phone','walkin':'Walk-in'};
-  var srcClasses={'email':'email','facebook':'fb','instagram':'ig','phone':'email','walkin':'email'};
-  var dispatchLabels={'road':'Road','courier':'Courier','pickup':'Pickup'};
 
-  // Format due date for display
-  var dueDisp='';var dueKey='';
-  if(dueDateRaw){
-    var dp=dueDateRaw.split('-');
-    var dueDt=new Date(parseInt(dp[0]),parseInt(dp[1])-1,parseInt(dp[2]));
-    var months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-    dueDisp=dueDt.getDate()+' '+months[dueDt.getMonth()];
-    dueKey=dp[0]+dp[1]+dp[2];
-  }
+  // ── Collect form data ────────────────────────────────────────────
+  var custName    = document.getElementById('jfCustName').value.trim();
+  var contactName = document.getElementById('jfContactName')?document.getElementById('jfContactName').value.trim():'';
+  var custEmail   = document.getElementById('jfCustEmail').value.trim();
+  var custPhone   = document.getElementById('jfCustPhone').value.trim();
+  var custAddress = document.getElementById('jfAddress')?document.getElementById('jfAddress').value.trim():'';
+  var src         = document.getElementById('jfSource').value||'email';
+  var dispatch    = document.getElementById('jfDispatch').value||'road';
+  var courier     = document.getElementById('jfCourier')?document.getElementById('jfCourier').value:'';
+  var dueDateRaw  = document.getElementById('jfDueDate').value;
+  var notes       = document.getElementById('jfNotes').value.trim();
+  var isOutsource = document.getElementById('jfOutsource')&&document.getElementById('jfOutsource').value==='true';
+  var outSupplier = document.getElementById('jfOutsourceSupplier')?document.getElementById('jfOutsourceSupplier').value.trim():'';
+  var outDest     = document.getElementById('jfOutsourceDest')?document.getElementById('jfOutsourceDest').value:'factory';
+  var outCourier  = document.getElementById('jfOutsourceCourier')?document.getElementById('jfOutsourceCourier').value:'';
 
-  var items=[];
+  // Collect items
+  var items = [];
   document.querySelectorAll('.jf-item-card').forEach(function(card){
-    var idx=card.id.replace('jfItem_','');
-    var matEl=document.getElementById('item_material_'+idx);
-    var mat=matEl?matEl.value:'';
+    var idx = card.id.replace('jfItem_','');
+    var matEl = document.getElementById('item_material_'+idx);
+    var mat   = matEl?matEl.value:'';
     if(mat==='Other (specify)'){var oth=document.getElementById('item_materialOther_'+idx);mat=oth?oth.value:mat;}
-    var shapeEl=document.getElementById('item_shape_'+idx);
-    var shape=shapeEl?shapeEl.value:'';
+    var shapeEl = document.getElementById('item_shape_'+idx);
+    var shape   = shapeEl?shapeEl.value:'';
     if(shape==='Custom'){var cs=document.getElementById('item_shapeCustom_'+idx);shape=cs&&cs.value?cs.value:'Custom';}
-    var sizeW=document.getElementById('item_sizeW_'+idx);
-    var sizeH=document.getElementById('item_sizeH_'+idx);
-    var sizeStr=(sizeW&&sizeW.value&&sizeH&&sizeH.value)?(sizeW.value+'×'+sizeH.value+'mm'):'—';
+    var prodEl  = document.getElementById('item_product_'+idx);
+    var prod    = prodEl?prodEl.value:'';
+    var lfEl    = document.getElementById('lf_subtype_'+idx);
+    var subtype = (prod==='Large format'&&lfEl)?lfEl.value:'';
+    var w = document.getElementById('item_sizeW_'+idx);
+    var h = document.getElementById('item_sizeH_'+idx);
+    var qEl = document.getElementById('item_qty_'+idx);
+    var lEl = document.getElementById('item_lam_'+idx);
     items.push({
-      id:'SS-'+(++jfJobCounter),
-      product:document.getElementById('item_product_'+idx)?document.getElementById('item_product_'+idx).value:'',
-      shape:shape,size:sizeStr,
-      qty:document.getElementById('item_qty_'+idx)?document.getElementById('item_qty_'+idx).value:'',
-      material:mat,
-      lam:document.getElementById('item_lam_'+idx)?document.getElementById('item_lam_'+idx).value:'None'
+      product_type:    productTypeKey(prod),
+      product_subtype: subtype||null,
+      quantity:        qEl?parseInt(qEl.value)||0:0,
+      width_mm:        w&&w.value?parseFloat(w.value):null,
+      height_mm:       h&&h.value?parseFloat(h.value):null,
+      shape:           shape||null,
+      material:        mat||null,
+      laminate:        lEl?lEl.value:null
     });
   });
 
-  var today=new Date();
-  var td=String(today.getDate()).padStart(2,'0');
-  var tm=String(today.getMonth()+1).padStart(2,'0');
-  var placedStr=today.getDate()+' '+'Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec'.split(',')[today.getMonth()];
-  var placedKey=''+today.getFullYear()+tm+td;
+  var db2 = getDB();
 
-  var tbody=document.querySelector('#fTable tbody');
-  if(!tbody)return;
-
-  var prodStatusKey=function(p){
-    if(p==='Labels on rolls')return 'rolls';
-    if(p==='Sticker sheets')return 'sheets';
-    if(p==='Individual stickers')return 'individual';
-    if(p==='Bumper stickers')return 'bumper';
-    return 'large';
-  };
-
-  var srcHtml='<span class="src '+srcClasses[src]+'">'+srcLabels[src]+'</span>';
-
-  if(items.length===1){
-    // Single row
-    var it=items[0];
-    var row=document.createElement('tr');
-    row.className='';
-    row.dataset.status='new';
-    row.dataset.product=prodStatusKey(it.product);
-    row.dataset.placed=placedKey;
-    row.dataset.due=dueKey;
-    row.setAttribute('onclick','openJobFromRow(this)');
-    row.innerHTML=
-      '<td onclick="event.stopPropagation()"><input type="checkbox" class="row-check" onchange="rowCheckAuto(this)"></td>'
-      +'<td><button class="prio-btn prio-off" onclick="event.stopPropagation();togglePrio(this)" title="Set as priority">⚡</button></td>'
-      +'<td class="tbl-id">'+it.id+'</td>'
-      +'<td class="tbl-cust">'+custName+'</td>'
-      +'<td>'+srcHtml+'</td>'
-      +'<td>'+it.product+'</td><td>'+it.size+'</td><td>'+it.qty+'</td>'
-      +'<td>'+placedStr+'</td><td>'+dueDisp+'</td><td>'+dispatchLabels[dispatch]+'</td>'
-      +'<td><span class="chip new">New</span></td>';
-    tbody.prepend(row);
-  } else {
-    // Group parent + children
-    var grpId='m'+jfJobCounter;
-    var parent=document.createElement('tr');
-    parent.className='grp-parent';
-    parent.dataset.status='new';
-    parent.dataset.product=prodStatusKey(items[0].product);
-    parent.dataset.placed=placedKey;
-    parent.dataset.due=dueKey;
-    parent.setAttribute('onclick',"toggleGroup('"+grpId+"')");
-    var totalQty=items.reduce(function(s,i){return s+(parseInt(i.qty)||0);},0);
-    parent.innerHTML=
-      '<td onclick="event.stopPropagation()"><input type="checkbox" class="row-check" onchange="rowCheckAuto(this)"></td>'
-      +'<td><button class="prio-btn prio-off" onclick="event.stopPropagation();togglePrio(this)">⚡</button></td>'
-      +'<td class="tbl-id"><button class="grp-toggle" id="grp-toggle-'+grpId+'">▶</button>#'+jfJobCounter+'</td>'
-      +'<td class="tbl-cust">'+custName+'<span class="grp-badge">'+items.length+' jobs</span></td>'
-      +'<td>'+srcHtml+'</td>'
-      +'<td>Mixed</td><td>—</td><td>'+totalQty+' total</td>'
-      +'<td>'+placedStr+'</td><td>'+dueDisp+'</td><td>'+dispatchLabels[dispatch]+'</td>'
-      +'<td><span class="chip new">New</span></td>';
-    tbody.prepend(parent);
-
-    items.forEach(function(it){
-      var child=document.createElement('tr');
-      child.className='grp-child';
-      child.dataset.group=grpId;
-      child.dataset.status='new';
-      child.dataset.product=prodStatusKey(it.product);
-      child.dataset.placed=placedKey;
-      child.dataset.due=dueKey;
-      child.setAttribute('onclick','openJob()');
-      child.innerHTML=
-        '<td onclick="event.stopPropagation()"><input type="checkbox" class="row-check grp-check" data-group="'+grpId+'" onchange="rowCheckAuto(this)"></td>'
-        +'<td><button class="prio-btn prio-off" onclick="event.stopPropagation();togglePrio(this)">⚡</button></td>'
-        +'<td class="tbl-id"><span class="indent">↳</span>'+it.id+'</td>'
-        +'<td class="tbl-cust">'+it.product+'</td>'
-        +'<td>'+srcHtml+'</td>'
-        +'<td>'+it.product+'</td><td>'+it.size+'</td><td>'+it.qty+'</td>'
-        +'<td>'+placedStr+'</td><td>'+dueDisp+'</td><td>'+dispatchLabels[dispatch]+'</td>'
-        +'<td><span class="chip new">New</span></td>';
-      tbody.insertBefore(child,parent.nextSibling);
-    });
-
-    // Action row
-    var action=document.createElement('tr');
-    action.className='grp-action-row';
-    action.dataset.group=grpId;
-    action.innerHTML='<td colspan="13"><div class="grp-actions">'
-      +'<span class="grp-label">'+items.length+' jobs · '+totalQty+' total units</span>'
-      +'<button class="btn-pack" data-grp="'+grpId+'" data-cnt="'+items.length+'" onclick="event.stopPropagation();bulkPackGroup(this.dataset.grp,this.dataset.cnt)">📦 Pack all '+items.length+' jobs</button>'
-      +'<button class="btn-grp-status" data-grp="'+grpId+'" data-cnt="'+items.length+'" data-st="qa" onclick="event.stopPropagation();changeGroupStatus(this.dataset.grp,this.dataset.st,this.dataset.cnt)">Move all → QA &amp; Pack</button>'
-      +'</div></td>';
-    tbody.insertBefore(action,parent.nextSibling);
+  if(!db2){
+    // Offline / prototype mode — just close form and show toast
+    closeJobForm();
+    showToast((items.length>1?items.length+' jobs':'Job')+' added for '+custName+' (prototype mode)');
+    return;
   }
 
-  // Re-sort board
-  if(typeof applyFrontFilters==='function')applyFrontFilters();
+  // Show loading state on button
+  var submitBtn = document.querySelector('.jf-submit');
+  if(submitBtn){submitBtn.textContent='Saving…';submitBtn.disabled=true;}
 
-  closeJobForm();
+  try {
+    // ── 1. Upsert customer ─────────────────────────────────────────
+    var custData = {
+      business_name: custName,
+      contact_name:  contactName||null,
+      email:         custEmail,
+      phone:         custPhone||null,
+      address_full:  custAddress||null
+    };
 
-  // Toast
-  var toast=document.getElementById('jfToast');
-  var msg=document.getElementById('jfToastMsg');
-  if(msg)msg.textContent=(items.length>1?items.length+' jobs':'Job')+' added for '+custName;
-  if(toast){toast.classList.add('show');setTimeout(function(){toast.classList.remove('show');},3500);}
+    // Check if customer already exists by email
+    var {data:existing} = await db2.from('customers')
+      .select('id, order_count').eq('email', custEmail).maybeSingle();
+
+    var customerId;
+    if(existing){
+      customerId = existing.id;
+      await db2.from('customers')
+        .update({...custData, order_count: (existing.order_count||0)+1})
+        .eq('id', customerId);
+    } else {
+      var {data:newCust, error:custErr} = await db2.from('customers')
+        .insert({...custData, order_count:1}).select('id').single();
+      if(custErr) throw new Error('Customer error: '+custErr.message);
+      customerId = newCust.id;
+    }
+
+    // ── 2. Create jobs (one per unique product type) ───────────────
+    var dueDate = dueDateRaw || calcFallbackDue(items[0]?items[0].product_type:'individual');
+    var isMulti = items.length > 1;
+    var groupId = isMulti ? ('MAN-'+Date.now()) : null;
+    var createdIds = [];
+
+    // Group items by product type for split orders
+    var byType = {};
+    items.forEach(function(it){
+      if(!byType[it.product_type]) byType[it.product_type]=[];
+      byType[it.product_type].push(it);
+    });
+    var types = Object.keys(byType);
+
+    for(var t=0; t<types.length; t++){
+      var ptype = types[t];
+      var typeItems = byType[ptype];
+      var jobIsOutsource = isOutsource || ptype==='rolls';
+
+      var jobPayload = {
+        customer_id:        customerId,
+        source:             src,
+        status:             'new',
+        dispatch_method:    dispatch||'road',
+        courier:            courier||null,
+        delivery_address:   custAddress||null,
+        is_outsourced:      jobIsOutsource,
+        outsource_supplier: jobIsOutsource?(outSupplier||null):null,
+        outsource_dest:     jobIsOutsource?(outDest||'factory'):null,
+        order_value:        0,
+        paid:               true,
+        placed_at:          new Date().toISOString(),
+        due_date:           dueDate,
+        is_parent:          false,
+        shopify_order_group: groupId
+      };
+
+      var {data:job, error:jobErr} = await db2.from('jobs')
+        .insert(jobPayload).select('id').single();
+      if(jobErr) throw new Error('Job error: '+jobErr.message);
+      createdIds.push(job.id);
+
+      // Job items for this product type
+      var jobItems = typeItems.map(function(it){
+        return {
+          job_id:          job.id,
+          product_type:    it.product_type,
+          product_subtype: it.product_subtype,
+          quantity:        it.quantity,
+          width_mm:        it.width_mm,
+          height_mm:       it.height_mm,
+          shape:           it.shape,
+          material:        it.material,
+          laminate:        it.laminate
+        };
+      });
+      await db2.from('job_items').insert(jobItems);
+    }
+
+    // Mark parent/children if split order
+    if(isMulti && createdIds.length > 1){
+      await db2.from('jobs').update({is_parent:true}).eq('id', createdIds[0]);
+      for(var c=1; c<createdIds.length; c++){
+        await db2.from('jobs').update({parent_job_id:createdIds[0]}).eq('id', createdIds[c]);
+      }
+    }
+
+    // ── 3. Save internal note if provided ─────────────────────────
+    if(notes && createdIds[0]){
+      await db2.from('job_notes').insert({
+        job_id:      createdIds[0],
+        author_name: CURRENT_MEMBER?(CURRENT_MEMBER.name+' ('+CURRENT_ROLE+')'):'Team',
+        content:     notes,
+        source:      'team'
+      });
+    }
+
+    // ── 4. Refresh board and close ─────────────────────────────────
+    // Save invoice + thread URL to the first job
+    if(createdIds[0]) saveInvoiceToJob(createdIds[0]);
+    // Upload invoice PDF to Supabase Storage if attached
+    var invFile = document.getElementById('jfInvoiceFile');
+    if(invFile && invFile.files && invFile.files[0] && createdIds[0]){
+      uploadInvoiceToStorage(invFile.files[0], createdIds[0]);
+    } else if(createdIds[0]){
+      // Save just the thread URL if no PDF
+      var threadUrl2 = document.getElementById('jfThreadUrl')?document.getElementById('jfThreadUrl').value.trim():'';
+      var db3 = getDB();
+      if(db3 && threadUrl2) await db3.from('jobs').update({thread_url:threadUrl2}).eq('id',createdIds[0]);
+    }
+    await loadBoard();
+    closeJobForm();
+    showToast((createdIds.length>1?createdIds.length+' jobs':'Job '+createdIds[0])+' created for '+custName+' ✓');
+
+  } catch(e) {
+    console.error('submitJob error:', e);
+    showToast('Error saving job: '+e.message);
+  } finally {
+    if(submitBtn){submitBtn.textContent='Create job →';submitBtn.disabled=false;}
+  }
 }
 
+function productTypeKey(label){
+  if(!label) return 'individual';
+  var l = label.toLowerCase();
+  if(l.includes('roll')||l.includes('label')) return 'rolls';
+  if(l.includes('sheet'))                     return 'sheets';
+  if(l.includes('bumper'))                    return 'bumper';
+  if(l.includes('large')||l.includes('banner')||l.includes('poster')) return 'large';
+  return 'individual';
+}
+
+function calcFallbackDue(productType){
+  var days = productType==='rolls' ? 3 : 2;
+  var d = new Date(); var added=0;
+  while(added<days){d.setDate(d.getDate()+1);var dow=d.getDay();if(dow!==0&&dow!==6)added++;}
+  return d.toISOString().split('T')[0];
+}
 
 // Reprint panel toggle
 function toggleReprint(){
@@ -3535,7 +3238,7 @@ function formatFileSize(bytes){
   return(bytes/1048576).toFixed(1)+' MB';
 }
 
-function sendProof(){
+async function sendProof(){
   // Gate: sticker sheets must have imposition filled
   if(window._currentJobProduct==='sheets'){
     var perSheet=document.getElementById('impoPerSheet');
@@ -3582,6 +3285,30 @@ function sendProof(){
     PROOF_THUMBNAILS[window._currentJobId].approved=false;
     updateAllRowThumbs(window._currentJobId);
   }
+
+  // ── Upload proof + send email via API ─────────────────────────────
+  var db2=getDB();
+  var proofFileInput=document.getElementById('proofFileInput');
+  var proofMsg=document.getElementById('proofMessage')?document.getElementById('proofMessage').value:'';
+  if(db2&&window._currentJobId&&proofFileInput&&proofFileInput.files&&proofFileInput.files[0]){
+    var fd=new FormData();
+    fd.append('file',proofFileInput.files[0]);
+    fd.append('job_id',window._currentJobId);
+    if(proofMsg)fd.append('message',proofMsg);
+    if(CURRENT_MEMBER)fd.append('sent_by_name',CURRENT_MEMBER.name);
+    fetch('/api/send-proof',{method:'POST',body:fd})
+      .then(function(r){return r.json();})
+      .then(function(result){
+        if(result.success){
+          showToast('Email sent to customer ✓');
+          var badge=document.getElementById('jdStatusBadge');
+          if(badge){badge.textContent='Awaiting Approval';badge.className='jd-status-badge awaiting';}
+        } else {
+          console.error('send-proof failed:',result.error);
+        }
+      }).catch(function(e){console.error('send-proof error:',e);});
+  }
+
   // Reset after 4 seconds so they can upload another
   setTimeout(function(){
     document.getElementById('proofSuccess').classList.remove('show');
@@ -3677,124 +3404,52 @@ function filterProdByStatus(status){
 
 
 // Full job data for each prototype job
-var JOB_DATA = {
-  'SS-1042': {
-    id:'SS-1042', shopify:'#4042', paid:true, src:'shopify', srcLabel:'Shopify',
-    name:'Bayside Brewing Co.', contact:'James Whitfield',
-    email:'hello@baysidebrewing.com', phone:'0412 555 123',
-    address:'12 Bay St, Port Melbourne VIC 3207', orderNote:'2nd order',
-    part:'PART 1 OF 2 · ORDER #4042 · Sibling: 500 individual stickers (SS-1042b) · split by product',
-    product:'Roll labels', qty:'2,000', shape:'Rounded rect', size:'90 × 60 mm',
-    material:'Gloss paper', lam:'Matte', dispatch:'Road dispatch', addr:'12 Bay St, Port Melbourne VIC 3207',
-    placed:'10 Jun', due:'13 Jun', dueAlert:true,
-    artFile:'bayside-label-v3.pdf', artSize:'4.2 MB',
-    status:'new', statusLabel:'New', productKey:'rolls', outsourceSupplier:'TBC', outsourceDest:'Our factory'
-  },
-  'SS-1042b': {
-    id:'SS-1042b', shopify:'#4042', paid:true, src:'shopify', srcLabel:'Shopify',
-    name:'Bayside Brewing Co.', contact:'James Whitfield',
-    email:'hello@baysidebrewing.com', phone:'0412 555 123',
-    address:'12 Bay St, Port Melbourne VIC 3207', orderNote:'2nd order',
-    part:'PART 2 OF 2 · ORDER #4042 · Sibling: 2,000 roll labels (SS-1042) · split by product',
-    product:'Individual stickers', qty:'500', shape:'Circle', size:'70 mm',
-    material:'White vinyl', lam:'Gloss', dispatch:'Road dispatch', addr:'12 Bay St, Port Melbourne VIC 3207',
-    placed:'10 Jun', due:'13 Jun', dueAlert:true,
-    artFile:'bayside-sticker-v1.pdf', artSize:'2.1 MB',
-    status:'new', statusLabel:'New', productKey:'individual'
-  },
-  'SS-1039': {
-    id:'SS-1039', shopify:null, paid:true, src:'ig', srcLabel:'Instagram',
-    name:'Hartley Hot Sauce', contact:'Sarah Hartley',
-    email:'hartley@hotsauce.com.au', phone:'0411 234 567',
-    address:'22 Church St, Richmond VIC 3121', orderNote:'',
-    part:'', product:'Roll labels', qty:'1,500', shape:'Rectangle', size:'80 × 80 mm',
-    material:'Gloss paper', lam:'Matte', dispatch:'Road dispatch', addr:'22 Church St, Richmond VIC 3121',
-    placed:'8 Jun', due:'11 Jun', dueAlert:true,
-    artFile:'hartley-label-v1.pdf', artSize:'3.1 MB',
-    status:'revision', statusLabel:'Artwork Revision', productKey:'rolls'
-  },
-  'SS-1041': {
-    id:'SS-1041', shopify:null, paid:true, src:'email', srcLabel:'Email',
-    name:"Tilly's Candles", contact:'Tilly Marsh',
-    email:'tilly@tillyscandles.com', phone:'0415 678 901',
-    address:'—', orderNote:'',
-    part:'', product:'Individual stickers', qty:'500', shape:'Circle', size:'70 mm',
-    material:'White vinyl', lam:'Gloss', dispatch:'Courier', addr:'—',
-    placed:'10 Jun', due:'12 Jun', dueAlert:false,
-    artFile:'tilly-candle-sticker.pdf', artSize:'2.2 MB',
-    status:'prepress', statusLabel:'Prepress', productKey:'individual'
-  },
-  'SS-1040': {
-    id:'SS-1040', shopify:'#4040', paid:true, src:'shopify', srcLabel:'Shopify',
-    name:'North St Coffee', contact:'—',
-    email:'orders@northstcoffee.com.au', phone:'0413 456 789',
-    address:'4 North St, Newtown VIC 3220', orderNote:'',
-    part:'', product:'Sticker sheets', qty:'1,000', shape:'Rectangle', size:'A5',
-    material:'Paper', lam:'None', dispatch:'Road dispatch', addr:'4 North St, Newtown VIC 3220',
-    placed:'10 Jun', due:'12 Jun', dueAlert:false,
-    artFile:'northst-sheet-v2.pdf', artSize:'4.0 MB',
-    status:'awaiting', statusLabel:'Awaiting Approval', productKey:'sheets'
-  },
-  'SS-1027': {
-    id:'SS-1027', shopify:null, paid:true, src:'fb', srcLabel:'Facebook',
-    name:'Vela Studio', contact:'Pia Nguyen',
-    email:'hello@velastudio.com.au', phone:'0416 789 012',
-    address:'Studio 3, 40 Rokeby St, Collingwood VIC 3066', orderNote:'',
-    part:'', product:'Sticker sheets', qty:'600', shape:'Rectangle', size:'A4',
-    material:'Paper', lam:'Matte', dispatch:'Road dispatch', addr:'Studio 3, 40 Rokeby St, Collingwood VIC 3066',
-    placed:'8 Jun', due:'12 Jun', dueAlert:false,
-    artFile:'vela-sheet-print.pdf', artSize:'3.7 MB',
-    status:'cut', statusLabel:'Cut', productKey:'sheets'
-  },
-  'SS-1028': {
-    id:'SS-1028', shopify:'#4028', paid:true, src:'shopify', srcLabel:'Shopify',
-    name:'Sunday Roasters', contact:'Maya Chen',
-    email:'hello@sundayroasters.com.au', phone:'0414 567 890',
-    address:'88 Smith St, Fitzroy VIC 3065', orderNote:'',
-    part:'', product:'Roll labels', qty:'4,000', shape:'Rounded rect', size:'90 × 60 mm',
-    material:'Gloss paper', lam:'Matte', dispatch:'Road dispatch', addr:'88 Smith St, Fitzroy VIC 3065',
-    placed:'5 Jun', due:'13 Jun', dueAlert:true,
-    artFile:'sunday-coffee-label.pdf', artSize:'5.8 MB',
-    status:'print', statusLabel:'Print', productKey:'rolls'
-  },
-  'SS-1022': {
-    id:'SS-1022', shopify:null, paid:true, src:'email', srcLabel:'Email',
-    name:'Ridgeline Apparel', contact:'Tom Ridgeway',
-    email:'studio@ridgeline.com.au', phone:'0417 890 123',
-    address:'14 Industrial Dr, Braybrook VIC 3019', orderNote:'',
-    part:'', product:'Individual stickers', qty:'2,500', shape:'Custom', size:'60 mm',
-    material:'White vinyl', lam:'Gloss', dispatch:'Pickup', addr:'Pickup — Braybrook',
-    placed:'6 Jun', due:'14 Jun', dueAlert:false,
-    artFile:'ridgeline-sticker.pdf', artSize:'2.9 MB',
-    status:'qa', statusLabel:'QA & Packing', productKey:'individual'
-  },
-  'SS-1020': {
-    id:'SS-1020', shopify:'#4020', paid:true, src:'shopify', srcLabel:'Shopify',
-    name:'Coastal Print Co.', contact:'—',
-    email:'orders@coastalprint.com.au', phone:'0418 901 234',
-    address:'Unit 7, 2 Coastal Rd, Williamstown VIC 3016', orderNote:'',
-    part:'', product:'Roll labels', qty:'5,000', shape:'Rectangle', size:'100 × 70 mm',
-    material:'Clear vinyl', lam:'None', dispatch:'Courier', addr:'Unit 7, 2 Coastal Rd, Williamstown VIC 3016',
-    placed:'4 Jun', due:'15 Jun', dueAlert:false,
-    artFile:'coastal-labels.pdf', artSize:'6.1 MB',
-    status:'outsource', statusLabel:'Outsource', productKey:'rolls'
-  },
-  'SS-1018': {
-    id:'SS-1018', shopify:'#4018', paid:true, src:'shopify', srcLabel:'Shopify',
-    name:'Blue Mountain Oils', contact:'—',
-    email:'orders@bluemountainoils.com.au', phone:'0419 012 345',
-    address:'Pickup only — Braybrook', orderNote:'',
-    part:'', product:'Roll labels', qty:'800', shape:'Rectangle', size:'80 × 50 mm',
-    material:'Gloss paper', lam:'None', dispatch:'Pickup', addr:'Pickup — Braybrook',
-    placed:'3 Jun', due:'5 Jun', dueAlert:false,
-    artFile:'bluemtn-label.pdf', artSize:'1.8 MB',
-    status:'pickup', statusLabel:'Awaiting Pickup', productKey:'rolls'
-  }
-};
+var JOB_DATA = {}; // Populated from Supabase by loadBoard()
 
-function populateJobDetail(jobId){
+async function populateJobDetail(jobId){
   var d=JOB_DATA[jobId];
-  if(!d)return; // Unknown job — keep existing content
+  // If not in cache, try fetching from Supabase
+  if(!d){
+    var db2=getDB();
+    if(db2){
+      var {data:job}=await db2.from('active_jobs').select('*, job_items(*)').eq('id',jobId).single();
+      if(job){
+        var item=(job.job_items||[])[0]||{};
+        d={
+          id:job.id, shopify:job.shopify_order_number||null, paid:job.paid||false,
+          src:job.source||'manual', srcLabel:(job.source||'Manual').charAt(0).toUpperCase()+(job.source||'manual').slice(1),
+          name:job.business_name||'Unknown', contact:job.contact_name||'',
+          email:job.customer_email||'', phone:job.customer_phone||'',
+          address:job.address_full||'', addr:job.address_full||'',
+          product:PRODUCT_LABELS_MAP[item.product_type]||item.product_type||'',
+          qty:item.quantity?item.quantity.toLocaleString():'—',
+          shape:item.shape||'', size:fmtSize(item.width_mm,item.height_mm),
+          material:item.material||'', lam:item.laminate||'',
+          dispatch:fmtDispatch(job.dispatch_method,job.courier), courier:job.courier||'',
+          placed:fmtDate(job.placed_at), due:fmtDate(job.due_date),
+          dueAlert:job.due_date&&new Date(job.due_date)<new Date(),
+          artFile:job.artwork_filename||'artwork.pdf',
+          status:job.status, statusLabel:chipLabel(job.status),
+          productKey:item.product_type||'individual',
+          outsourceSupplier:job.outsource_supplier||'TBC',
+          outsourceDest:job.outsource_dest||'Our factory',
+          invoice_url:job.invoice_url||null, invoice_filename:job.invoice_filename||null,
+          thread_url:job.thread_url||null,
+          cancellationReason:job.cancellation_reason||null,
+          cancelledAt:job.cancelled_at?fmtDate(job.cancelled_at):null,
+          refundedAmount:job.refunded_amount||null,
+          refundedAt:job.refunded_at?fmtDate(job.refunded_at):null,
+          shopify_order_group:job.shopify_order_group||null, parent_job_id:job.parent_job_id||null
+        };
+        JOB_DATA[jobId]=d;
+      }
+    }
+  }
+  if(!d){
+    var nameEl=document.getElementById('jdName');
+    if(nameEl)nameEl.textContent='Job not found';
+    return;
+  }
 
   // ID line
   var idEl=document.getElementById('jdId');
@@ -3857,16 +3512,92 @@ function populateJobDetail(jobId){
   var badge=document.getElementById('jdStatusBadge');
   if(badge){badge.textContent=d.statusLabel;badge.className='jd-status-badge '+d.status;}
 
+  // ── Cancellation / refund banner ──────────────────────────────────
+  var cancelBanner=document.getElementById('cancelBanner');
+  if(cancelBanner){
+    cancelBanner.className='cancel-banner';
+    if(d.status==='cancelled'){
+      cancelBanner.classList.add('show','cancelled');
+      document.getElementById('cancelBannerTitle').textContent='🚫 Order cancelled';
+      document.getElementById('cancelBannerDetail').textContent=
+        (d.cancellationReason?d.cancellationReason:'No reason provided.')+(d.cancelledAt?' · '+d.cancelledAt:'');
+    } else if(d.status==='refunded'){
+      cancelBanner.classList.add('show','refunded');
+      document.getElementById('cancelBannerTitle').textContent='💰 Order refunded';
+      document.getElementById('cancelBannerDetail').textContent=
+        (d.refundedAmount?'$'+Number(d.refundedAmount).toLocaleString()+' refunded':'Refund processed')+(d.refundedAt?' · '+d.refundedAt:'');
+    } else if(d.refundedAmount && Number(d.refundedAmount)>0){
+      // Partial refund on a job that's still active
+      cancelBanner.classList.add('show','refunded');
+      document.getElementById('cancelBannerTitle').textContent='💰 Partial refund issued';
+      document.getElementById('cancelBannerDetail').textContent='$'+Number(d.refundedAmount).toLocaleString()+' refunded so far. Job is still active — check with customer if needed.';
+    }
+  }
+
+  // ── Sibling jobs (split orders) ─────────────────────────────────
+  var sibPanel = document.getElementById('siblingPanel');
+  if(sibPanel){
+    sibPanel.style.display = 'none';
+    var sibCards = document.getElementById('siblingCards');
+    if(sibCards) sibCards.innerHTML = '';
+
+    // Find siblings from JOB_DATA (same shopify_order_group or parent_job_id)
+    var siblings = [];
+    Object.keys(JOB_DATA).forEach(function(jid){
+      if(jid === jobId) return;
+      var sib = JOB_DATA[jid];
+      if(!sib) return;
+      // Check if sibling via parent relationship or same order group
+      var sameGroup = d.shopify_order_group && sib.shopify_order_group && d.shopify_order_group === sib.shopify_order_group;
+      var isParent  = sib.parent_job_id === jobId;
+      var isChild   = d.parent_job_id === jid;
+      if(sameGroup || isParent || isChild) siblings.push({id:jid, data:sib});
+    });
+
+    if(siblings.length > 0 && sibCards && sibPanel){
+      sibPanel.style.display = 'block';
+      sibCards.innerHTML = siblings.map(function(s){
+        var status = s.data.status || 'new';
+        var meta   = STATUS_META[status] || [status, status];
+        return '<div class="sibling-card" data-job-id="'+s.id+'" onclick="openSiblingJob(this)">'
+          +'<div class="sibling-info">'
+          +'<div class="sibling-id">'+s.id+(s.data.shopify?'<span style="font-size:10px;font-weight:400;color:var(--green);margin-left:6px">'+s.data.shopify+'</span>':'')+'</div>'
+          +'<div class="sibling-product">'+s.data.product+'</div>'
+          +'</div>'
+          +'<span class="chip '+meta[1]+'" style="font-size:11px">'+meta[0]+'</span>'
+          +'<span class="sibling-arrow">›</span>'
+          +'</div>';
+      }).join('');
+    }
+  }
+
   // Imposition: editable at Prepress, locked read-only after, hidden for non-sheets
   // Highlight current status in picker
   updateStatusPillHighlight(d.status);
   // Close picker on job open
   var picker=document.getElementById('jdStatusPicker');
   if(picker)picker.classList.remove('open');
+  // Show invoice / thread references
+  // Merge stored URLs from Supabase into JOB_INVOICES for display
+  if(d && (d.invoice_url || d.thread_url)){
+    JOB_INVOICES[jobId] = {
+      dataUrl:   d.invoice_url   || null,
+      filename:  d.invoice_filename || 'invoice.pdf',
+      threadUrl: d.thread_url    || null,
+      isUrl: true  // flag: use URL directly, not data: URI
+    };
+  }
+  showJobRefs(jobId);
 
   // Show pickup action buttons for pickup dispatch jobs
   var pickupActions=document.getElementById('pickupActions');
   if(pickupActions) pickupActions.style.display=(d.dispatch&&d.dispatch.toLowerCase().includes('pickup'))?'block':'none';
+  // Show road dispatch tracking panel for road dispatch jobs
+  var roadActions=document.getElementById('roadDispatchActions');
+  if(roadActions){
+    var isRoad=d.dispatch&&d.dispatch.toLowerCase().includes('road');
+    roadActions.style.display=isRoad?'block':'none';
+  }
   var impoEdit=document.getElementById('impositionSection');
   var impoLock=document.getElementById('impositionLocked');
   var isSheets=d.productKey==='sheets';
@@ -3930,7 +3661,7 @@ function updateCustSheetLayout(){
 
 // ── Proof thumbnails — live in rows ──────────────────────────────────
 var PROOF_THUMBNAILS = {};
-// Seed with example approved proof for SS-1028 (Sunday Roasters - Print stage)
+// Proof thumbnails populated dynamically from Supabase via loadBoard()
 // In real build these load from Supabase storage URLs
 
 function storeThumbnail(jobId, src, type, approved){
@@ -3975,7 +3706,7 @@ function refreshAllThumbs(){
 }
 
 
-function approvePoof(){
+async function approvePoof(){
   if(window._currentJobId){
     if(!PROOF_THUMBNAILS[window._currentJobId]){
       PROOF_THUMBNAILS[window._currentJobId]={src:null,type:'pdf',approved:true};
@@ -3983,11 +3714,17 @@ function approvePoof(){
       PROOF_THUMBNAILS[window._currentJobId].approved=true;
     }
     updateAllRowThumbs(window._currentJobId);
+    // Persist to Supabase
+    var db2=getDB();
+    if(db2){
+      await db2.from('jobs').update({
+        status:'print', proof_approved:true, proof_approved_at:new Date().toISOString()
+      }).eq('id',window._currentJobId);
+    }
   }
-  // Update status badge
   var badge=document.getElementById('jdStatusBadge');
   if(badge){badge.textContent='Print';badge.className='jd-status-badge print';}
-  alert('Proof approved! Job moves to Print. Customer confirmation sent.');
+  showToast('Proof approved — job moved to Print ✓');
 }
 
 
@@ -4177,13 +3914,45 @@ function saveOutsourceTracking(){
   if(!t){document.getElementById('outTrackingInput').focus();return;}
   alert('Tracking saved: '+t+'\nReady to send to customer when needed.');
 }
-function sendOutsourceTrackingToCustomer(){
+async function sendOutsourceTrackingToCustomer(){
   var t=document.getElementById('outTrackingInput').value;
   if(!t){alert('Enter the tracking number first.');document.getElementById('outTrackingInput').focus();return;}
   var courierEl=document.getElementById('outCourierDisplay');
-  var courier=courierEl?courierEl.textContent:'your carrier';
-  // Customer email shows StickySitch as sender — no outsource info
-  alert('Tracking sent to customer as:\n\n"Your StickySitch order has been dispatched via '+courier+'.\nTrack your order: '+t+'"\n\nNo outsource information is shared with the customer.');
+  var courier=courierEl?courierEl.textContent:'';
+
+  // Auto-fulfil the Shopify order
+  var d = window._currentJobId ? JOB_DATA[window._currentJobId] : null;
+  if(d && d.shopify_order_id){
+    try {
+      var resp = await fetch('/api/fulfil-shopify', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({
+          shopify_order_id: d.shopify_order_id,
+          tracking_number:  t,
+          courier:          courier
+        })
+      });
+      var result = await resp.json();
+      if(result.success){
+        showToast('Shopify order marked as fulfilled ✓');
+      } else {
+        console.warn('Shopify fulfil:', result.error);
+      }
+    } catch(e){
+      console.error('Fulfil error:', e);
+    }
+  }
+
+  // Update job status to dispatched
+  if(window._currentJobId){
+    var db2=getDB();
+    if(db2) await db2.from('jobs').update({status:'dispatched',outsource_tracking:t}).eq('id',window._currentJobId);
+  }
+
+  // Customer preview (internal) — no outsource info shared
+  togglePanel('outsourcePanel');
+  showToast('Tracking sent to customer. Shopify order fulfilled ✓');
 }
 
 // Show outsource section when job is outsourced
@@ -4418,18 +4187,77 @@ function parseAddress(addr){
 
 
 // ── Pickup workflow ───────────────────────────────────────────────────
-function markPickupReady(){
+async function markPickupReady(){
   var badge=document.getElementById('jdStatusBadge');
   if(badge){badge.textContent='Awaiting Pickup';badge.className='jd-status-badge pickup';}
   logInternalNote('📦 Job packed and ready for customer pickup. Customer notified.');
-  alert('Status → Awaiting Pickup\nCustomer notified that their order is ready to collect.');
+  if(window._currentJobId){
+    try{
+      var resp=await fetch('/api/send-pickup-notification',{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({job_id:window._currentJobId})
+      });
+      var result=await resp.json();
+      if(result.success){ showToast('Customer notified — order ready for pickup ✓'); }
+      else { showToast('Email failed: '+(result.error||'unknown error')); }
+    }catch(e){ console.error('pickup notify error:',e); showToast('Connection error sending notification'); }
+  }
 }
-function markPickedUp(){
+async function markPickedUp(){
   var badge=document.getElementById('jdStatusBadge');
   if(badge){badge.textContent='Picked Up';badge.className='jd-status-badge pickedup';}
   logInternalNote('✓ Order collected by customer. Will archive in 5 days.');
-  alert('Status → Picked Up\nJob will archive automatically after 5 days.');
+  if(window._currentJobId){
+    var db2=getDB();
+    if(db2) await db2.from('jobs').update({status:'pickedup'}).eq('id',window._currentJobId);
+  }
+  showToast('Marked as picked up — archives in 5 days');
 }
+async function sendRoadTracking(){
+  var tracking=document.getElementById('roadTrackingInput').value.trim();
+  var courier=document.getElementById('roadCourierSelect').value;
+  if(!tracking){alert('Enter the tracking number first.');document.getElementById('roadTrackingInput').focus();return;}
+  if(!courier){alert('Select a courier.');document.getElementById('roadCourierSelect').focus();return;}
+  if(!window._currentJobId)return;
+
+  var btn=event&&event.target?event.target:null;
+  if(btn){btn.textContent='Sending…';btn.disabled=true;}
+
+  try{
+    // Send our branded email + update job status
+    var emailResp=await fetch('/api/send-tracking-email',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({job_id:window._currentJobId,tracking_number:tracking,courier:courier})
+    });
+    var emailResult=await emailResp.json();
+
+    // Auto-fulfil Shopify if this job came from Shopify
+    var d=JOB_DATA[window._currentJobId];
+    if(d&&d.shopify){
+      var shopifyOrderId=d.shopify_order_id||null;
+      if(shopifyOrderId){
+        await fetch('/api/fulfil-shopify',{
+          method:'POST',headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({shopify_order_id:shopifyOrderId,tracking_number:tracking,courier:courier})
+        }).catch(function(e){console.warn('Shopify fulfil error:',e);});
+      }
+    }
+
+    if(emailResult.success){
+      showToast('Tracking sent to customer ✓ — Shopify order fulfilled');
+      var badge=document.getElementById('jdStatusBadge');
+      if(badge){badge.textContent='Dispatched';badge.className='jd-status-badge dispatched';}
+    } else {
+      showToast('Email failed: '+(emailResult.error||'unknown error'));
+    }
+  }catch(e){
+    console.error('sendRoadTracking error:',e);
+    showToast('Connection error sending tracking');
+  } finally {
+    if(btn){btn.textContent='Send tracking → mark dispatched';btn.disabled=false;}
+  }
+}
+
 function logInternalNote(text){
   var now=new Date();
   var months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -4759,28 +4587,63 @@ function loginAsAdmin(){CURRENT_MEMBER=TEAM[0];loginAs('admin');}
 function loginAsStaff(){CURRENT_MEMBER=TEAM[1]||{name:'Staff',email:'staff@stickysitch.com.au',role:'staff'};loginAs('staff');}
 
 function openTeamModal(){
-  renderTeamList();
+  loadTeamFromServer();
   document.getElementById('teamOverlay').classList.add('show');
 }
 function closeTeamModal(){
   document.getElementById('teamOverlay').classList.remove('show');
 }
 
+var SERVER_TEAM = [];
+
+async function getAdminAuthHeader(){
+  var db2 = getDB();
+  if(!db2) return null;
+  var sess = await db2.auth.getSession();
+  return sess && sess.data && sess.data.session ? sess.data.session.access_token : null;
+}
+
+async function loadTeamFromServer(){
+  var list=document.getElementById('teamMemberList');
+  if(list) list.innerHTML='<div class="team-empty">Loading team...</div>';
+  var token = await getAdminAuthHeader();
+  if(!token){ if(list) list.innerHTML='<div class="team-empty">Not signed in.</div>'; return; }
+  try{
+    var resp = await fetch('/api/manage-team', {
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
+      body: JSON.stringify({action:'list'})
+    });
+    var result = await resp.json();
+    if(result.success){
+      SERVER_TEAM = result.team || [];
+      renderTeamList();
+    } else {
+      if(list) list.innerHTML='<div class="team-empty">'+(result.error||'Failed to load team')+'</div>';
+    }
+  } catch(e){
+    console.error('loadTeamFromServer error:', e);
+    if(list) list.innerHTML='<div class="team-empty">Connection error.</div>';
+  }
+}
+
 function renderTeamList(){
   var list=document.getElementById('teamMemberList');
   if(!list)return;
-  if(TEAM.length===0){list.innerHTML='<div class="team-empty">No team members yet.</div>';return;}
-  list.innerHTML=TEAM.map(function(m,i){
-    var initial=(m.name||'?')[0].toUpperCase();
-    var isSelf=(m.email.toLowerCase()===(CURRENT_MEMBER&&CURRENT_MEMBER.email||'').toLowerCase());
+  if(SERVER_TEAM.length===0){list.innerHTML='<div class="team-empty">No team members yet.</div>';return;}
+  list.innerHTML=SERVER_TEAM.map(function(m){
+    var initial=(m.full_name||'?')[0].toUpperCase();
+    var isSelf=(CURRENT_MEMBER && m.username===CURRENT_MEMBER.username);
+    var youTag = isSelf ? ' <span class="team-you-tag">(you)</span>' : '';
+    var removeBtn = isSelf ? '' : '<button class="team-remove" data-user-id="'+m.id+'" data-user-name="'+m.full_name+'" onclick="removeTeamMember(this)" title="Remove access">\u2715</button>';
     return '<div class="team-member-row">'
       +'<div class="team-avatar '+(m.role==='admin'?'':'staff')+'">'+initial+'</div>'
       +'<div class="team-info">'
-      +'<div class="team-name">'+m.name+(isSelf?' <span style=\'font-size:10px;color:var(--ink-3);font-weight:400\'>(you)</span>':'')+'</div>'
+      +'<div class="team-name">'+m.full_name+youTag+'</div>'
       +'<div class="team-email">@'+m.username+'</div>'
       +'</div>'
       +'<span class="team-role-badge '+(m.role==='admin'?'admin':'staff')+'">'+m.role.charAt(0).toUpperCase()+m.role.slice(1)+'</span>'
-      +(isSelf?'':'<button class="team-remove" onclick="removeTeamMember('+i+')" title="Remove access">✕</button>')
+      +removeBtn
     +'</div>';
   }).join('');
 }
@@ -4792,35 +4655,83 @@ function selectNewRole(role, btn){
   var desc=document.getElementById('roleDescription');
   if(desc){
     desc.textContent=role==='admin'
-      ?'Admin has full access — frontend board, customers, archive, team management and all job actions.'
-      :'Staff can view and action jobs in production. Cannot access frontend, customers or archive.';
+      ? 'Admin has full access. Frontend board, customers, archive, team management and all job actions.'
+      : 'Staff can view and action jobs in production. Cannot access frontend, customers or archive.';
   }
 }
 
-function addTeamMember(){
+async function addTeamMember(){
   var name=document.getElementById('newMemberName').value.trim();
   var username=(document.getElementById('newMemberUsername').value||'').trim().toLowerCase().replace(/[^a-z0-9_]/g,'');
+  var email=(document.getElementById('newMemberEmail').value||'').trim().toLowerCase();
   var password=document.getElementById('newMemberPassword').value;
+
   if(!name){alert('Enter a name.');return;}
   if(!username){alert('Enter a username (letters and numbers only).');return;}
-  if(!password||password.length<6){alert('Password must be at least 6 characters.');return;}
-  if(TEAM.find(function(m){return m.username.toLowerCase()===username;})){alert('Username "'+username+'" is already taken.');return;}
-  TEAM.push({name:name,username:username,password:password,role:_newMemberRole});
-  // Clear form
-  document.getElementById('newMemberName').value='';
-  document.getElementById('newMemberUsername').value='';
-  document.getElementById('newMemberPassword').value='';
-  renderTeamList();
-  showToast(name+' added to team as '+_newMemberRole+' ✓');
+  if(!email||!email.includes('@')){alert('Enter a valid email.');return;}
+  if(!password||password.length<8){alert('Password must be at least 8 characters.');return;}
+
+  var token = await getAdminAuthHeader();
+  if(!token){alert('Not signed in.');return;}
+
+  var btn = document.querySelector('.team-add-btn');
+  if(btn){btn.textContent='Adding...';btn.disabled=true;}
+
+  try{
+    var resp = await fetch('/api/manage-team', {
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
+      body: JSON.stringify({action:'create', name:name, username:username, email:email, password:password, role:_newMemberRole})
+    });
+    var result = await resp.json();
+    if(result.success){
+      document.getElementById('newMemberName').value='';
+      document.getElementById('newMemberUsername').value='';
+      document.getElementById('newMemberEmail').value='';
+      document.getElementById('newMemberPassword').value='';
+      await loadTeamFromServer();
+      showToast(name+' added to team as '+_newMemberRole+' \u2713');
+    } else {
+      alert('Could not add team member: '+(result.error||'unknown error'));
+    }
+  } catch(e){
+    console.error('addTeamMember error:', e);
+    alert('Connection error. Please try again.');
+  } finally {
+    if(btn){btn.textContent='Add member \u2192';btn.disabled=false;}
+  }
 }
 
-function removeTeamMember(idx){
-  var m=TEAM[idx];
-  if(!m)return;
-  if(!confirm('Remove '+m.name+' ('+m.email+') from team?\nThey will no longer be able to log in.'))return;
-  TEAM.splice(idx,1);
-  renderTeamList();
-  showToast('Access removed for '+m.name);
+async function removeTeamMember(el){
+  var userId = el.dataset.userId;
+  var userName = el.dataset.userName;
+  if(!userId)return;
+  if(!confirm('Remove '+userName+' from the team?\nThey will no longer be able to log in.'))return;
+
+  var token = await getAdminAuthHeader();
+  if(!token){alert('Not signed in.');return;}
+
+  el.textContent='...'; el.disabled=true;
+
+  try{
+    var resp = await fetch('/api/manage-team', {
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
+      body: JSON.stringify({action:'remove', user_id:userId})
+    });
+    var result = await resp.json();
+    if(result.success){
+      await loadTeamFromServer();
+      showToast('Access removed for '+userName);
+    } else {
+      alert('Could not remove team member: '+(result.error||'unknown error'));
+      el.textContent='\u2715'; el.disabled=false;
+    }
+  } catch(e){
+    console.error('removeTeamMember error:', e);
+    alert('Connection error. Please try again.');
+    el.textContent='\u2715'; el.disabled=false;
+  }
 }
 
 
@@ -4955,10 +4866,246 @@ window.addEventListener('load', async function(){
 });
 
 // ── Live board ──────────────────────────────────────────────
+
+
+// ── Open a sibling (split) job ────────────────────────────────────────
+function openSiblingJob(el){
+  var jobId = el ? el.dataset.jobId : '';
+  if(!jobId) return;
+  window._currentJobId = jobId;
+  window._currentJobProduct = JOB_DATA[jobId] ? JOB_DATA[jobId].productKey : '';
+  var prodActive = document.getElementById('production') && document.getElementById('production').classList.contains('show');
+  window._jobOpenedFrom = prodActive ? 'production' : 'frontend';
+  populateJobDetail(jobId);
+  // Already on job screen — just re-populate, no navigation needed
+  document.querySelector('.jd-body').scrollTo({top:0, behavior:'smooth'});
+}
+
+
+// ── Invoice / reference files ─────────────────────────────────────────
+var JOB_INVOICES = {}; // { jobId: { dataUrl, filename, threadUrl } }
+var _pendingInvoice = null; // set before job is saved
+
+function handleInvFile(input){
+  var file = input && input.files && input.files[0];
+  if(!file) return;
+  var preview = document.getElementById('invFilePreview');
+  var nameEl  = document.getElementById('invFileName');
+  if(nameEl) nameEl.textContent = file.name;
+  if(preview) preview.classList.add('show');
+  // Store as data URL for download
+  var reader = new FileReader();
+  reader.onload = function(e){ _pendingInvoice = { dataUrl: e.target.result, filename: file.name }; };
+  reader.readAsDataURL(file);
+}
+function handleInvDrop(e){
+  e.preventDefault();
+  document.getElementById('invDropZone').classList.remove('drag');
+  var file = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+  if(file && file.type === 'application/pdf'){
+    handleInvFile({ files: [file] });
+  }
+}
+function clearInvFile(){
+  _pendingInvoice = null;
+  var preview = document.getElementById('invFilePreview');
+  var input   = document.getElementById('jfInvoiceFile');
+  if(preview) preview.classList.remove('show');
+  if(input)   input.value = '';
+}
+
+// Save invoice to job after creation
+function saveInvoiceToJob(jobId){
+  var threadUrl = document.getElementById('jfThreadUrl') ? document.getElementById('jfThreadUrl').value.trim() : '';
+  if(_pendingInvoice || threadUrl){
+    JOB_INVOICES[jobId] = {
+      dataUrl:   _pendingInvoice ? _pendingInvoice.dataUrl   : null,
+      filename:  _pendingInvoice ? _pendingInvoice.filename  : null,
+      threadUrl: threadUrl || null
+    };
+    _pendingInvoice = null;
+  }
+}
+
+// Show references in job detail
+function showJobRefs(jobId){
+  var refs    = JOB_INVOICES[jobId];
+  var block   = document.getElementById('jdRefBlock');
+  var invRow  = document.getElementById('jdInvoiceRef');
+  var thrRow  = document.getElementById('jdThreadRef');
+  if(!block) return;
+
+  var hasInvoice = refs && refs.dataUrl;
+  var hasThread  = refs && refs.threadUrl;
+
+  block.style.display   = (hasInvoice || hasThread) ? 'block' : 'none';
+  if(invRow) invRow.style.display = hasInvoice ? 'flex' : 'none';
+  if(thrRow) thrRow.style.display = hasThread  ? 'flex' : 'none';
+
+  if(hasInvoice){
+    var nameEl = document.getElementById('jdInvoiceName');
+    var dlBtn  = document.getElementById('jdInvoiceBtn');
+    var url = refs.isUrl ? refs.dataUrl : refs.dataUrl;
+    if(nameEl) nameEl.textContent = refs.filename || 'invoice.pdf';
+    if(dlBtn){ dlBtn.href = url||'#'; dlBtn.setAttribute('download', refs.filename||'invoice.pdf'); }
+  }
+  if(hasThread){
+    var thrBtn = document.getElementById('jdThreadBtn');
+    var thrSub = document.getElementById('jdThreadDomain');
+    if(thrBtn) thrBtn.href = refs.threadUrl;
+    if(thrSub){
+      try{ thrSub.textContent = new URL(refs.threadUrl).hostname; } catch(e){ thrSub.textContent = 'Open thread'; }
+    }
+  }
+}
+
+// Clear ref form fields on form reset
+var _origOpenJobForm = openJobForm;
+function openJobForm(){
+  _origOpenJobForm();
+  _pendingInvoice = null;
+  clearInvFile();
+  var tu = document.getElementById('jfThreadUrl'); if(tu) tu.value = '';
+}
+
+
+// ── Artwork upload to Supabase Storage ───────────────────────────────
+async function uploadArtworkToStorage(file, jobId){
+  if(!file || !jobId) return null;
+  var db2 = getDB();
+  if(!db2){ console.log('No DB — artwork not persisted'); return null; }
+
+  showToast('Uploading artwork…');
+  var formData = new FormData();
+  formData.append('file',   file);
+  formData.append('job_id', jobId);
+  formData.append('bucket', 'artwork');
+
+  try {
+    var resp = await fetch('/api/upload-artwork', { method:'POST', body: formData });
+    var result = await resp.json();
+    if(result.success){
+      showToast('Artwork uploaded ✓');
+      return result;
+    } else {
+      console.error('Artwork upload failed:', result.error);
+      showToast('Upload failed: '+result.error);
+      return null;
+    }
+  } catch(e){
+    console.error('Artwork upload error:', e);
+    showToast('Upload error — check connection');
+    return null;
+  }
+}
+
+// ── Invoice upload to Supabase Storage ───────────────────────────────
+async function uploadInvoiceToStorage(file, jobId){
+  if(!file || !jobId) return null;
+  showToast('Uploading invoice…');
+  var formData = new FormData();
+  formData.append('file',   file);
+  formData.append('job_id', jobId);
+  formData.append('bucket', 'invoices');
+
+  try {
+    var resp = await fetch('/api/upload-artwork', { method:'POST', body: formData });
+    var result = await resp.json();
+    if(result.success){
+      // Also save thread URL to job record if provided
+      var threadUrl = document.getElementById('jfThreadUrl') ? document.getElementById('jfThreadUrl').value.trim() : '';
+      var db2 = getDB();
+      if(db2 && threadUrl){
+        await db2.from('jobs').update({ thread_url: threadUrl }).eq('id', jobId);
+      }
+      showToast('Invoice uploaded ✓');
+      return result;
+    }
+    return null;
+  } catch(e){
+    console.error('Invoice upload error:', e);
+    return null;
+  }
+}
+
+// Override handleProofFile to also upload to storage when a job is open
+var _origHandleProofFile = handleProofFile;
+function handleProofFile(input){
+  _origHandleProofFile(input);
+  // If a job is currently open and has a real Supabase ID, upload
+  if(window._currentJobId && window._currentJobId.startsWith('SS-')){
+    var file = input && input.files && input.files[0];
+    if(file) uploadArtworkToStorage(file, window._currentJobId);
+  }
+}
+
+
+// ── Live scorecard from Supabase ────────────────────────────────────
+function trendArrow(up){
+  return up
+    ? '<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 10V2M6 2L2 6M6 2L10 6" stroke="#00C27A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+    : '<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 2V10M6 10L2 6M6 10L10 6" stroke="#D92B4B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+}
+function pctChange(curr, prev){
+  if(!prev || prev===0) return curr>0 ? 100 : 0;
+  return Math.round(((curr-prev)/prev)*100);
+}
+function trendHtml(curr, prev, label, isMoney){
+  var pct = pctChange(curr, prev);
+  var up  = pct >= 0;
+  var color = up ? 'var(--green)' : 'var(--red)';
+  var prevDisplay = isMoney ? ('$'+Number(prev).toLocaleString()) : Number(prev).toLocaleString();
+  return '<span style="font-family:\'Inter Tight\',sans-serif;font-size:12px;font-weight:700;color:'+color+';display:flex;align-items:center;gap:2px">'
+    +trendArrow(up)+(up?'+':'')+pct+'%</span>'
+    +'<span style="font-family:\'DM Sans\',sans-serif;font-size:11px;color:var(--ink-3)">vs '+prevDisplay+' '+label+'</span>';
+}
+
+async function fetchScorecard(){
+  var db2 = getDB();
+  if(!db2) return;
+
+  try {
+    var {data, error} = await db2.rpc('get_weekly_stats');
+    if(error){ console.error('Scorecard fetch error:', error); return; }
+    if(!data) return;
+
+    // Jobs this week
+    var jwEl = document.getElementById('scJobsWeekCount');
+    var jwTrend = document.getElementById('scJobsWeekTrend');
+    if(jwEl) jwEl.textContent = (data.jobs_this_week||0).toLocaleString();
+    if(jwTrend) jwTrend.innerHTML = trendHtml(data.jobs_this_week||0, data.jobs_last_week||0, 'last week', false);
+
+    // Revenue this week
+    var rwEl = document.getElementById('scRevWeekCount');
+    var rwTrend = document.getElementById('scRevWeekTrend');
+    if(rwEl) rwEl.textContent = '$'+Math.round(data.revenue_this_week||0).toLocaleString();
+    if(rwTrend) rwTrend.innerHTML = trendHtml(data.revenue_this_week||0, data.revenue_last_week||0, 'last week', true);
+
+    // Jobs this month
+    var jmEl = document.getElementById('scJobsMonthCount');
+    var jmTrend = document.getElementById('scJobsMonthTrend');
+    if(jmEl) jmEl.textContent = (data.jobs_this_month||0).toLocaleString();
+    if(jmTrend) jmTrend.innerHTML = trendHtml(data.jobs_this_month||0, data.jobs_last_month||0, 'last month', false);
+
+    // Revenue this month
+    var rmEl = document.getElementById('scRevMonthCount');
+    var rmTrend = document.getElementById('scRevMonthTrend');
+    if(rmEl) rmEl.textContent = '$'+Math.round(data.revenue_this_month||0).toLocaleString();
+    if(rmTrend) rmTrend.innerHTML = trendHtml(data.revenue_this_month||0, data.revenue_last_month||0, 'last month', true);
+
+  } catch(e){
+    console.error('fetchScorecard error:', e);
+  }
+}
+
+
+
+// ── Grafted: live board functions (loadBoard, buildJobRow, buildJobCard, etc.) ──
 var PRODUCT_LABELS = {
   rolls:'Roll labels', sheets:'Sticker sheets',
   individual:'Individual stickers', bumper:'Bumper stickers', large:'Large format'
 };
+
 var PRODUCT_THUMBS = {
   rolls:{emoji:'🏷️',cls:'rolls'}, sheets:{emoji:'📋',cls:'sheets'},
   individual:{emoji:'⭐',cls:'individual'}, bumper:{emoji:'🚗',cls:'bumper'},
@@ -4970,21 +5117,26 @@ function fmtDate(d){
   var dt=new Date(d);
   return dt.getDate()+' '+'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split(' ')[dt.getMonth()];
 }
+
 function fmtSize(w,h){
   if(w&&h) return w+' × '+h+' mm';
   if(w)    return w+' mm';
   return '—';
 }
+
 function fmtDispatch(method, courier){
   var m = method==='road'?'Road dispatch':method==='same-day'?'Same day courier':method==='pickup'?'Pickup':'—';
   return courier ? m+' · '+courier : m;
 }
+
 function chipClass(status){
   var map={new:'new',prepress:'prepress',awaiting:'awaiting',revision:'revision',
     print:'print',lam:'lam',cut:'cut',qa:'qa',outsource:'outsource',
-    pickup:'pickup',pickedup:'pickedup',hold:'hold',dispatched:'dispatched'};
+    pickup:'pickup',pickedup:'pickedup',hold:'hold',dispatched:'dispatched',
+    cancelled:'cancelled',refunded:'refunded'};
   return map[status]||'new';
 }
+
 function chipLabel(status){
   return (STATUS_META[status]||[status])[0]||status;
 }
@@ -5009,7 +5161,7 @@ function buildJobRow(job){
     +'<td><button class="prio-btn prio-off" onclick="event.stopPropagation();togglePrio(this)" title="Set priority">⚡</button></td>'
     +'<td class="thumb-cell"><div class="row-thumb '+thumb.cls+'" onclick="event.stopPropagation();downloadArtwork(this)">'
     +thumb.emoji+'<span class="thumb-dl">⬇</span><span class="proof-tick">✓</span></div></td>'
-    +'<td class="tbl-id">'+job.id+'</td>'
+    +'<td class="tbl-id">'+job.id+(job.shopify_order_number?'<div class="shopify-ref">'+job.shopify_order_number+'</div>':'')+'</td>'
     +'<td class="tbl-cust"><div style="font-weight:600;font-size:14px;color:var(--navy)">'+(job.business_name||'Unknown')+'</div>'
     +(job.contact_name?'<div class="tbl-id" style="font-size:11px;margin-top:1px">'+job.contact_name+'</div>':'')+'</td>'
     +'<td><span class="src '+src+'">'+src.charAt(0).toUpperCase()+src.slice(1)+'</span></td>'
@@ -5091,9 +5243,18 @@ async function loadBoard(){
       artFile: job.artwork_filename||'artwork.pdf', artSize: job.artwork_size_bytes
         ? Math.round(job.artwork_size_bytes/1024/1024*10)/10+' MB' : '',
       status: job.status, statusLabel: chipLabel(job.status),
+      shopify_order_group: job.shopify_order_group||null,
+      parent_job_id: job.parent_job_id||null,
       productKey: item.product_type||'individual',
       outsourceSupplier: job.outsource_supplier||'TBC',
-      outsourceDest: job.outsource_dest||'Our factory'
+      outsourceDest: job.outsource_dest||'Our factory',
+      invoice_url:   job.invoice_url||null,
+      invoice_filename: job.invoice_filename||null,
+      thread_url:    job.thread_url||null,
+      cancellationReason: job.cancellation_reason||null,
+      cancelledAt:   job.cancelled_at?fmtDate(job.cancelled_at):null,
+      refundedAmount: job.refunded_amount||null,
+      refundedAt:    job.refunded_at?fmtDate(job.refunded_at):null
     };
   });
 
@@ -5118,10 +5279,10 @@ async function loadBoard(){
   applyFrontFilters();
   applyProdFilters();
   updateScorecard();
+  fetchScorecard();
   refreshAllThumbs();
 }
 
-// ── Realtime subscription ─────────────────────────────────────────────
 function subscribeRealtime(){
   db = getDB(); if(!db) return;
   db.channel('board-changes')
@@ -5144,35 +5305,6 @@ function subscribeRealtime(){
     })
     .subscribe();
 }
-
-// ── Persist status change to Supabase ────────────────────────────────
-var _origChangeJobStatus = changeJobStatus;
-async function changeJobStatus(newStatus){
-  _origChangeJobStatus(newStatus); // update UI immediately
-  db = getDB(); if(db && window._currentJobId){
-    var {error} = await db.from('jobs')
-      .update({status: newStatus})
-      .eq('id', window._currentJobId);
-    if(error) console.error('Status update failed:', error.message);
-  }
-}
-
-// ── Persist internal notes to Supabase ───────────────────────────────
-var _origLogNote = logInternalNote;
-async function logInternalNote(text){
-  _origLogNote(text); // update UI immediately
-  db = getDB(); if(db && window._currentJobId && CURRENT_MEMBER){
-    await db.from('job_notes').insert({
-      job_id:      window._currentJobId,
-      author_name: CURRENT_MEMBER.name + (CURRENT_ROLE==='admin' ? ' (Admin)' : ' (Staff)'),
-      content:     text,
-      source:      'team'
-    });
-  }
-}
-
-// Start realtime after a short delay to ensure auth is settled
-setTimeout(subscribeRealtime, 2000);
 
 </script>
 
@@ -5366,10 +5498,45 @@ setTimeout(subscribeRealtime, 2000);
         </div>
       </div>
 
-      <!-- § 6 ARTWORK -->
+      <!-- § 6 REFERENCES -->
       <div class="jf-section">
         <div class="jf-section-head">
           <div class="jf-section-num">6</div>
+          <h3>References</h3>
+        </div>
+
+        <!-- Invoice PDF upload -->
+        <div class="jf-field">
+          <label>Invoice / quote PDF</label>
+          <div class="jf-file-drop" id="invDropZone"
+            ondragover="event.preventDefault();this.classList.add('drag')"
+            ondragleave="this.classList.remove('drag')"
+            ondrop="handleInvDrop(event)">
+            <input type="file" accept=".pdf" onchange="handleInvFile(this)" id="jfInvoiceFile">
+            <div class="jf-file-drop-icon">🧾</div>
+            <div class="jf-file-drop-label">Drop invoice PDF here or tap to browse</div>
+            <div class="jf-file-drop-sub">PDF from Xero, Rounded or any invoicing tool</div>
+          </div>
+          <div class="jf-file-selected" id="invFilePreview">
+            <span style="font-size:20px">📄</span>
+            <span class="jf-file-name" id="invFileName">invoice.pdf</span>
+            <button class="jf-file-clear" onclick="clearInvFile()">✕</button>
+          </div>
+        </div>
+
+        <!-- HelpScout / email thread URL -->
+        <div class="jf-field" style="margin-top:12px">
+          <label>Email thread URL <span style="font-weight:400;color:var(--ink-3)">(optional)</span></label>
+          <input class="jf-input" id="jfThreadUrl" type="url"
+            placeholder="Paste HelpScout conversation URL…"
+            autocomplete="off">
+        </div>
+      </div>
+
+      <!-- § 7 ARTWORK -->
+      <div class="jf-section">
+        <div class="jf-section-head">
+          <div class="jf-section-num">7</div>
           <h3>Artwork</h3>
         </div>
         <div class="jf-pills" id="jfArtworkPills">
@@ -5383,10 +5550,10 @@ setTimeout(subscribeRealtime, 2000);
         </div>
       </div>
 
-      <!-- § 6 NOTES -->
+      <!-- § 8 NOTES -->
       <div class="jf-section">
         <div class="jf-section-head">
-          <div class="jf-section-num">7</div>
+          <div class="jf-section-num">8</div>
           <h3>Internal notes</h3>
         </div>
         <div class="jf-field">
@@ -5682,13 +5849,13 @@ setTimeout(subscribeRealtime, 2000);
         <thead><tr><th>Job #</th><th>Product</th><th>Qty</th><th>Size</th><th>Status</th><th>Due</th></tr></thead>
         <tbody>
           <tr onclick="go('job')">
-            <td style="font-family:'Inter Tight',sans-serif;font-weight:600;color:var(--lilac)">SS-1042</td>
+            <td style="font-family:'Inter Tight',sans-serif;font-weight:600;color:var(--lilac)" id="cvSibJob1"></td>
             <td>Roll labels</td><td>2,000</td><td>90 × 60 mm</td>
             <td><span class="chip new">New</span></td>
             <td style="color:#D92B4B;font-weight:700">⚡ 13 Jun</td>
           </tr>
           <tr onclick="go('job')">
-            <td style="font-family:'Inter Tight',sans-serif;font-weight:600;color:var(--lilac)">SS-1042b</td>
+            <td style="font-family:'Inter Tight',sans-serif;font-weight:600;color:var(--lilac)" id="cvSibJob2"></td>
             <td>Individual stickers</td><td>500</td><td>70 mm</td>
             <td><span class="chip new">New</span></td>
             <td style="color:#D92B4B;font-weight:700">⚡ 13 Jun</td>
@@ -5762,6 +5929,10 @@ setTimeout(subscribeRealtime, 2000);
         <input class="team-input" id="newMemberUsername" type="text" placeholder="e.g. emmanuel" autocapitalize="none">
       </div>
       <div class="team-field">
+        <label>Email</label>
+        <input class="team-input" id="newMemberEmail" type="email" placeholder="e.g. emmanuel@example.com" autocapitalize="none">
+      </div>
+      <div class="team-field">
         <label>Password</label>
         <input class="team-input" id="newMemberPassword" type="password" placeholder="Min 8 characters">
       </div>
@@ -5784,357 +5955,6 @@ setTimeout(subscribeRealtime, 2000);
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
-// ============================================================
-// SUPABASE — Auth + Live Board
-// ============================================================
-const SUPABASE_URL  = 'https://irwgxtnlsssmkjiofhgq.supabase.co';
-const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlyd2d4dG5sc3NzbWtqaW9maGdxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyOTI3MzQsImV4cCI6MjA5Nzg2ODczNH0.38oYSKXw3TiP4VP9g9A3Ghn43f8z8Mt8NYF_zKdwkm0';
-var _db = null;
-function getDB(){
-  if(!_db){
-    if(window.supabase){
-      _db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
-    }
-  }
-  return _db;
-}
-var db = null; // set after DOM ready
 
-// ── Auth ────────────────────────────────────────────────────
-async function doLogin(){
-  db = getDB();
-  var username = (document.getElementById('loginUsername').value||'').toLowerCase().trim();
-  var pw       = document.getElementById('loginPw').value||'';
-  var errEl    = document.getElementById('loginErr');
-
-  function showErr(msg){
-    if(errEl){errEl.textContent=msg||'Incorrect username or password.';errEl.style.display='block';}
-  }
-
-  if(!username||!pw){showErr('Enter your username and password.');return;}
-
-  // No Supabase client — fall back to prototype mode
-  if(!db){
-    var member=TEAM.find(function(m){return m.username.toLowerCase()===username&&m.password===pw;});
-    if(member){
-      CURRENT_MEMBER=member;CURRENT_ROLE=member.role;
-      if(errEl)errEl.style.display='none';
-      if(member.role==='admin')go('frontend');else go('production');
-      applyRoleUI();
-    } else {
-      showErr('Incorrect username or password.');
-    }
-    return;
-  }
-
-  // Step 1: look up email by username via RPC (bypasses RLS for anon users)
-  var {data:email, error:rpcErr} = await db.rpc('get_email_by_username', {p_username: username});
-
-  if(rpcErr){
-    console.error('Username lookup error:', rpcErr);
-    showErr('Database error — check console.'); return;
-  }
-  if(!email){
-    showErr('Username not found. Check spelling or ask David to add you.'); return;
-  }
-
-  // Step 2: sign in with Supabase Auth using the resolved email
-  var {data:authData, error:authErr} = await db.auth.signInWithPassword({
-    email: email,
-    password: pw
-  });
-
-  if(authErr){
-    console.error('Auth error:', authErr.message);
-    showErr('Wrong password. Try again or reset your password.'); return;
-  }
-
-  // Step 3: fetch full profile now that we are authenticated
-  var {data:profile} = await db
-    .from('profiles')
-    .select('full_name, role, username, email')
-    .eq('username', username)
-    .single();
-
-  // Success
-  CURRENT_MEMBER={
-    name: (profile&&profile.full_name)||username,
-    username: username,
-    email: email,
-    role: (profile&&profile.role)||'staff'
-  };
-  CURRENT_ROLE = CURRENT_MEMBER.role;
-  if(errEl)errEl.style.display='none';
-  if(CURRENT_ROLE==='admin')go('frontend');else go('production');
-  applyRoleUI();
-  loadBoard();
-}
-
-function doLoginPrototype(){
-  var username = (document.getElementById('loginUsername').value||'').toLowerCase().trim();
-  var pw = document.getElementById('loginPw').value||'';
-  var member = TEAM.find(function(m){return m.username.toLowerCase()===username&&m.password===pw;});
-  var errEl = document.getElementById('loginErr');
-  if(member){
-    CURRENT_MEMBER=member; CURRENT_ROLE=member.role;
-    if(errEl)errEl.style.display='none';
-    if(member.role==='admin') go('frontend'); else go('production');
-    applyRoleUI();
-  } else {
-    if(errEl)errEl.style.display='block';
-  }
-}
-
-async function doLogout(){
-  document.querySelectorAll('.avatar-menu').forEach(function(m){m.classList.remove('show');});
-  db = getDB(); if(db) await db.auth.signOut();
-  CURRENT_ROLE='admin'; CURRENT_MEMBER=null;
-  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('show');});
-  document.getElementById('login').classList.add('show');
-  var un=document.getElementById('loginUsername'); if(un)un.value='';
-  var pw=document.getElementById('loginPw');       if(pw)pw.value='';
-}
-
-// Check for existing session on page load
-window.addEventListener('load', async function(){
-  db = getDB(); if(!db) return;
-  var {data:{session}} = await db.auth.getSession();
-  if(session){
-    var {data:profile} = await db.from('profiles')
-      .select('full_name, role, username, email')
-      .eq('id', session.user.id)
-      .single();
-    if(profile){
-      CURRENT_MEMBER={name:profile.full_name, username:profile.username, email:profile.email, role:profile.role};
-      CURRENT_ROLE=profile.role;
-      if(profile.role==='admin') go('frontend'); else go('production');
-      applyRoleUI();
-      loadBoard();
-    }
-  }
-});
-
-// ── Live board ──────────────────────────────────────────────
-var PRODUCT_LABELS = {
-  rolls:'Roll labels', sheets:'Sticker sheets',
-  individual:'Individual stickers', bumper:'Bumper stickers', large:'Large format'
-};
-var PRODUCT_THUMBS = {
-  rolls:{emoji:'🏷️',cls:'rolls'}, sheets:{emoji:'📋',cls:'sheets'},
-  individual:{emoji:'⭐',cls:'individual'}, bumper:{emoji:'🚗',cls:'bumper'},
-  large:{emoji:'🖼️',cls:'large'}
-};
-
-function fmtDate(d){
-  if(!d)return '—';
-  var dt=new Date(d);
-  return dt.getDate()+' '+'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split(' ')[dt.getMonth()];
-}
-function fmtSize(w,h){
-  if(w&&h) return w+' × '+h+' mm';
-  if(w)    return w+' mm';
-  return '—';
-}
-function fmtDispatch(method, courier){
-  var m = method==='road'?'Road dispatch':method==='same-day'?'Same day courier':method==='pickup'?'Pickup':'—';
-  return courier ? m+' · '+courier : m;
-}
-function chipClass(status){
-  var map={new:'new',prepress:'prepress',awaiting:'awaiting',revision:'revision',
-    print:'print',lam:'lam',cut:'cut',qa:'qa',outsource:'outsource',
-    pickup:'pickup',pickedup:'pickedup',hold:'hold',dispatched:'dispatched'};
-  return map[status]||'new';
-}
-function chipLabel(status){
-  return (STATUS_META[status]||[status])[0]||status;
-}
-
-function buildJobRow(job){
-  var items   = job.job_items||[];
-  var item    = items[0]||{};
-  var ptype   = item.product_type||'individual';
-  var thumb   = PRODUCT_THUMBS[ptype]||PRODUCT_THUMBS.individual;
-  var size    = fmtSize(item.width_mm, item.height_mm);
-  var qty     = item.quantity ? item.quantity.toLocaleString() : '—';
-  var prodLbl = ptype==='large'&&item.product_subtype ? item.product_subtype : (PRODUCT_LABELS[ptype]||ptype);
-  var src     = job.source||'shopify';
-  var status  = job.status||'new';
-  var due     = fmtDate(job.due_date);
-  var placed  = fmtDate(job.placed_at);
-  var dueAlert= job.due_date && new Date(job.due_date) < new Date() && status!=='dispatched'&&status!=='pickedup';
-
-  return '<tr data-status="'+status+'" data-station="'+status+'" data-product="'+ptype+'"'
-    +' data-placed="'+placed+'" onclick="openJobFromRow(this)">'
-    +'<td onclick="event.stopPropagation()"><input type="checkbox" class="row-check" onchange="rowCheckAuto(this)"></td>'
-    +'<td><button class="prio-btn prio-off" onclick="event.stopPropagation();togglePrio(this)" title="Set priority">⚡</button></td>'
-    +'<td class="thumb-cell"><div class="row-thumb '+thumb.cls+'" onclick="event.stopPropagation();downloadArtwork(this)">'
-    +thumb.emoji+'<span class="thumb-dl">⬇</span><span class="proof-tick">✓</span></div></td>'
-    +'<td class="tbl-id">'+job.id+'</td>'
-    +'<td class="tbl-cust"><div style="font-weight:600;font-size:14px;color:var(--navy)">'+(job.business_name||'Unknown')+'</div>'
-    +(job.contact_name?'<div class="tbl-id" style="font-size:11px;margin-top:1px">'+job.contact_name+'</div>':'')+'</td>'
-    +'<td><span class="src '+src+'">'+src.charAt(0).toUpperCase()+src.slice(1)+'</span></td>'
-    +'<td>'+prodLbl+'</td>'
-    +'<td>'+size+'</td>'
-    +'<td>'+qty+'</td>'
-    +'<td>'+placed+'</td>'
-    +'<td><span class="chip '+chipClass(status)+'" data-statkey="'+status+'">'+chipLabel(status)+'</span>'
-    +'<button class="nav-stat" onclick="event.stopPropagation();navStat(this,-1)">‹</button>'
-    +'<button class="nav-stat" onclick="event.stopPropagation();navStat(this,1)">›</button></td>'
-    +'<td>'+(dueAlert?'<span style="color:var(--red)">⚡ '+due+'</span>':due)+'</td>'
-    +'<td>'+fmtDispatch(job.dispatch_method, job.courier)+'</td>'
-    +'</tr>';
-}
-
-function buildJobCard(job){
-  var items  = job.job_items||[];
-  var item   = items[0]||{};
-  var ptype  = item.product_type||'individual';
-  var thumb  = PRODUCT_THUMBS[ptype]||PRODUCT_THUMBS.individual;
-  var size   = fmtSize(item.width_mm, item.height_mm);
-  var qty    = item.quantity ? item.quantity.toLocaleString() : '—';
-  var prodLbl= ptype==='large'&&item.product_subtype?item.product_subtype:(PRODUCT_LABELS[ptype]||ptype);
-  var status = job.status||'new';
-  var src    = job.source||'shopify';
-  var due    = fmtDate(job.due_date);
-  var dueAlert = job.due_date && new Date(job.due_date) < new Date() && status!=='dispatched'&&status!=='pickedup';
-  var mat    = item.material||'';
-  var lam    = item.laminate||'';
-
-  return '<div class="fcard" data-status="'+status+'" data-station="'+status+'" data-product="'+ptype+'" onclick="openJobFromRow(this)">'
-    +'<div class="fc-head">'
-    +'<div class="fc-thumb" style="background:linear-gradient(135deg,#6B5CE7,#2C2545)">'+thumb.emoji+'</div>'
-    +'<div class="fc-headtext">'
-    +'<div style="display:flex;gap:6px;align-items:center;margin-bottom:3px;flex-wrap:wrap">'
-    +'<span class="job-id-label">'+job.id+'</span>'
-    +'<span class="chip '+chipClass(status)+'" style="font-size:10px">'+chipLabel(status)+'</span>'
-    +'<span class="src '+src+'">'+src.charAt(0).toUpperCase()+src.slice(1)+'</span>'
-    +'</div>'
-    +'<div class="fc-make">'+qty+' · '+prodLbl+'</div>'
-    +'<div class="fc-cust">'+(job.business_name||'Unknown')+'</div>'
-    +'</div></div>'
-    +'<div class="fc-sg">'
-    +'<div><div class="k">Size</div><div class="v">'+size+'</div></div>'
-    +(mat?'<div><div class="k">Material</div><div class="v">'+mat+'</div></div>':'')
-    +(lam?'<div><div class="k">Laminate</div><div class="v">'+lam+'</div></div>':'')
-    +'</div>'
-    +'<div class="fc-foot">'
-    +'<span class="fc-due'+(dueAlert?' late':'')+'">'+( dueAlert?'⚡ Overdue · ':'📅 Due ')+due+'</span>'
-    +'<span class="fc-dispatch">'+fmtDispatch(job.dispatch_method, job.courier)+'</span>'
-    +'</div></div>';
-}
-
-async function loadBoard(){
-  db = getDB(); if(!db) return;
-  var {data:jobs, error} = await db
-    .from('active_jobs')
-    .select('*, job_items(*)')
-    .order('due_date', {ascending:true});
-
-  if(error){console.error('loadBoard error:', error); return;}
-
-  // ── Populate JOB_DATA for job detail lookups ─────────────────────
-  jobs.forEach(function(job){
-    var item = (job.job_items||[])[0]||{};
-    JOB_DATA[job.id] = {
-      id: job.id, shopify: job.shopify_order_number||null, paid: job.paid,
-      src: job.source, srcLabel: (job.source||'').charAt(0).toUpperCase()+(job.source||'').slice(1),
-      name: job.business_name||'Unknown', contact: job.contact_name||'—',
-      email: job.customer_email||'', phone: job.customer_phone||'',
-      address: job.address_full||'', addr: job.address_full||'',
-      product: PRODUCT_LABELS[item.product_type]||item.product_type||'',
-      qty: item.quantity ? item.quantity.toLocaleString() : '—',
-      shape: item.shape||'', size: fmtSize(item.width_mm, item.height_mm),
-      material: item.material||'', lam: item.laminate||'',
-      dispatch: fmtDispatch(job.dispatch_method, job.courier), courier: job.courier||'',
-      placed: fmtDate(job.placed_at), due: fmtDate(job.due_date),
-      dueAlert: job.due_date && new Date(job.due_date)<new Date(),
-      artFile: job.artwork_filename||'artwork.pdf', artSize: job.artwork_size_bytes
-        ? Math.round(job.artwork_size_bytes/1024/1024*10)/10+' MB' : '',
-      status: job.status, statusLabel: chipLabel(job.status),
-      productKey: item.product_type||'individual',
-      outsourceSupplier: job.outsource_supplier||'TBC',
-      outsourceDest: job.outsource_dest||'Our factory'
-    };
-  });
-
-  // ── Render tables ─────────────────────────────────────────────────
-  var fTbody = document.querySelector('#fTable tbody');
-  var pTbody = document.querySelector('#pTable tbody');
-  if(fTbody){
-    fTbody.innerHTML = jobs.length ? jobs.map(buildJobRow).join('') : '<tr><td colspan="13" class="empty-board-cell">No active jobs</td></tr>';
-  }
-  if(pTbody){
-    pTbody.innerHTML = jobs.length ? jobs.map(buildJobRow).join('') : '<tr><td colspan="13" class="empty-board-cell">No active jobs</td></tr>';
-  }
-
-  // ── Render card views ─────────────────────────────────────────────
-  var fCards = document.getElementById('fCardView');
-  var pCards = document.getElementById('pCardView');
-  var cardHtml = jobs.length ? jobs.map(buildJobCard).join('') : '<p class="empty-board-cell">No active jobs</p>';
-  if(fCards) fCards.innerHTML = cardHtml;
-  if(pCards) pCards.innerHTML = cardHtml;
-
-  // Re-apply filters and scorecard
-  applyFrontFilters();
-  applyProdFilters();
-  updateScorecard();
-  refreshAllThumbs();
-}
-
-// ── Realtime subscription ─────────────────────────────────────────────
-function subscribeRealtime(){
-  db = getDB(); if(!db) return;
-  db.channel('board-changes')
-    .on('postgres_changes', {event:'INSERT', schema:'public', table:'jobs'}, function(payload){
-      loadBoard(); showToast('New job on the board');
-    })
-    .on('postgres_changes', {event:'UPDATE', schema:'public', table:'jobs'}, function(payload){
-      // Update just the changed row without full reload
-      var job = payload.new;
-      if(!job||!job.id) return;
-      document.querySelectorAll('#fTable tbody tr, #pTable tbody tr').forEach(function(row){
-        var idEl=row.querySelector('.tbl-id');
-        if(!idEl||idEl.textContent.trim()!==job.id) return;
-        row.dataset.status=job.status;
-        row.dataset.station=job.status;
-        var chip=row.querySelector('.chip');
-        if(chip){chip.textContent=chipLabel(job.status);chip.className='chip '+chipClass(job.status);chip.dataset.statkey=job.status;}
-      });
-      updateScorecard();
-    })
-    .subscribe();
-}
-
-// ── Persist status change to Supabase ────────────────────────────────
-var _origChangeJobStatus = changeJobStatus;
-async function changeJobStatus(newStatus){
-  _origChangeJobStatus(newStatus); // update UI immediately
-  db = getDB(); if(db && window._currentJobId){
-    var {error} = await db.from('jobs')
-      .update({status: newStatus})
-      .eq('id', window._currentJobId);
-    if(error) console.error('Status update failed:', error.message);
-  }
-}
-
-// ── Persist internal notes to Supabase ───────────────────────────────
-var _origLogNote = logInternalNote;
-async function logInternalNote(text){
-  _origLogNote(text); // update UI immediately
-  db = getDB(); if(db && window._currentJobId && CURRENT_MEMBER){
-    await db.from('job_notes').insert({
-      job_id:      window._currentJobId,
-      author_name: CURRENT_MEMBER.name + (CURRENT_ROLE==='admin' ? ' (Admin)' : ' (Staff)'),
-      content:     text,
-      source:      'team'
-    });
-  }
-}
-
-// Start realtime after a short delay to ensure auth is settled
-setTimeout(subscribeRealtime, 2000);
-
-</script>
 </body>
 </html>
