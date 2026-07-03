@@ -50,8 +50,43 @@ function calcDueDate(placedAt, productType) {
   return date.toISOString().split('T')[0]; // YYYY-MM-DD
 }
 
-// ── Extract all useful fields from Shopify line item properties ────────
-function parseProps(item) {
+// ── Parse specs from StickySitch product title ────────────────────────
+// Title format: "sheets | circle | 65 × 65 mm | White Vinyl | Qty 50"
+function parseTitleSpecs(item) {
+  const title = item.title || '';
+  const parts  = title.split('|').map(s => s.trim());
+  let shape = null, widthMm = null, heightMm = null,
+      material = null, laminate = null, qty = null;
+  for (const part of parts) {
+    const sizeMatch = part.match(/(\d+(?:\.\d+)?)\s*[×x]\s*(\d+(?:\.\d+)?)\s*mm/i);
+    if (sizeMatch) { widthMm = parseFloat(sizeMatch[1]); heightMm = parseFloat(sizeMatch[2]); continue; }
+    const qtyMatch = part.match(/qty\s*(\d+)|(\d+)\s*stickers?/i);
+    if (qtyMatch) { qty = parseInt(qtyMatch[1] || qtyMatch[2]); continue; }
+    // Laminate first (overlaps with material terms like "matte")
+    if (/lam(inate)?|soft.?touch|gloss\s+lam|matte\s+lam|no.?lam/i.test(part) ||
+        /^(matte|gloss|soft touch|none)$/i.test(part)) { laminate = part; continue; }
+    // Material
+    if (/vinyl|paper|film|polyprop|kraft|clear|transparent|white|silver|gold|chrome/i.test(part)) { material = part; continue; }
+    // Shape — remaining non-type parts
+    if (!/^(sheet|roll|sticker|bumper|large|individual)/i.test(part) && part.length > 1) shape = part;
+  }
+  // Fallback to properties
+  const props = (item.properties || []);
+  const fp = (re) => { const p = props.find(p => re.test(p.name)); return p ? p.value.trim() : null; };
+  if (!widthMm)  { const w = fp(/width/i);   if (w) widthMm  = parseFloat(w); }
+  if (!heightMm) { const h = fp(/height/i);  if (h) heightMm = parseFloat(h); }
+  if (!material)  material = fp(/material|substrate|vinyl|paper/i);
+  if (!laminate)  laminate = fp(/laminat|finish/i);
+  if (!shape)     shape    = fp(/shape|die.?cut/i);
+  if (!qty)       { const q = fp(/qty|quantity|sticker.?count|how.?many/i); if (q) qty = parseInt(q); }
+  const artProp = props.find(p => /artwork|design.?file|upload|your.?file|file$/i.test(p.name));
+  return { widthMm, heightMm, shape, material, laminate,
+           qty: qty || item.quantity, artworkUrl: artProp ? artProp.value.trim() : null };
+}
+
+// Legacy alias
+function parseProps(item) { return { width_mm: parseTitleSpecs(item).widthMm, height_mm: parseTitleSpecs(item).heightMm, qty_override: null, artwork_url: parseTitleSpecs(item).artworkUrl, shape: parseTitleSpecs(item).shape, material: parseTitleSpecs(item).material, laminate: parseTitleSpecs(item).laminate }; }
+function parsePropsReal(item) {
   const props = (item.properties || []);
 
   const find = (pattern) => {
@@ -256,14 +291,14 @@ export default async function handler(req, res) {
       // ── Create job_items for each line item of this type ─────────────
       let jobArtworkUrl = null;
       const jobItems = items.map(item => {
-        const p = parseProps(item);
-        if (p.artwork_url && !jobArtworkUrl) jobArtworkUrl = p.artwork_url;
+        const p = parseTitleSpecs(item);
+        if (p.artworkUrl && !jobArtworkUrl) jobArtworkUrl = p.artworkUrl;
         return {
           job_id:       job.id,
           product_type: productType,
-          quantity:     p.qty_override || item.quantity,
-          width_mm:     p.width_mm,
-          height_mm:    p.height_mm,
+          quantity:     p.qty || item.quantity,
+          width_mm:     p.widthMm,
+          height_mm:    p.heightMm,
           shape:        p.shape,
           material:     p.material,
           laminate:     p.laminate,
