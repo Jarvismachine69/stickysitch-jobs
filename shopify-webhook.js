@@ -228,6 +228,30 @@ export default async function handler(req, res) {
     // ── Upsert customer ───────────────────────────────────────────────
     const customerId = await upsertCustomer(order);
 
+    // ── Parse order-level note_attributes (from website configurator) ──
+    const noteAttrs = {};
+    (order.note_attributes || []).forEach(a => {
+      noteAttrs[a.name.toLowerCase().trim()] = (a.value || '').trim();
+    });
+    // Also parse from order note (structured text block)
+    const orderNote = order.note || '';
+    const noteLines = orderNote.split('\n');
+    noteLines.forEach(line => {
+      const m = line.match(/^([^:]+):\s*(.+)/);
+      if (m) noteAttrs[m[1].toLowerCase().trim()] = m[2].trim();
+    });
+    const noteShape    = noteAttrs['shape']    || null;
+    const noteSize     = noteAttrs['size']     || null;
+    const noteMaterial = noteAttrs['material'] || null;
+    const noteLaminate = noteAttrs['laminate'] || noteAttrs['finish'] || null;
+    const noteQty      = noteAttrs['quantity'] ? parseInt(noteAttrs['quantity']) : null;
+    // Parse "65 × 65 mm" from note size string
+    let noteW = null, noteH = null;
+    if (noteSize) {
+      const sm = noteSize.match(/(\d+(?:\.\d+)?)\s*[×x]\s*(\d+(?:\.\d+)?)/i);
+      if (sm) { noteW = parseFloat(sm[1]); noteH = parseFloat(sm[2]); }
+    }
+
     // ── Group line items by product type ─────────────────────────────
     // Each different product type becomes a separate job (split order)
     const itemsByType = {};
@@ -298,12 +322,12 @@ export default async function handler(req, res) {
         return {
           job_id:       job.id,
           product_type: productType,
-          quantity:     p.qty || item.quantity,
-          width_mm:     p.widthMm,
-          height_mm:    p.heightMm,
-          shape:        p.shape,
-          material:     p.material,
-          laminate:     p.laminate,
+          quantity:     p.qty || noteQty || item.quantity,
+          width_mm:     p.widthMm || noteW,
+          height_mm:    p.heightMm || noteH,
+          shape:        p.shape || noteShape,
+          material:     p.material || noteMaterial,
+          laminate:     p.laminate || noteLaminate,
           unit_price:   parseFloat(item.price || 0),
         };
       });
