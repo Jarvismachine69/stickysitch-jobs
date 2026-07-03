@@ -3591,6 +3591,19 @@ async function populateJobDetail(jobId){
   var badge=document.getElementById('jdStatusBadge');
   if(badge){badge.textContent=d.statusLabel;badge.className='jd-status-badge '+d.status;}
 
+
+  // ── Outsource section visibility ─────────────────────────────────
+  var outsourceSec=document.getElementById('outsourceSection');
+  if(outsourceSec){
+    outsourceSec.style.display=(d.productKey==='rolls')?'block':'none';
+    if(d.productKey==='rolls'){
+      var outSup=document.getElementById('outSupplierDisplay');
+      var outDest=document.getElementById('outDestDisplay');
+      if(outSup)outSup.textContent=d.outsourceSupplier||'To be confirmed';
+      if(outDest)outDest.textContent=d.outsourceDest||'Our factory';
+    }
+  }
+
   // ── Cancellation / refund banner ──────────────────────────────────
   var cancelBanner=document.getElementById('cancelBanner');
   if(cancelBanner){
@@ -4034,23 +4047,7 @@ async function sendOutsourceTrackingToCustomer(){
   showToast('Tracking sent to customer. Shopify order fulfilled ✓');
 }
 
-// Show outsource section when job is outsourced
-var _origPopulate=populateJobDetail;
-async function populateJobDetail(jobId){
-  await _origPopulate(jobId);
-  // After async load, d will be in JOB_DATA
-  var d=JOB_DATA[jobId];
-  var sec=document.getElementById('outsourceSection');
-  if(sec){
-    sec.style.display=(d&&d.productKey==='rolls')?'block':'none';
-    if(d&&d.productKey==='rolls'){
-      var sup=document.getElementById('outSupplierDisplay');
-      var dest=document.getElementById('outDestDisplay');
-      if(sup)sup.textContent=d.outsourceSupplier||'To be confirmed';
-      if(dest)dest.textContent=d.outsourceDest||'Our factory';
-    }
-  }
-}
+
 
 
 // ── Machship CSV export (from selection) ─────────────────────────────
