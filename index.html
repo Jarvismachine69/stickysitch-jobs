@@ -1507,8 +1507,22 @@ async function navStatSelect(sel){
     <!-- DETAILS TAB -->
     <div class="jd-panel show" id="tab-details">
 
+      <!-- Artwork — shown first for quick access -->
+      <div class="seclabel" style="margin-top:0">Artwork</div>
+      <div class="artbox" id="artboxSection">
+        <div class="artthumb">🖼️</div>
+        <div style="flex:1;min-width:0">
+          <b style="font-size:13px;color:var(--navy)" id="jdArtFile">No artwork attached</b>
+          <span style="font-size:11px;color:var(--ink-2);display:block;margin-top:2px" id="jdArtSize"></span>
+        </div>
+        <a id="jdArtDownload" href="#" target="_blank" rel="noopener"
+          style="display:none;background:var(--navy);color:#fff;border:none;border-radius:9px;padding:8px 14px;font-family:'Inter Tight',sans-serif;font-weight:700;font-size:12px;cursor:pointer;text-decoration:none;white-space:nowrap">
+          ⬇ Download
+        </a>
+      </div>
+
       <!-- Spec grid with admin edit -->
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;margin-top:4px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;margin-top:12px">
         <span class="seclabel" style="margin:0">Job details</span>
         <button id="specEditBtn" onclick="toggleSpecEdit()" class="admin-only" style="font-family:'Inter Tight',sans-serif;font-size:11px;font-weight:700;background:none;border:1.5px solid var(--line);border-radius:7px;padding:4px 11px;cursor:pointer;color:var(--ink-2)">✏ Edit</button>
       </div>
@@ -1549,16 +1563,7 @@ async function navStatSelect(sel){
         </div>
       </div>
 
-      <div class="seclabel">Artwork</div>
-      <div class="artbox">
-        <div class="artthumb">🖼️</div>
-        <div>
-          <b style="font-size:13px;color:var(--navy)" id="jdArtFile"></b>
-          <span style="font-size:11px;color:var(--ink-2);display:block;margin-top:2px" id="jdArtSize"></span>
-          
-        </div>
-      </div>
-      <button class="btn btn-ghost" style="width:100%;margin-bottom:4px" onclick="alert('Downloads print-ready file.')">⬇ Download artwork</button>
+
 
       <!-- Imposition calculator — sticker sheets only -->
       <div id="impositionSection" style="display:none;background:#fff;border:1.5px solid var(--lilac-line);border-radius:13px;padding:14px;margin-top:10px;margin-bottom:4px">
@@ -1578,6 +1583,14 @@ async function navStatSelect(sel){
             <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:#FFE234;font-weight:700" id="impoExtraStat">+20 stickers extra for customer</span>
           </div>
           <div style="font-family:'Inter Tight',sans-serif;font-size:10.5px;color:rgba(255,255,255,.4);margin-top:4px" id="impoExact">Exact: 4.17 copies → rounded up to 5</div>
+          <button onclick="saveImposition()" id="impoSaveBtn"
+            style="margin-top:12px;width:100%;background:#FFE234;color:var(--navy);border:none;border-radius:9px;padding:10px;font-family:'Inter Tight',sans-serif;font-weight:800;font-size:13px;cursor:pointer">
+            ✓ Confirm &amp; save imposition
+          </button>
+        </div>
+        <div id="impoSaved" style="display:none;background:var(--green-soft);border:1.5px solid var(--green);border-radius:10px;padding:10px 13px;margin-top:8px;font-family:'Inter Tight',sans-serif;font-size:13px;font-weight:700;color:#007A4A">
+          ✓ Imposition saved — <span id="impoSavedSummary"></span>
+          <button onclick="resetImposition()" style="background:none;border:none;color:#007A4A;font-size:12px;cursor:pointer;text-decoration:underline;margin-left:6px">Edit</button>
         </div>
       </div>
 
@@ -1708,24 +1721,8 @@ async function navStatSelect(sel){
     <!-- PROOFS TAB -->
     <div class="jd-panel" id="tab-proofs">
 
-      <!-- Proof version history -->
-      <div class="seclabel" style="margin-top:0">Proof history</div>
-      <div class="pvlist" id="pvList" style="margin-bottom:14px">
-        <div class="pvrow">
-          <span class="pv-v">v2</span>
-          <div class="pv-body"><b>Proof v2 · sent to customer</b><span>11 Jun · 2:10pm · awaiting response</span></div>
-          <span class="pv-stat wait">Awaiting</span>
-        </div>
-        <div class="pvrow">
-          <span class="pv-v">v1</span>
-          
-          <span class="pv-stat rej">Rejected</span>
-        </div>
-      </div>
-      <p class="hintline" style="margin-bottom:16px">Every version is saved. Customer sees the full history on their magic link.</p>
-
-      <!-- Upload new proof -->
-      <div class="seclabel">Upload new proof</div>
+      <!-- Upload new proof — shown first for quick access -->
+      <div class="seclabel" style="margin-top:0">Upload new proof</div>
 
       <!-- Success state (hidden until sent) -->
       <div class="proof-success" id="proofSuccess">
@@ -1772,9 +1769,12 @@ async function navStatSelect(sel){
         </p>
       </div>
 
-    </div>
+      <!-- Proof version history — populated dynamically -->
+      <div class="seclabel" style="margin-top:18px" id="pvHistoryLabel" style="display:none">Proof history</div>
+      <div class="pvlist" id="pvList" style="margin-bottom:8px"></div>
+      <p class="hintline" id="pvHintLine" style="margin-bottom:8px;display:none">Every version is saved. Customer sees the full history on their magic link.</p>
 
-    <!-- CUSTOMER VIEW TAB -->
+    </div>
     <div class="jd-panel" id="tab-custview">
       <div class="note purple" style="margin-bottom:14px"><b>CUSTOMER PREVIEW</b> · This is exactly what the customer sees when they open their private link. No login required on their end.</div>
 
@@ -3079,19 +3079,70 @@ function toggleReprint(){
 // Imposition calculator
 function calcImpo(){
   var perSheet=parseInt(document.getElementById('impoPerSheet').value)||0;
-  var ordered=2000;
+  // Use real job quantity from JOB_DATA, fallback to 0
+  var d=window._currentJobId?JOB_DATA[window._currentJobId]:null;
+  var ordered=d?parseInt((d.qty||'0').replace(/,/g,''))||0:0;
   var result=document.getElementById('impoResult');
-  if(!perSheet||perSheet<1){if(result)result.style.display='none';return;}
+  if(!perSheet||perSheet<1||!ordered){if(result)result.style.display='none';return;}
   var exact=ordered/perSheet;
   var copies=Math.ceil(exact);
   var produced=copies*perSheet;
   var extra=produced-ordered;
   document.getElementById('impoCopies').textContent=copies;
   document.getElementById('impoPerSheetStat').innerHTML='<b style="color:#fff">'+perSheet+'</b> stickers/sheet';
-  document.getElementById('impoExtraStat').textContent='+'+extra+' stickers extra for customer';
+  document.getElementById('impoExtraStat').textContent=(extra>0?'+'+extra+' stickers extra':'Exact — no extra stickers');
   document.getElementById('impoExact').textContent='Exact: '+exact.toFixed(2)+' copies → rounded up to '+copies;
+  // Update ordered count inline
+  var orderedSpan=document.querySelector('#impositionSection b[style*="color:var(--ink)"]');
+  if(orderedSpan)orderedSpan.textContent=ordered.toLocaleString();
   if(result)result.style.display='block';
+  document.getElementById('impoSaved').style.display='none';
   updateCustSheetLayout();
+}
+
+async function saveImposition(){
+  var perSheet=parseInt(document.getElementById('impoPerSheet').value)||0;
+  if(!perSheet||perSheet<1){alert('Enter stickers per sheet first.');return;}
+  var d=window._currentJobId?JOB_DATA[window._currentJobId]:null;
+  var ordered=d?parseInt((d.qty||'0').replace(/,/g,''))||0:0;
+  var copies=Math.ceil(ordered/perSheet);
+  var btn=document.getElementById('impoSaveBtn');
+  if(btn){btn.textContent='Saving…';btn.disabled=true;}
+  // Save to Supabase
+  var db2=getDB();
+  if(db2&&window._currentJobId){
+    var {error}=await db2.from('jobs').update({
+      imposition_per_sheet: perSheet,
+      imposition_copies:    copies,
+      status:               'prepress'
+    }).eq('id',window._currentJobId);
+    if(error){
+      console.error('saveImposition error:', error);
+      showToast('Save failed: '+error.message);
+      if(btn){btn.textContent='✓ Confirm & save imposition';btn.disabled=false;}
+      return;
+    }
+    // Update local cache
+    if(d){d.impoPerSheet=perSheet;d.impoCopies=copies;d.status='prepress';d.statusLabel='Prepress';}
+  }
+  // Update UI
+  document.getElementById('impoResult').style.display='none';
+  var saved=document.getElementById('impoSaved');
+  var summary=document.getElementById('impoSavedSummary');
+  if(saved)saved.style.display='block';
+  if(summary)summary.textContent=perSheet+' per sheet · '+copies+' copies to print';
+  // Update status badge
+  var badge=document.getElementById('jdStatusBadge');
+  if(badge){badge.textContent='Prepress';badge.className='jd-status-badge prepress';}
+  showToast('Imposition saved · job moved to Prepress ✓');
+  if(btn){btn.textContent='✓ Confirm & save imposition';btn.disabled=false;}
+}
+
+function resetImposition(){
+  document.getElementById('impoSaved').style.display='none';
+  document.getElementById('impoResult').style.display='none';
+  document.getElementById('impoPerSheet').value='';
+  document.getElementById('impoPerSheet').focus();
 }
 
 
@@ -3333,6 +3384,8 @@ async function sendProof(){
   var timeStr=now.getDate()+' '+months[now.getMonth()]+' · '+
     now.toLocaleTimeString('en-AU',{hour:'numeric',minute:'2-digit',hour12:true});
   var list=document.getElementById('pvList');
+  var pvLabel=document.getElementById('pvHistoryLabel');
+  var pvHint=document.getElementById('pvHintLine');
   if(list){
     var newRow=document.createElement('div');
     newRow.className='pvrow';
@@ -3505,7 +3558,7 @@ async function populateJobDetail(jobId){
           dispatch:fmtDispatch(job.dispatch_method,job.courier), courier:job.courier||'',
           placed:fmtDate(job.placed_at), due:fmtDate(job.due_date),
           dueAlert:job.due_date&&new Date(job.due_date)<new Date(),
-          artFile:job.artwork_filename||'artwork.pdf',
+          artFile:job.artwork_filename||'artwork.pdf', artwork_url:job.artwork_url||null, artUrl:job.artwork_url||null,
           status:job.status, statusLabel:chipLabel(job.status),
           productKey:item.product_type||'individual',
           outsourceSupplier:job.outsource_supplier||'TBC',
@@ -3693,8 +3746,21 @@ async function populateJobDetail(jobId){
   var impoEdit=document.getElementById('impositionSection');
   var impoLock=document.getElementById('impositionLocked');
   var isSheets=d.productKey==='sheets';
-  var isPrepress=d.status==='prepress';
-  if(impoEdit)impoEdit.style.display=(isSheets&&isPrepress)?'block':'none';
+  var isPrepress=(d.status==='prepress'||d.status==='new');
+  if(impoEdit)impoEdit.style.display=(isSheets&&(isPrepress||d.impoCopies))?'block':'none';
+  // Pre-fill saved imposition values
+  var impoInput=document.getElementById('impoPerSheet');
+  var impoSavedEl=document.getElementById('impoSaved');
+  var impoResultEl=document.getElementById('impoResult');
+  var impoSummary=document.getElementById('impoSavedSummary');
+  if(impoInput) impoInput.value='';
+  if(impoSavedEl) impoSavedEl.style.display='none';
+  if(impoResultEl) impoResultEl.style.display='none';
+  if(d.impoPerSheet&&d.impoCopies){
+    if(impoInput) impoInput.value=d.impoPerSheet;
+    if(impoSavedEl) impoSavedEl.style.display='block';
+    if(impoSummary) impoSummary.textContent=d.impoPerSheet+' per sheet · '+d.impoCopies+' copies to print';
+  }
   if(impoLock){
     if(isSheets&&!isPrepress){
       impoLock.style.display='block';
@@ -5344,7 +5410,9 @@ async function loadBoard(){
       cancellationReason: job.cancellation_reason||null,
       cancelledAt:   job.cancelled_at?fmtDate(job.cancelled_at):null,
       refundedAmount: job.refunded_amount||null,
-      refundedAt:    job.refunded_at?fmtDate(job.refunded_at):null
+      refundedAt:    job.refunded_at?fmtDate(job.refunded_at):null,
+      impoPerSheet: job.imposition_per_sheet||null,
+      impoCopies:   job.imposition_copies||null
     };
   });
 
