@@ -29,16 +29,28 @@ function detectProductType(item) {
   return 'individual';
 }
 
-// ── Parse size from line item properties ─────────────────────────────
-function parseSize(item) {
-  const props = item.properties || [];
-  const w = props.find(p => /width/i.test(p.name));
-  const h = props.find(p => /height/i.test(p.name));
+// ── Extract all useful fields from Shopify line item properties ────────
+function parseProps(item) {
+  const props = (item.properties || []);
+  const find = (pattern) => {
+    const p = props.find(p => pattern.test(p.name));
+    return p ? (p.value || '').trim() : null;
+  };
+  const widthRaw   = find(/width|w\s*\(/i);
+  const heightRaw  = find(/height|h\s*\(/i);
+  const qtyProp    = find(/^(qty|quantity|sticker.?count|how.?many|number.?of|pieces|labels|stickers)$/i);
+  const artworkUrl = find(/artwork|design.?file|upload|your.?file|file|art$/i);
   return {
-    width_mm:  w ? parseFloat(w.value) : null,
-    height_mm: h ? parseFloat(h.value) : null,
+    width_mm:     widthRaw  ? parseFloat(widthRaw)  : null,
+    height_mm:    heightRaw ? parseFloat(heightRaw) : null,
+    qty_override: qtyProp   ? parseInt(qtyProp)     : null,
+    artwork_url:  artworkUrl || null,
+    shape:        find(/shape|die.?cut|cut.?type/i) || null,
+    material:     find(/material|substrate|stock|vinyl|paper|film/i) || null,
+    laminate:     find(/laminat|laminate|finish|coat|gloss|matte|soft.?touch/i) || null,
   };
 }
+
 
 // ── Business days calculation ─────────────────────────────────────────
 function calcDueDate(placedAt, productType) {
@@ -161,18 +173,29 @@ async function processOrder(order) {
     createdIds.push({ id: job.id, type: productType });
 
     // Job items
+    let jobArtworkUrl = null;
     const jobItems = items.map(item => {
-      const size = parseSize(item);
+      const p = parseProps(item);
+      if (p.artwork_url && !jobArtworkUrl) jobArtworkUrl = p.artwork_url;
       return {
         job_id:       job.id,
         product_type: productType,
-        quantity:     item.quantity,
-        width_mm:     size.width_mm,
-        height_mm:    size.height_mm,
+        quantity:     p.qty_override || item.quantity,
+        width_mm:     p.width_mm,
+        height_mm:    p.height_mm,
+        shape:        p.shape,
+        material:     p.material,
+        laminate:     p.laminate,
         unit_price:   parseFloat(item.price || 0),
       };
     });
     await supabase.from('job_items').insert(jobItems);
+    if (jobArtworkUrl) {
+      await supabase.from('jobs').update({
+        artwork_url:      jobArtworkUrl,
+        artwork_filename: jobArtworkUrl.split('/').pop().split('?')[0] || 'artwork',
+      }).eq('id', job.id);
+    }
   }
 
   // Mark parent/children for split orders
