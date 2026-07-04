@@ -15,30 +15,80 @@ const SHOPIFY_TOKEN = process.env.SHOPIFY_ACCESS_TOKEN;
 
 // ── Product type detection (same as webhook handler) ─────────────────
 function detectProductType(item) {
-  const text = [
-    item.title,
-    item.product_type,
-    item.vendor,
-    (item.properties || []).map(p => `${p.name} ${p.value}`).join(' ')
-  ].join(' ').toLowerCase();
+  const title = (item.title || '').toLowerCase().trim();
+  const ptype = (item.product_type || '').toLowerCase();
+  const text  = title + ' ' + ptype + ' ' + (item.vendor || '').toLowerCase();
 
-  if (text.includes('roll') || text.includes('roll label'))   return 'rolls';
+  // Check if title STARTS WITH the product type (StickySitch format: "sheets | circle | ...")
+  if (/^rolls?\b|^roll.?label/i.test(title))           return 'rolls';
+  if (/^sheets?\b|^sticker.?sheet/i.test(title))        return 'sheets';
+  if (/^bumper/i.test(title))                            return 'bumper';
+  if (/^large.?format|^banner|^pull.?up/i.test(title))  return 'large';
+  if (/^individual|^die.?cut|^custom.?sticker/i.test(title)) return 'individual';
+
+  // Fallback: search anywhere in combined text
+  if (text.includes('roll label') || text.includes('roll labels')) return 'rolls';
   if (text.includes('sticker sheet') || text.includes('sheet label')) return 'sheets';
-  if (text.includes('bumper'))                                return 'bumper';
-  if (text.includes('large format') || text.includes('banner') || text.includes('pull up')) return 'large';
+  if (text.includes('bumper'))        return 'bumper';
+  if (text.includes('large format') || text.includes('banner')) return 'large';
   return 'individual';
 }
 
-// ── Parse size from line item properties ─────────────────────────────
-function parseSize(item) {
-  const props = item.properties || [];
-  const w = props.find(p => /width/i.test(p.name));
-  const h = props.find(p => /height/i.test(p.name));
+// ── Parse specs from StickySitch product title ────────────────────────
+// Title format: "sheets | circle | 65 × 65 mm | White Vinyl | Qty 50"
+function parseTitleSpecs(item) {
+  const title = item.title || '';
+  const parts  = title.split('|').map(s => s.trim());
+  let shape = null, widthMm = null, heightMm = null,
+      material = null, laminate = null, qty = null;
+  for (const part of parts) {
+    const sizeMatch = part.match(/(\d+(?:\.\d+)?)\s*[×x]\s*(\d+(?:\.\d+)?)\s*mm/i);
+    if (sizeMatch) { widthMm = parseFloat(sizeMatch[1]); heightMm = parseFloat(sizeMatch[2]); continue; }
+    const qtyMatch = part.match(/qty\s*(\d+)|(\d+)\s*stickers?/i);
+    if (qtyMatch) { qty = parseInt(qtyMatch[1] || qtyMatch[2]); continue; }
+    // Laminate first (overlaps with material terms like "matte")
+    if (/lam(inate)?|soft.?touch|gloss\s+lam|matte\s+lam|no.?lam/i.test(part) ||
+        /^(matte|gloss|soft touch|none)$/i.test(part)) { laminate = part; continue; }
+    // Material
+    if (/vinyl|paper|film|polyprop|kraft|clear|transparent|white|silver|gold|chrome/i.test(part)) { material = part; continue; }
+    // Shape — remaining non-type parts
+    if (!/^(sheet|roll|sticker|bumper|large|individual)/i.test(part) && part.length > 1) shape = part;
+  }
+  // Fallback to properties
+  const props = (item.properties || []);
+  const fp = (re) => { const p = props.find(p => re.test(p.name)); return p ? p.value.trim() : null; };
+  if (!widthMm)  { const w = fp(/width/i);   if (w) widthMm  = parseFloat(w); }
+  if (!heightMm) { const h = fp(/height/i);  if (h) heightMm = parseFloat(h); }
+  if (!material)  material = fp(/material|substrate|vinyl|paper/i);
+  if (!laminate)  laminate = fp(/laminat|finish/i);
+  if (!shape)     shape    = fp(/shape|die.?cut/i);
+  if (!qty)       { const q = fp(/qty|quantity|sticker.?count|how.?many/i); if (q) qty = parseInt(q); }
+  const artProp = props.find(p => /artwork|design.?file|upload|your.?file|file$/i.test(p.name));
+  return { widthMm, heightMm, shape, material, laminate,
+           qty: qty || item.quantity, artworkUrl: artProp ? artProp.value.trim() : null };
+}
+
+function parsePropsReal(item) {
+  const props = (item.properties || []);
+  const find = (pattern) => {
+    const p = props.find(p => pattern.test(p.name));
+    return p ? (p.value || '').trim() : null;
+  };
+  const widthRaw   = find(/width|w\s*\(/i);
+  const heightRaw  = find(/height|h\s*\(/i);
+  const qtyProp    = find(/^(qty|quantity|sticker.?count|how.?many|number.?of|pieces|labels|stickers)$/i);
+  const artworkUrl = find(/artwork|design.?file|upload|your.?file|file|art$/i);
   return {
-    width_mm:  w ? parseFloat(w.value) : null,
-    height_mm: h ? parseFloat(h.value) : null,
+    width_mm:     widthRaw  ? parseFloat(widthRaw)  : null,
+    height_mm:    heightRaw ? parseFloat(heightRaw) : null,
+    qty_override: qtyProp   ? parseInt(qtyProp)     : null,
+    artwork_url:  artworkUrl || null,
+    shape:        find(/shape|die.?cut|cut.?type/i) || null,
+    material:     find(/material|substrate|stock|vinyl|paper|film/i) || null,
+    laminate:     find(/laminat|laminate|finish|coat|gloss|matte|soft.?touch/i) || null,
   };
 }
+
 
 // ── Business days calculation ─────────────────────────────────────────
 function calcDueDate(placedAt, productType) {
@@ -110,6 +160,30 @@ async function processOrder(order) {
   if (existing) return { skipped: true, order_number: order.order_number };
 
   const customerId = await upsertCustomer(order);
+
+    // ── Parse order-level note_attributes (from website configurator) ──
+    const noteAttrs = {};
+    (order.note_attributes || []).forEach(a => {
+      noteAttrs[a.name.toLowerCase().trim()] = (a.value || '').trim();
+    });
+    // Also parse from order note (structured text block)
+    const orderNote = order.note || '';
+    const noteLines = orderNote.split('\n');
+    noteLines.forEach(line => {
+      const m = line.match(/^([^:]+):\s*(.+)/);
+      if (m) noteAttrs[m[1].toLowerCase().trim()] = m[2].trim();
+    });
+    const noteShape    = noteAttrs['shape']    || null;
+    const noteSize     = noteAttrs['size']     || null;
+    const noteMaterial = noteAttrs['material'] || null;
+    const noteLaminate = noteAttrs['laminate'] || noteAttrs['finish'] || null;
+    const noteQty      = noteAttrs['quantity'] ? parseInt(noteAttrs['quantity']) : null;
+    // Parse "65 × 65 mm" from note size string
+    let noteW = null, noteH = null;
+    if (noteSize) {
+      const sm = noteSize.match(/(\d+(?:\.\d+)?)\s*[×x]\s*(\d+(?:\.\d+)?)/i);
+      if (sm) { noteW = parseFloat(sm[1]); noteH = parseFloat(sm[2]); }
+    }
   const placedAt   = order.created_at || new Date().toISOString();
   const orderValue = parseFloat(order.total_price || 0);
   const orderNumber = `#${order.order_number}`;
@@ -161,18 +235,29 @@ async function processOrder(order) {
     createdIds.push({ id: job.id, type: productType });
 
     // Job items
+    let jobArtworkUrl = null;
     const jobItems = items.map(item => {
-      const size = parseSize(item);
+      const p = parseTitleSpecs(item);
+      if (p.artworkUrl && !jobArtworkUrl) jobArtworkUrl = p.artworkUrl;
       return {
         job_id:       job.id,
         product_type: productType,
-        quantity:     item.quantity,
-        width_mm:     size.width_mm,
-        height_mm:    size.height_mm,
+        quantity:     p.qty || noteQty || item.quantity,
+        width_mm:     p.widthMm || noteW,
+        height_mm:    p.heightMm || noteH,
+        shape:        p.shape || noteShape,
+        material:     p.material || noteMaterial,
+        laminate:     p.laminate || noteLaminate,
         unit_price:   parseFloat(item.price || 0),
       };
     });
     await supabase.from('job_items').insert(jobItems);
+    if (jobArtworkUrl) {
+      await supabase.from('jobs').update({
+        artwork_url:      jobArtworkUrl,
+        artwork_filename: jobArtworkUrl.split('/').pop().split('?')[0] || 'artwork',
+      }).eq('id', job.id);
+    }
   }
 
   // Mark parent/children for split orders
