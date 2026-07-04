@@ -1008,81 +1008,7 @@ td.thumb-cell{padding:6px 4px 6px 8px!important;width:44px}
 .inline-stat-sel:focus{outline:none;border-color:var(--lilac);}
 
 </style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
-// Inline status dropdown in table row
-async function navStatSelect(sel){
-  var newStatus = sel.value;
-  if(!newStatus) return;
-  sel.value = ''; // reset to "Change…"
-  var row = sel.closest('tr');
-  if(!row) return;
-  // Update chip
-  var chip = row.querySelector('.chip');
-  if(chip){ chip.textContent=chipLabel(newStatus); chip.className='chip '+chipClass(newStatus); chip.dataset.statkey=newStatus; }
-  row.dataset.status = newStatus;
-  row.dataset.station = newStatus;
-  // Persist to Supabase
-  var jobId = row.dataset.jobId;
-  if(jobId){
-    window._currentJobId = jobId;
-    var db2 = getDB();
-    if(db2){ await db2.from('jobs').update({status:newStatus}).eq('id',jobId); }
-  }
-  updateScorecard();
-}
-
-
-// ── Notes display helpers ─────────────────────────────────────────────
-var _allNotesExpanded = false;
-function toggleAllNotes(){
-  _allNotesExpanded = !_allNotesExpanded;
-  var recent = document.getElementById('notesRecent');
-  var all    = document.getElementById('notesList');
-  var btn    = document.getElementById('notesToggleBtn');
-  if(_allNotesExpanded){
-    if(recent) recent.style.display='none';
-    if(all)    all.style.display='block';
-    if(btn)    btn.textContent='Show less';
-  } else {
-    if(recent) recent.style.display='block';
-    if(all)    all.style.display='none';
-    if(btn)    btn.textContent='See all';
-  }
-}
-
-function toggleActivityPanel(){
-  var panel = document.getElementById('activityPanel');
-  var arrow = document.getElementById('activityArrow');
-  if(!panel) return;
-  var open = panel.style.display !== 'none';
-  panel.style.display = open ? 'none' : 'block';
-  if(arrow) arrow.style.transform = open ? '' : 'rotate(180deg)';
-}
-
-// ── Rebuild notesRecent from notesList entries ─────────────────────────
-function syncRecentNotes(){
-  var all    = document.getElementById('notesList');
-  var recent = document.getElementById('notesRecent');
-  var btn    = document.getElementById('notesToggleBtn');
-  if(!all || !recent) return;
-  var entries = Array.from(all.querySelectorAll('.note-entry'));
-  var totalCount = entries.length;
-  // Show 2 most recent (first 2 in list since newest is prepended)
-  var recentHtml = entries.slice(0,2).map(function(e){return e.outerHTML;}).join('');
-  recent.innerHTML = recentHtml || '<div style="padding:12px 14px;font-family:\'DM Sans\',sans-serif;font-size:13px;color:var(--ink-3)">No notes yet.</div>';
-  if(btn) btn.style.display = totalCount > 2 ? 'block' : 'none';
-  if(btn) btn.textContent = 'See all '+totalCount+' notes';
-}
-
-// ── Update note author label with current user ─────────────────────────
-function updateNoteAuthorLabel(){
-  var label = document.getElementById('noteAuthorLabel');
-  if(!label || !CURRENT_MEMBER) return;
-  label.innerHTML = 'Logged as <b>'+(CURRENT_MEMBER.name||'Team')+(CURRENT_ROLE==='admin'?' (Admin)':' (Staff)')+'</b>';
-}
-
-
-</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -2014,6 +1940,77 @@ function updateNoteAuthorLabel(){
 </section>
 
 <script>
+// Inline status dropdown in table row
+async function navStatSelect(sel){
+  var newStatus = sel.value;
+  if(!newStatus) return;
+  sel.value = ''; // reset to "Change…"
+  var row = sel.closest('tr');
+  if(!row) return;
+  // Update chip
+  var chip = row.querySelector('.chip');
+  if(chip){ chip.textContent=chipLabel(newStatus); chip.className='chip '+chipClass(newStatus); chip.dataset.statkey=newStatus; }
+  row.dataset.status = newStatus;
+  row.dataset.station = newStatus;
+  // Persist to Supabase
+  var jobId = row.dataset.jobId;
+  if(jobId){
+    window._currentJobId = jobId;
+    var db2 = getDB();
+    if(db2){ await db2.from('jobs').update({status:newStatus}).eq('id',jobId); }
+  }
+  updateScorecard();
+}
+
+
+// ── Notes display helpers ─────────────────────────────────────────────
+var _allNotesExpanded = false;
+function toggleAllNotes(){
+  _allNotesExpanded = !_allNotesExpanded;
+  var recent = document.getElementById('notesRecent');
+  var all    = document.getElementById('notesList');
+  var btn    = document.getElementById('notesToggleBtn');
+  if(_allNotesExpanded){
+    if(recent) recent.style.display='none';
+    if(all)    all.style.display='block';
+    if(btn)    btn.textContent='Show less';
+  } else {
+    if(recent) recent.style.display='block';
+    if(all)    all.style.display='none';
+    if(btn)    btn.textContent='See all';
+  }
+}
+
+function toggleActivityPanel(){
+  var panel = document.getElementById('activityPanel');
+  var arrow = document.getElementById('activityArrow');
+  if(!panel) return;
+  var open = panel.style.display !== 'none';
+  panel.style.display = open ? 'none' : 'block';
+  if(arrow) arrow.style.transform = open ? '' : 'rotate(180deg)';
+}
+
+// ── Rebuild notesRecent from notesList entries ─────────────────────────
+function syncRecentNotes(){
+  var all    = document.getElementById('notesList');
+  var recent = document.getElementById('notesRecent');
+  var btn    = document.getElementById('notesToggleBtn');
+  if(!all || !recent) return;
+  var entries = Array.from(all.querySelectorAll('.note-entry'));
+  var totalCount = entries.length;
+  // Show 2 most recent (first 2 in list since newest is prepended)
+  var recentHtml = entries.slice(0,2).map(function(e){return e.outerHTML;}).join('');
+  recent.innerHTML = recentHtml || '<div style="padding:12px 14px;font-family:\'DM Sans\',sans-serif;font-size:13px;color:var(--ink-3)">No notes yet.</div>';
+  if(btn) btn.style.display = totalCount > 2 ? 'block' : 'none';
+  if(btn) btn.textContent = 'See all '+totalCount+' notes';
+}
+
+// ── Update note author label with current user ─────────────────────────
+function updateNoteAuthorLabel(){
+  var label = document.getElementById('noteAuthorLabel');
+  if(!label || !CURRENT_MEMBER) return;
+  label.innerHTML = 'Logged as <b>'+(CURRENT_MEMBER.name||'Team')+(CURRENT_ROLE==='admin'?' (Admin)':' (Staff)')+'</b>';
+}
 // Navigation
 // ── Role management ───────────────────────────────────────────────────
 var CURRENT_ROLE = 'admin'; // 'admin' | 'staff'
