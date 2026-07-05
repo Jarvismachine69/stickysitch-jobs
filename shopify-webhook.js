@@ -56,36 +56,84 @@ function calcDueDate(placedAt, productType) {
 
 // ── Parse specs from StickySitch product title ────────────────────────
 // Title format: "sheets | circle | 65 × 65 mm | White Vinyl | Qty 50"
+// Normalise a laminate/finish raw string → "Matte", "Gloss", "Soft Touch", or "None"
+function normaliseLaminate(raw) {
+  if (!raw) return null;
+  const s = raw.trim();
+  if (/matte/i.test(s))            return 'Matte';
+  if (/gloss/i.test(s))            return 'Gloss';
+  if (/soft.?touch/i.test(s))      return 'Soft Touch';
+  if (/no.?lam|none|uncoated/i.test(s)) return 'None';
+  if (/lam/i.test(s))              return s; // keep "Laminate" variants as-is
+  return s;
+}
+
 function parseTitleSpecs(item) {
-  const title = item.title || '';
-  const parts  = title.split('|').map(s => s.trim());
+  const title   = item.title         || '';
+  const variant = item.variant_title || ''; // e.g. "White Vinyl / Matte"
+  const parts   = title.split('|').map(s => s.trim());
   let shape = null, widthMm = null, heightMm = null,
       material = null, laminate = null, qty = null;
+
   for (const part of parts) {
     const sizeMatch = part.match(/(\d+(?:\.\d+)?)\s*[×x]\s*(\d+(?:\.\d+)?)\s*mm/i);
     if (sizeMatch) { widthMm = parseFloat(sizeMatch[1]); heightMm = parseFloat(sizeMatch[2]); continue; }
     const qtyMatch = part.match(/qty\s*(\d+)|(\d+)\s*stickers?/i);
     if (qtyMatch) { qty = parseInt(qtyMatch[1] || qtyMatch[2]); continue; }
-    // Laminate first (overlaps with material terms like "matte")
+    // Laminate first (before material — "matte" overlaps)
     if (/lam(inate)?|soft.?touch|gloss\s+lam|matte\s+lam|no.?lam/i.test(part) ||
         /^(matte|gloss|soft touch|none)$/i.test(part)) { laminate = part; continue; }
     // Material
     if (/vinyl|paper|film|polyprop|kraft|clear|transparent|white|silver|gold|chrome/i.test(part)) { material = part; continue; }
-    // Shape — remaining non-type parts
+    // Shape
     if (!/^(sheet|roll|sticker|bumper|large|individual)/i.test(part) && part.length > 1) shape = part;
   }
-  // Fallback to properties
+
+  // ── Fallback 1: variant_title (e.g. "White Vinyl / Matte" or "Matte / 90×60mm")
+  if (!laminate && variant) {
+    const vParts = variant.split('/').map(s => s.trim());
+    for (const vp of vParts) {
+      if (/^(matte|gloss|soft.?touch|none|no.?lam)/i.test(vp) || /lam(inate)?/i.test(vp)) {
+        laminate = vp; break;
+      }
+    }
+    // Also check if material is embedded in variant
+    if (!material) {
+      for (const vp of vParts) {
+        if (/vinyl|paper|film|polyprop|kraft|clear|white|silver|gold/i.test(vp)) {
+          material = vp; break;
+        }
+      }
+    }
+  }
+
+  // ── Fallback 2: line item properties
   const props = (item.properties || []);
   const fp = (re) => { const p = props.find(p => re.test(p.name)); return p ? p.value.trim() : null; };
   if (!widthMm)  { const w = fp(/width/i);   if (w) widthMm  = parseFloat(w); }
   if (!heightMm) { const h = fp(/height/i);  if (h) heightMm = parseFloat(h); }
   if (!material)  material = fp(/material|substrate|vinyl|paper/i);
-  if (!laminate)  laminate = fp(/laminat|finish/i);
+  if (!laminate)  laminate = fp(/laminat|laminate|finish|coat|gloss|matte|soft.?touch|overlay/i);
   if (!shape)     shape    = fp(/shape|die.?cut/i);
   if (!qty)       { const q = fp(/qty|quantity|sticker.?count|how.?many/i); if (q) qty = parseInt(q); }
+
+  // ── Fallback 3: scan material string for embedded laminate
+  if (!laminate && material) {
+    const m = material.match(/\b(matte lam(?:inate)?|gloss lam(?:inate)?|soft touch|no lam(?:inate)?|matte|gloss)\b/i);
+    if (m) {
+      laminate = m[1];
+      material = material.replace(m[0], '').trim().replace(/\s+/, ' ');
+    }
+  }
+
   const artProp = props.find(p => /artwork|design.?file|upload|your.?file|file$/i.test(p.name));
-  return { widthMm, heightMm, shape, material, laminate,
-           qty: qty || item.quantity, artworkUrl: artProp ? artProp.value.trim() : null };
+  return {
+    widthMm, heightMm, shape,
+    material,
+    laminate: normaliseLaminate(laminate),
+    qty: qty || item.quantity,
+    artworkUrl: artProp ? artProp.value.trim() : null,
+  };
 }
 
 function parsePropsReal(item) {

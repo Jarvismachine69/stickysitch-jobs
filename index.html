@@ -2029,6 +2029,16 @@ function buildJobCard(job){
     +'</div></div>';
 }
 
+function normaliseLaminate(raw) {
+  if (!raw) return '';
+  var s = raw.trim();
+  if (/matte/i.test(s))                  return 'Matte';
+  if (/gloss/i.test(s))                  return 'Gloss';
+  if (/soft.?touch/i.test(s))            return 'Soft Touch';
+  if (/no.?lam|none|uncoated/i.test(s))  return 'None';
+  return s;
+}
+
 async function loadBoard(){
   db = getDB(); if(!db) return;
   var {data:jobs, error} = await db
@@ -2070,11 +2080,10 @@ async function loadBoard(){
         if(!item.laminate) mat = mat.replace(/\s*\b(matte lam|gloss lam|soft touch|no lam|matte|gloss)\b/gi,'').trim();
         return mat;
       })(),
-      lam: item.laminate || (function(){
-        // Fallback: extract laminate keyword from material string
+      lam: normaliseLaminate(item.laminate) || (function(){
         var mat = item.material||'';
         var m = mat.match(/\b(matte lam(?:inate)?|gloss lam(?:inate)?|soft touch|no lam(?:inate)?|matte|gloss)\b/i);
-        return m ? m[1] : '';
+        return m ? normaliseLaminate(m[1]) : '';
       })(),
       dispatch: fmtDispatch(job.dispatch_method, job.courier), courier: job.courier||'',
       placed: fmtDate(job.placed_at), due: fmtDate(job.due_date),
