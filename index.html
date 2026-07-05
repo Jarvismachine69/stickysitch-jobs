@@ -121,7 +121,7 @@ tr.prio-manual:hover td{background:#FFB8B8!important}
 .back-btn{font-family:'Inter Tight';font-size:13px;font-weight:600;cursor:pointer;color:var(--ink-2);background:none;border:none;padding:0;display:flex;align-items:center;gap:5px;margin-bottom:16px}
 .back-btn:hover{color:var(--navy)}
 .jd-id{font-family:'Inter Tight';font-size:11.5px;font-weight:700;color:var(--lilac);letter-spacing:.05em}
-.jd-name{font-family:'Inter Tight',sans-serif;font-weight:800;font-size:28px;color:var(--ink);letter-spacing:-.02em;margin-top:4px}
+.jd-name{font-family:'Inter Tight',sans-serif;font-weight:900;font-size:38px;color:var(--ink);letter-spacing:-.03em;margin-top:2px;line-height:1.1}
 .jd-meta{font-size:12.5px;color:var(--ink-2);margin-top:3px}
 
 /* Job detail tabs */
@@ -1007,6 +1007,69 @@ td.thumb-cell{padding:6px 4px 6px 8px!important;width:44px}
 }
 .inline-stat-sel:focus{outline:none;border-color:var(--lilac);}
 
+
+/* Status pill that IS the dropdown */
+.jd-stat-select{font-size:15px!important;padding:9px 28px 9px 16px!important;background-size:12px!important;background-position:right 10px center!important;}
+.stat-pill-select{
+  appearance:none; -webkit-appearance:none;
+  border:none; outline:none; cursor:pointer;
+  font-family:'Inter Tight',sans-serif; font-weight:700; font-size:12px;
+  padding:5px 22px 5px 10px; border-radius:999px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='currentColor' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:right 7px center;
+  background-size:10px;
+  min-width:0; max-width:160px;
+  transition:.15s;
+}
+/* Colour classes mirror .chip colours */
+.stat-pill-select.new        {background-color:#EDE9FD;color:#4B3ECC;}
+.stat-pill-select.prepress   {background-color:#EDE9FD;color:#4B3ECC;}
+.stat-pill-select.awaiting   {background-color:#FEF3C7;color:#92400E;}
+.stat-pill-select.revision   {background-color:#FEE2E2;color:#991B1B;}
+.stat-pill-select.print      {background-color:#DCFCE7;color:#14532D;}
+.stat-pill-select.lam        {background-color:#DCFCE7;color:#14532D;}
+.stat-pill-select.cut        {background-color:#DCFCE7;color:#14532D;}
+.stat-pill-select.qa         {background-color:#DCFCE7;color:#14532D;}
+.stat-pill-select.dispatched {background-color:#D1FAE5;color:#064E3B;}
+.stat-pill-select.outsource  {background-color:#F3E8FF;color:#6B21A8;}
+.stat-pill-select.pickup     {background-color:#DCFCE7;color:#14532D;}
+.stat-pill-select.pickedup   {background-color:#D1FAE5;color:#064E3B;}
+.stat-pill-select.hold       {background-color:#FEF3C7;color:#92400E;}
+.stat-pill-select.cancelled  {background-color:#FEE2E2;color:#7F1D1D;}
+.stat-pill-select.refunded   {background-color:#FEF3C7;color:#78350F;}
+
+
+/* ── Two-column job detail layout ── */
+.jd-two-col{display:grid;grid-template-columns:2fr 3fr;gap:14px;align-items:start;margin-top:0}
+@media(max-width:700px){.jd-two-col{grid-template-columns:1fr}}
+.jd-left-col{display:flex;flex-direction:column;gap:10px}
+.jd-right-col{display:flex;flex-direction:column;gap:0}
+/* Bigger artwork card */
+.artbox-tall{background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:12px}
+.artbox-thumb-big{width:100%;aspect-ratio:4/3;background:var(--paper);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:48px;overflow:hidden}
+.artbox-thumb-big img{width:100%;height:100%;object-fit:contain}
+/* Single-col spec list */
+.spec-list{background:#fff;border:1.5px solid var(--line);border-radius:14px;overflow:hidden}
+.spec-row{display:flex;align-items:baseline;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--line)}
+.spec-row:last-child{border-bottom:none}
+.spec-row .k{font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);min-width:90px}
+.spec-row .v{font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);font-weight:500;text-align:right}
+.spec-row .v[id="sv-due"]{color:var(--red);font-weight:700}
+/* Bigger customer header */
+.jd-cust-header{margin-bottom:10px}
+.jd-cust-contact-row{display:flex;flex-wrap:wrap;gap:4px 16px;align-items:center;margin:4px 0 6px}
+.jd-cust-contact-name{font-family:'Inter Tight',sans-serif;font-weight:700;font-size:15px;color:var(--ink)}
+.jd-cust-contact-detail{font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink-3)}
+.jd-cust-addr-row{display:flex;align-items:center;gap:8px;margin-top:2px}
+/* Note rows */
+.note-entry{padding:10px 14px;border-bottom:1px solid var(--line)}
+.note-entry:last-child{border-bottom:none}
+/* Two dropdown buttons side by side */
+.jd-dropdown-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.jd-dropdown-btn{background:var(--paper);border:1.5px solid var(--line);border-radius:12px;padding:10px 14px;font-family:'Inter Tight',sans-serif;font-weight:700;font-size:12.5px;color:var(--ink-2);cursor:pointer;display:flex;align-items:center;justify-content:space-between;width:100%;text-align:left}
+.jd-dropdown-panel{display:none;background:#fff;border:1.5px solid var(--line);border-top:none;border-radius:0 0 12px 12px;padding:14px}
+
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -1407,14 +1470,13 @@ td.thumb-cell{padding:6px 4px 6px 8px!important;width:44px}
     <button class="back-btn" onclick="go('frontend')">← Back to board</button>
 
     <div class="jd-id" id="jdId"></div>
-    <div class="jd-name" id="jdName"></div>
-
-    <!-- Customer details block -->
-    <div id="jdCustView" style="margin-top:6px;margin-bottom:4px">
-      
-      <div style="display:flex;align-items:center;gap:10px;margin-top:4px">
-        <span style="font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink-2)">📍 12 Bay St, Port Melbourne VIC 3207</span>
-        <button onclick="toggleCustEdit()" id="jdCustEditBtn" style="font-family:'Inter Tight',sans-serif;font-size:11px;font-weight:700;background:none;border:1.5px solid var(--line);border-radius:7px;padding:3px 10px;cursor:pointer;color:var(--ink-2)" class="admin-only">Edit</button>
+    <div class="jd-cust-header">
+      <div class="jd-name" id="jdName"></div>
+      <div id="jdCustView" class="jd-cust-contact-row"></div>
+      <div class="jd-cust-addr-row">
+        <span style="font-size:14px">📍</span>
+        <span class="jd-cust-contact-detail" id="jdAddr"></span>
+        <button onclick="toggleCustEdit()" id="jdCustEditBtn" class="admin-only" style="font-family:'Inter Tight',sans-serif;font-size:11px;font-weight:700;background:none;border:1.5px solid var(--line);border-radius:7px;padding:3px 10px;cursor:pointer;color:var(--ink-2)">Edit</button>
       </div>
     </div>
     <!-- Customer edit panel (admin only) -->
@@ -1448,29 +1510,24 @@ td.thumb-cell{padding:6px 4px 6px 8px!important;width:44px}
 
     <div class="jd-status-wrap">
       <span class="jd-status-label">Status</span>
-      <span class="jd-status-badge prepress" id="jdStatusBadge" onclick="toggleStatusPicker()" title="Tap to change status">Prepress</span>
-    </div>
-
-    <!-- Status picker — opens when badge is tapped -->
-    <div class="jd-status-picker" id="jdStatusPicker">
-      <div class="jd-status-picker-label">Select new status</div>
-      <div class="jd-status-pills">
-        <button class="jd-status-pill new"       onclick="changeJobStatus('new')">New</button>
-        <button class="jd-status-pill prepress"  onclick="changeJobStatus('prepress')">Prepress</button>
-        <button class="jd-status-pill awaiting"  onclick="changeJobStatus('awaiting')">Awaiting Approval</button>
-        <button class="jd-status-pill revision"  onclick="changeJobStatus('revision')">Artwork Revision</button>
-        <button class="jd-status-pill print"     onclick="changeJobStatus('print')">Print</button>
-        <button class="jd-status-pill lam"       onclick="changeJobStatus('lam')">Laminate</button>
-        <button class="jd-status-pill cut"       onclick="changeJobStatus('cut')">Cut</button>
-        <button class="jd-status-pill qa"        onclick="changeJobStatus('qa')">QA &amp; Packing</button>
-        <button class="jd-status-pill outsource" onclick="changeJobStatus('outsource')">Outsource</button>
-        <button class="jd-status-pill pickup"    onclick="changeJobStatus('pickup')">Awaiting Pickup</button>
-        <button class="jd-status-pill pickedup"  onclick="changeJobStatus('pickedup')">Picked Up</button>
-        <button class="jd-status-pill hold"      onclick="changeJobStatus('hold')">On Hold</button>
-        <button class="jd-status-pill dispatched" onclick="changeJobStatus('dispatched')">Dispatched</button>
-        <button class="jd-status-pill cancelled" onclick="manualCancelJob()">🚫 Cancelled</button>
-        <button class="jd-status-pill refunded" onclick="manualRefundJob()">💰 Refunded</button>
-      </div>
+      <select class="stat-pill-select jd-stat-select prepress" id="jdStatusBadge"
+        onchange="changeJobStatus(this.value)">
+        <option value="new">New</option>
+        <option value="prepress">Prepress</option>
+        <option value="awaiting">Awaiting Approval</option>
+        <option value="revision">Artwork Revision</option>
+        <option value="print">Print</option>
+        <option value="lam">Laminate</option>
+        <option value="cut">Cut</option>
+        <option value="qa">QA &amp; Packing</option>
+        <option value="outsource">Outsource</option>
+        <option value="pickup">Awaiting Pickup</option>
+        <option value="pickedup">Picked Up</option>
+        <option value="dispatched">Dispatched</option>
+        <option value="hold">On Hold</option>
+        <option value="cancelled">🚫 Cancelled</option>
+        <option value="refunded">💰 Refunded</option>
+      </select>
     </div>
 
     <!-- JOB DETAIL TABS -->
@@ -1484,189 +1541,141 @@ td.thumb-cell{padding:6px 4px 6px 8px!important;width:44px}
     <!-- DETAILS TAB -->
     <div class="jd-panel show" id="tab-details">
 
-      <!-- Artwork — shown first for quick access -->
-      <div class="seclabel" style="margin-top:0">Artwork</div>
-      <div class="artbox" id="artboxSection">
-        <div class="artthumb">🖼️</div>
-        <div style="flex:1;min-width:0">
-          <b style="font-size:13px;color:var(--navy)" id="jdArtFile">No artwork attached</b>
-          <span style="font-size:11px;color:var(--ink-2);display:block;margin-top:2px" id="jdArtSize"></span>
-        </div>
-        <a id="jdArtDownload" href="#" target="_blank" rel="noopener"
-          style="display:none;background:var(--navy);color:#fff;border:none;border-radius:9px;padding:8px 14px;font-family:'Inter Tight',sans-serif;font-weight:700;font-size:12px;cursor:pointer;text-decoration:none;white-space:nowrap">
-          ⬇ Download
-        </a>
-      </div>
+      <div class="jd-two-col">
 
-      <!-- Spec grid with admin edit -->
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;margin-top:12px">
-        <span class="seclabel" style="margin:0">Job details</span>
-        <button id="specEditBtn" onclick="toggleSpecEdit()" class="admin-only" style="font-family:'Inter Tight',sans-serif;font-size:11px;font-weight:700;background:none;border:1.5px solid var(--line);border-radius:7px;padding:4px 11px;cursor:pointer;color:var(--ink-2)">✏ Edit</button>
-      </div>
+        <!-- ── LEFT COLUMN: Artwork + Imposition ── -->
+        <div class="jd-left-col">
 
-      <!-- View mode -->
-      <div id="specViewMode">
-        <div class="spec-grid">
-          <div class="spec-cell"><div class="k">Product</div><div class="v" id="sv-product"></div></div>
-          <div class="spec-cell"><div class="k">Quantity</div><div class="v" id="sv-qty"></div></div>
-          <div class="spec-cell"><div class="k">Shape</div><div class="v" id="sv-shape"></div></div>
-          <div class="spec-cell"><div class="k">Size</div><div class="v" id="sv-size"></div></div>
-          <div class="spec-cell"><div class="k">Material</div><div class="v" id="sv-material"></div></div>
-          <div class="spec-cell"><div class="k">Laminate</div><div class="v" id="sv-lam"></div></div>
-          <div class="spec-cell"><div class="k">Dispatch · Courier</div><div class="v" id="sv-dispatch"></div></div>
-          <div class="spec-cell"><div class="k">Delivery to</div><div class="v" id="sv-addr"></div></div>
-          <div class="spec-cell"><div class="k">Order placed</div><div class="v" id="sv-placed"></div></div>
-          <div class="spec-cell due"><div class="k">Due date</div><div class="v" id="sv-due"></div></div>
-        </div>
-        <p class="hintline">Due date auto-set: rolls = 3 days, all others = 2 days. Editable for rush jobs.</p>
-      </div>
-
-      <!-- Edit mode (admin only, hidden by default) -->
-      <div id="specEditMode" style="display:none;background:#fff;border:1.5px solid var(--lilac-line);border-radius:13px;padding:14px;margin-bottom:8px">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
-          <div><label style="font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);display:block;margin-bottom:4px">Product</label><input id="se-product" class="jf-input" value="" style="width:100%;padding:9px 11px;border:1.5px solid var(--line);border-radius:9px;font-size:14px"></div>
-          <div><label style="font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);display:block;margin-bottom:4px">Quantity</label><input id="se-qty" class="jf-input" value="" style="width:100%;padding:9px 11px;border:1.5px solid var(--line);border-radius:9px;font-size:14px"></div>
-          <div><label style="font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);display:block;margin-bottom:4px">Shape</label><input id="se-shape" class="jf-input" value="" style="width:100%;padding:9px 11px;border:1.5px solid var(--line);border-radius:9px;font-size:14px"></div>
-          <div><label style="font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);display:block;margin-bottom:4px">Size</label><input id="se-size" class="jf-input" value="" style="width:100%;padding:9px 11px;border:1.5px solid var(--line);border-radius:9px;font-size:14px"></div>
-          <div><label style="font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);display:block;margin-bottom:4px">Material</label><input id="se-material" class="jf-input" value="" style="width:100%;padding:9px 11px;border:1.5px solid var(--line);border-radius:9px;font-size:14px"></div>
-          <div><label style="font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);display:block;margin-bottom:4px">Laminate</label><input id="se-lam" class="jf-input" value="" style="width:100%;padding:9px 11px;border:1.5px solid var(--line);border-radius:9px;font-size:14px"></div>
-          <div><label style="font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);display:block;margin-bottom:4px">Dispatch</label><input id="se-dispatch" class="jf-input" value="Road dispatch" style="width:100%;padding:9px 11px;border:1.5px solid var(--line);border-radius:9px;font-size:14px"></div>
-          <div><label style="font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);display:block;margin-bottom:4px">Due date</label><input id="se-due" class="jf-input" value="13 Jun" style="width:100%;padding:9px 11px;border:1.5px solid var(--line);border-radius:9px;font-size:14px"></div>
-        </div>
-        <div style="display:flex;gap:8px;align-items:center">
-          <button onclick="saveSpecEdit()" style="background:var(--lilac);color:#fff;border:none;border-radius:9px;padding:9px 18px;font-family:'Inter Tight',sans-serif;font-weight:700;font-size:13px;cursor:pointer">Save changes</button>
-          <button onclick="toggleSpecEdit()" style="background:#fff;border:1.5px solid var(--line);border-radius:9px;padding:9px 14px;font-family:'Inter Tight',sans-serif;font-weight:600;font-size:13px;cursor:pointer;color:var(--ink-2)">Cancel</button>
-          <span style="font-family:'Inter Tight',sans-serif;font-size:11px;color:var(--ink-3)">Admin only · changes logged</span>
-        </div>
-      </div>
-
-
-
-      <!-- Imposition calculator — sticker sheets only -->
-      <div id="impositionSection" style="display:none;background:#fff;border:1.5px solid var(--lilac-line);border-radius:13px;padding:14px;margin-top:10px;margin-bottom:4px">
-        <div style="font-family:'Inter Tight',sans-serif;font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px;display:flex;align-items:center;gap:7px">
-          Imposition <span style="background:var(--lilac);color:#fff;font-size:10px;font-weight:700;padding:4px 10px;border-radius:999px">STICKER SHEETS</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap">
-          <label style="font-family:'DM Sans',sans-serif;font-size:13.5px;color:var(--ink-2);white-space:nowrap">Stickers per sheet</label>
-          <input id="impoPerSheet" class="impo-input" type="number" min="1" placeholder="e.g. 24" oninput="calcImpo()" style="width:80px;padding:9px 11px;border:1.5px solid var(--line);border-radius:9px;font-family:'Inter Tight',sans-serif;font-size:15px;font-weight:700;text-align:center;color:var(--ink);background:var(--paper)">
-          <span style="font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink-3)">for <b style="color:var(--ink)" id="impoOrderedCount">—</b> ordered</span>
-        </div>
-        <div id="impoResult" style="display:none;background:var(--navy);border-radius:10px;padding:13px 16px">
-          <div style="font-family:'Inter Tight',sans-serif;font-weight:800;font-size:28px;color:#FFE234;line-height:1" id="impoCopies">5</div>
-          <div style="font-family:'Inter Tight',sans-serif;font-size:11px;font-weight:600;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.1em;margin-top:2px">COPIES TO PRINT</div>
-          <div style="display:flex;gap:16px;margin-top:8px;flex-wrap:wrap">
-            <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:rgba(255,255,255,.75)" id="impoPerSheetStat"><b style="color:#fff">24</b> stickers/sheet</span>
-            <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:#FFE234;font-weight:700" id="impoExtraStat">+20 stickers extra for customer</span>
+          <!-- Artwork -->
+          <div class="artbox-tall" id="artboxSection">
+            <div class="artbox-thumb-big" id="artThumbBig">🖼️</div>
+            <div>
+              <b style="font-size:13px;color:var(--navy)" id="jdArtFile">No artwork attached</b>
+              <span style="font-size:11px;color:var(--ink-2);display:block;margin-top:2px" id="jdArtSize"></span>
+            </div>
+            <a id="jdArtDownload" href="#" target="_blank" rel="noopener"
+              style="display:none;background:var(--navy);color:#fff;border:none;border-radius:9px;padding:10px;font-family:'Inter Tight',sans-serif;font-weight:700;font-size:13px;cursor:pointer;text-decoration:none;text-align:center">
+              ⬇ Download artwork
+            </a>
           </div>
-          <div style="font-family:'Inter Tight',sans-serif;font-size:10.5px;color:rgba(255,255,255,.4);margin-top:4px" id="impoExact">Exact: 4.17 copies → rounded up to 5</div>
-          <button onclick="saveImposition()" id="impoSaveBtn"
-            style="margin-top:12px;width:100%;background:#FFE234;color:var(--navy);border:none;border-radius:9px;padding:10px;font-family:'Inter Tight',sans-serif;font-weight:800;font-size:13px;cursor:pointer">
-            ✓ Confirm &amp; save imposition
-          </button>
-        </div>
-        <div id="impoSaved" style="display:none;background:var(--green-soft);border:1.5px solid var(--green);border-radius:10px;padding:10px 13px;margin-top:8px;font-family:'Inter Tight',sans-serif;font-size:13px;font-weight:700;color:#007A4A">
-          ✓ Imposition saved — <span id="impoSavedSummary"></span>
-          <button onclick="resetImposition()" style="background:none;border:none;color:#007A4A;font-size:12px;cursor:pointer;text-decoration:underline;margin-left:6px">Edit</button>
-        </div>
-      </div>
 
-      <div class="seclabel">Actions</div>
-      <div class="btn-row" style="margin-bottom:7px">
-        <button class="btn btn-honey" onclick="setJobTab('proofs',document.querySelectorAll('.jd-tab')[1])">Upload proof & send</button>
-        <button class="btn btn-ghost" id="holdBtn" onclick="togglePanel('holdPanel')">⏸ On hold</button>
-      </div>
-      <!-- Pickup workflow buttons — shown for pickup dispatch jobs -->
-      <div id="pickupActions" style="display:none;margin-bottom:10px">
-        <div style="background:var(--green-soft);border:1.5px solid var(--green);border-radius:11px;padding:12px 14px">
-          <div style="font-family:'Inter Tight',sans-serif;font-size:11px;font-weight:700;color:#007A4A;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">📦 Pickup job</div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <button onclick="markPickupReady()" style="background:var(--green);color:#fff;border:none;border-radius:9px;padding:10px 14px;font-family:'Inter Tight',sans-serif;font-weight:700;font-size:13px;cursor:pointer">✓ Ready for pickup</button>
-            <button onclick="markPickedUp()" style="background:#fff;border:1.5px solid var(--green);color:#007A4A;border-radius:9px;padding:10px 14px;font-family:'Inter Tight',sans-serif;font-weight:700;font-size:13px;cursor:pointer">Picked up ✓</button>
+          <!-- Imposition — sticker sheets only -->
+          <div id="impositionSection" style="display:none;background:#fff;border:1.5px solid var(--lilac-line);border-radius:13px;padding:14px">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+              <span style="font-family:'Inter Tight',sans-serif;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)">Imposition</span>
+              <span style="background:var(--lilac);color:#fff;font-family:'Inter Tight',sans-serif;font-size:9px;font-weight:800;padding:2px 8px;border-radius:999px;letter-spacing:.06em">STICKER SHEETS</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+              <span style="font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink-2)">Stickers per sheet</span>
+              <input type="number" id="impoPerSheet" min="1" max="200" placeholder="e.g. 24"
+                oninput="calcImpo()"
+                style="width:80px;padding:8px 10px;border:1.5px solid var(--line);border-radius:8px;font-family:'Inter Tight',sans-serif;font-size:15px;font-weight:700;text-align:center">
+              <span style="font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink-3)">for <b style="color:var(--ink)" id="impoOrderedCount">—</b> ordered</span>
+            </div>
+            <div id="impoResult" style="display:none;background:var(--navy);border-radius:10px;padding:13px 16px;margin-top:10px">
+              <div style="font-family:'Inter Tight',sans-serif;font-weight:800;font-size:28px;color:#FFE234;line-height:1" id="impoCopies">5</div>
+              <div style="font-family:'Inter Tight',sans-serif;font-size:11px;font-weight:600;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.1em;margin-top:2px">COPIES TO PRINT</div>
+              <div style="display:flex;gap:16px;margin-top:8px;flex-wrap:wrap">
+                <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:rgba(255,255,255,.75)" id="impoPerSheetStat"><b style="color:#fff">24</b> stickers/sheet</span>
+                <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:#FFE234;font-weight:700" id="impoExtraStat">+20 extra</span>
+              </div>
+              <div style="font-family:'Inter Tight',sans-serif;font-size:10.5px;color:rgba(255,255,255,.4);margin-top:4px" id="impoExact"></div>
+              <button onclick="saveImposition()" id="impoSaveBtn"
+                style="margin-top:12px;width:100%;background:#FFE234;color:var(--navy);border:none;border-radius:9px;padding:10px;font-family:'Inter Tight',sans-serif;font-weight:800;font-size:13px;cursor:pointer">
+                ✓ Confirm &amp; save imposition
+              </button>
+            </div>
+            <div id="impoSaved" style="display:none;background:var(--green-soft);border:1.5px solid var(--green);border-radius:10px;padding:10px 13px;margin-top:8px;font-family:'Inter Tight',sans-serif;font-size:13px;font-weight:700;color:#007A4A">
+              ✓ Imposition saved — <span id="impoSavedSummary"></span>
+              <button onclick="resetImposition()" style="background:none;border:none;color:#007A4A;font-size:12px;cursor:pointer;text-decoration:underline;margin-left:6px">Edit</button>
+            </div>
           </div>
-          <div style="font-family:'DM Sans',sans-serif;font-size:12px;color:#007A4A;margin-top:7px">Ready for pickup → notify customer. Picked up → mark collected, archived after 5 days.</div>
-        </div>
-      </div>
 
-      <!-- Road dispatch tracking panel — shown for road dispatch jobs -->
-      <div id="roadDispatchActions" style="display:none;margin-bottom:10px">
-        <div style="background:#EFF6FF;border:1.5px solid #3B82F6;border-radius:11px;padding:12px 14px">
-          <div style="font-family:'Inter Tight',sans-serif;font-size:11px;font-weight:700;color:#1D4ED8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">🚚 Road dispatch</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
-            <input id="roadTrackingInput" type="text" placeholder="Tracking number"
-              style="padding:9px 11px;border:1.5px solid #BFDBFE;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;background:#fff">
-            <select id="roadCourierSelect" style="padding:9px 11px;border:1.5px solid #BFDBFE;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;background:#fff">
-              <option value="">Select courier…</option>
-              <option value="StarTrack">StarTrack</option>
-              <option value="TNT">TNT</option>
-              <option value="Titan Couriers">Titan Couriers</option>
-              <option value="NTS">NTS</option>
-              <option value="Uber Courier">Uber Courier</option>
-            </select>
+        </div><!-- end left col -->
+
+        <!-- ── RIGHT COLUMN: Specs ── -->
+        <div class="jd-right-col">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+            <span class="seclabel" style="margin:0">Job details</span>
+            <button id="specEditBtn" onclick="toggleSpecEdit()" class="admin-only" style="font-family:'Inter Tight',sans-serif;font-size:11px;font-weight:700;background:none;border:1.5px solid var(--line);border-radius:7px;padding:4px 11px;cursor:pointer;color:var(--ink-2)">✏ Edit</button>
           </div>
-          <button onclick="sendRoadTracking()" style="width:100%;background:#3B82F6;color:#fff;border:none;border-radius:9px;padding:10px 14px;font-family:'Inter Tight',sans-serif;font-weight:700;font-size:13px;cursor:pointer">Send tracking → mark dispatched</button>
-          <div style="font-family:'DM Sans',sans-serif;font-size:12px;color:#1D4ED8;margin-top:7px">Emails customer with tracking and auto-fulfils the Shopify order.</div>
-        </div>
-      </div>
-
-
-      <!-- On Hold panel -->
-      <div id="holdPanel" style="display:none;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:14px;margin-bottom:10px">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-          <span style="font-family:'Inter Tight',sans-serif;font-weight:700;font-size:13px;color:var(--ink)">⏸ Put job on hold</span>
-          <button onclick="togglePanel('holdPanel')" style="background:none;border:none;cursor:pointer;color:var(--ink-3);font-size:20px;line-height:1;padding:0">✕</button>
-        </div>
-        <input id="holdReason" type="text" placeholder="Reason e.g. awaiting payment, customer changes mind…"
-          style="width:100%;padding:10px 12px;border:1.5px solid var(--line);border-radius:9px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);background:var(--paper);box-sizing:border-box;margin-bottom:10px">
-        <div style="display:flex;gap:8px">
-          <button onclick="confirmHold()" style="flex:1;background:var(--honey);color:var(--navy);border:none;border-radius:9px;padding:11px;font-family:'Inter Tight',sans-serif;font-weight:700;font-size:13px;cursor:pointer">Confirm hold</button>
-          <button onclick="togglePanel('holdPanel')" style="background:#fff;border:1.5px solid var(--line);border-radius:9px;padding:11px 14px;font-family:'Inter Tight',sans-serif;font-weight:600;font-size:13px;cursor:pointer;color:var(--ink-2)">Cancel</button>
-        </div>
-      </div>
-
-      <!-- Outsource details — shown when job is outsourced -->
-      <div id="outsourceSection" style="display:none;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:14px;margin-bottom:10px">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:6px">
-          <span style="font-family:'Inter Tight',sans-serif;font-weight:700;font-size:13px;color:var(--ink)">📦 Outsource details</span>
-          <span style="font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;padding:3px 10px;border-radius:999px;background:var(--green-soft);color:#007A4A">🔒 Internal only — customer sees nothing</span>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
-          <div>
-            <div style="font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-bottom:4px">Supplier</div>
-            <div style="font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink)" id="outSupplierDisplay">—</div>
+          <div class="spec-list" id="specViewMode">
+            <div class="spec-row"><span class="k">Product</span><span class="v" id="sv-product"></span></div>
+            <div class="spec-row"><span class="k">Quantity</span><span class="v" id="sv-qty"></span></div>
+            <div class="spec-row"><span class="k">Shape</span><span class="v" id="sv-shape"></span></div>
+            <div class="spec-row"><span class="k">Size</span><span class="v" id="sv-size"></span></div>
+            <div class="spec-row"><span class="k">Material</span><span class="v" id="sv-material"></span></div>
+            <div class="spec-row"><span class="k">Laminate</span><span class="v" id="sv-lam"></span></div>
+            <div class="spec-row"><span class="k">Dispatch</span><span class="v" id="sv-dispatch"></span></div>
+            <div class="spec-row"><span class="k">Delivery to</span><span class="v" id="sv-delivery"></span></div>
+            <div class="spec-row"><span class="k">Order placed</span><span class="v" id="sv-placed"></span></div>
+            <div class="spec-row" style="background:var(--lilac-soft)"><span class="k" style="color:var(--lilac)">Due date</span><span class="v" id="sv-due" style="color:var(--lilac);font-weight:700"></span></div>
           </div>
-          <div>
-            <div style="font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-bottom:4px">Delivery to</div>
-            <div style="font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink)" id="outDestDisplay">—</div>
-          </div>
-        </div>
-        <div style="font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-bottom:5px">Tracking number</div>
-        <div style="display:flex;gap:8px;margin-bottom:10px">
-          <input id="outTrackingInput" type="text" placeholder="Enter tracking number when received…"
-            style="flex:1;padding:10px 12px;border:1.5px solid var(--line);border-radius:9px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);background:var(--paper)">
-        </div>
-        <div style="display:flex;gap:8px">
-          <button onclick="saveOutsourceTracking()" style="flex:1;background:var(--navy);color:#fff;border:none;border-radius:9px;padding:10px;font-family:'Inter Tight',sans-serif;font-weight:700;font-size:13px;cursor:pointer">Save tracking</button>
-          <button onclick="sendOutsourceTrackingToCustomer()" style="flex:1;background:var(--lilac);color:#fff;border:none;border-radius:9px;padding:10px;font-family:'Inter Tight',sans-serif;font-weight:700;font-size:13px;cursor:pointer">📧 Send to customer</button>
-        </div>
-      </div>
+          <p style="font-family:'DM Sans',sans-serif;font-size:11px;color:var(--ink-3);margin:6px 2px 0">Due date auto-set: rolls = 3 days, all others = 2 days. Editable for rush jobs.</p>
 
-      <!-- ══ NOTES & ACTIVITY — collapsible bottom section ══ -->
-      <div style="margin-top:16px">
+          <!-- Spec edit mode -->
+          <div id="specEditMode" style="display:none;margin-top:10px"></div>
 
-        <!-- Internal notes — always visible, 2 most recent -->
-        <div style="background:#fff;border:1.5px solid var(--line);border-radius:14px;overflow:hidden;margin-bottom:8px">
-          <div style="padding:12px 14px 10px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between">
-            <span style="font-family:'Inter Tight',sans-serif;font-size:12px;font-weight:700;color:var(--navy)">📝 Internal notes</span>
-            <button onclick="toggleAllNotes()" id="notesToggleBtn" style="font-family:'Inter Tight',sans-serif;font-size:11px;color:var(--lilac);background:none;border:none;cursor:pointer;font-weight:600;display:none">See all</button>
+          <!-- Outsource info (rolls only) -->
+          <div id="outsourceSection" style="display:none;background:var(--paper);border:1.5px solid var(--line);border-radius:12px;padding:13px;margin-top:10px">
+            <div style="font-family:'Inter Tight',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);margin-bottom:8px">Outsource details</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+              <div><div style="font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-bottom:4px">Supplier</div><div style="font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink)" id="outSupplierDisplay">—</div></div>
+              <div><div style="font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-bottom:4px">Delivery to</div><div style="font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink)" id="outDestDisplay">—</div></div>
+            </div>
+            <div style="font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-bottom:5px">Tracking number</div>
+            <div style="display:flex;gap:8px">
+              <input id="outTrackingInput" type="text" placeholder="Enter tracking number when received…" style="flex:1;padding:10px 12px;border:1.5px solid var(--line);border-radius:9px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);background:var(--paper)">
+            </div>
+            <div style="display:flex;gap:8px;margin-top:8px">
+              <button onclick="saveOutsourceTracking()" style="flex:1;background:var(--navy);color:#fff;border:none;border-radius:9px;padding:10px;font-family:'Inter Tight',sans-serif;font-weight:700;font-size:13px;cursor:pointer">Save tracking</button>
+              <button onclick="sendOutsourceTrackingToCustomer()" style="flex:1;background:var(--lilac);color:#fff;border:none;border-radius:9px;padding:10px;font-family:'Inter Tight',sans-serif;font-weight:700;font-size:13px;cursor:pointer">📧 Send to customer</button>
+            </div>
           </div>
-          <!-- Recent notes (max 2 shown by default) -->
-          <div id="notesRecent" style="padding:0 2px"></div>
-          <!-- All notes (hidden by default) -->
-          <div id="notesList" style="display:none;padding:0 2px"></div>
-          <!-- Add note -->
+
+          <!-- Pickup / road dispatch — shown based on dispatch method -->
+          <div id="pickupActions" style="display:none;margin-top:10px">
+            <div style="background:var(--green-soft);border:1.5px solid var(--green);border-radius:11px;padding:12px 14px">
+              <div style="font-family:'Inter Tight',sans-serif;font-size:11px;font-weight:700;color:#007A4A;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">📦 Pickup job</div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <button onclick="markPickupReady()" style="background:var(--green);color:#fff;border:none;border-radius:9px;padding:10px 14px;font-family:'Inter Tight',sans-serif;font-weight:700;font-size:13px;cursor:pointer">✓ Ready for pickup</button>
+                <button onclick="markPickedUp()" style="background:#fff;border:1.5px solid var(--green);color:#007A4A;border-radius:9px;padding:10px 14px;font-family:'Inter Tight',sans-serif;font-weight:700;font-size:13px;cursor:pointer">Picked up ✓</button>
+              </div>
+            </div>
+          </div>
+
+          <div id="roadDispatchActions" style="display:none;margin-top:10px">
+            <div style="background:#EFF6FF;border:1.5px solid #3B82F6;border-radius:11px;padding:12px 14px">
+              <div style="font-family:'Inter Tight',sans-serif;font-size:11px;font-weight:700;color:#1D4ED8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">🚚 Road dispatch</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+                <input id="roadTrackingInput" type="text" placeholder="Tracking number" style="padding:9px 11px;border:1.5px solid #BFDBFE;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;background:#fff">
+                <select id="roadCourierSelect" style="padding:9px 11px;border:1.5px solid #BFDBFE;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;background:#fff">
+                  <option value="">Select courier…</option>
+                  <option value="StarTrack">StarTrack</option>
+                  <option value="TNT">TNT</option>
+                  <option value="Titan Couriers">Titan Couriers</option>
+                  <option value="NTS">NTS</option>
+                  <option value="Uber Courier">Uber Courier</option>
+                </select>
+              </div>
+              <button onclick="sendRoadTracking()" style="width:100%;background:#3B82F6;color:#fff;border:none;border-radius:9px;padding:10px 14px;font-family:'Inter Tight',sans-serif;font-weight:700;font-size:13px;cursor:pointer">Send tracking → mark dispatched</button>
+            </div>
+          </div>
+
+        </div><!-- end right col -->
+      </div><!-- end two-col -->
+
+      <!-- ── INTERNAL NOTES — always visible, 2 most recent ── -->
+      <div style="margin-top:14px">
+        <div style="background:#fff;border:1.5px solid var(--line);border-radius:14px;overflow:hidden">
+          <div style="padding:11px 14px 10px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between">
+            <span style="font-family:'Inter Tight',sans-serif;font-size:12px;font-weight:800;color:var(--navy)">📝 Internal notes</span>
+            <button onclick="toggleAllNotes()" id="notesToggleBtn" style="font-family:'Inter Tight',sans-serif;font-size:11px;color:var(--lilac);background:none;border:none;cursor:pointer;font-weight:700;display:none">See all</button>
+          </div>
+          <div id="notesRecent"></div>
+          <div id="notesList" style="display:none"></div>
           <div style="border-top:1px solid var(--line)">
-            <textarea id="newNoteText" placeholder="Add a note… visible to the whole team" style="width:100%;padding:11px 14px;border:none;outline:none;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);resize:none;min-height:60px;background:transparent;box-sizing:border-box"></textarea>
+            <textarea id="newNoteText" placeholder="Add a note… visible to the whole team" style="width:100%;padding:11px 14px;border:none;outline:none;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);resize:none;min-height:56px;background:transparent;box-sizing:border-box"></textarea>
             <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 12px;border-top:1px solid var(--line);background:var(--paper)">
               <span style="font-family:'Inter Tight',sans-serif;font-size:11px;color:var(--ink-3)" id="noteAuthorLabel">Logged as <b>David (Admin)</b></span>
               <button onclick="addNote()" style="background:var(--lilac);color:#fff;border:none;border-radius:8px;padding:6px 13px;font-family:'Inter Tight',sans-serif;font-weight:700;font-size:12px;cursor:pointer">Add note</button>
@@ -1674,45 +1683,67 @@ td.thumb-cell{padding:6px 4px 6px 8px!important;width:44px}
           </div>
         </div>
 
-        <!-- Activity + reprint — collapsible -->
-        <button onclick="toggleActivityPanel()" style="width:100%;background:var(--paper);border:1.5px solid var(--line);border-radius:12px;padding:11px 14px;font-family:'Inter Tight',sans-serif;font-weight:700;font-size:12.5px;color:var(--ink-2);cursor:pointer;display:flex;align-items:center;justify-content:space-between">
-          <span>Activity log &amp; reprint</span>
-          <span id="activityArrow" style="font-size:11px;transition:.2s">▼</span>
-        </button>
-        <div id="activityPanel" style="display:none;background:#fff;border:1.5px solid var(--line);border-top:none;border-radius:0 0 12px 12px;padding:0">
-          <!-- Activity log -->
-          <div style="padding:12px 14px" id="activityLogList">
-            <div class="logrow"><span class="t">—</span><span style="color:var(--ink-3)">No activity yet</span></div>
-          </div>
-          <!-- Reprint -->
-          <div style="border-top:1px solid var(--line);padding:12px 14px">
-            <div style="font-family:'Inter Tight',sans-serif;font-size:11px;font-weight:700;color:var(--ink-3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px">⚑ Log reprint / remake</div>
-            <div class="rr split" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
-              <div><label style="font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;color:var(--ink-3);display:block;margin-bottom:4px">Qty to redo</label><input type="text" placeholder="e.g. 500" style="width:100%;padding:8px 10px;border:1.5px solid var(--line);border-radius:8px;font-size:13px;box-sizing:border-box"></div>
-              <div><label style="font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;color:var(--ink-3);display:block;margin-bottom:4px">Reason</label>
-                <select style="width:100%;padding:8px 10px;border:1.5px solid var(--line);border-radius:8px;font-size:13px;box-sizing:border-box"><option>Press error</option><option>Wrong cut</option><option>Material fault</option><option>Colour off</option><option>Damaged in transit</option><option>Customer artwork error</option></select>
+        <!-- ── Activity log + Reprint — two separate dropdowns ── -->
+        <div class="jd-dropdown-row">
+          <div>
+            <button class="jd-dropdown-btn" onclick="toggleDropdown('activityPanel','activityArrow')">
+              <span>📋 Activity log</span>
+              <span id="activityArrow" style="font-size:11px;transition:.2s">▼</span>
+            </button>
+            <div id="activityPanel" class="jd-dropdown-panel">
+              <div id="activityLogList">
+                <div class="logrow"><span class="t">—</span><span style="color:var(--ink-3)">No activity yet</span></div>
               </div>
+              <div class="note red" style="margin-top:10px;font-size:12px"><b>SAFEGUARD:</b> cancelled or refunded in Shopify auto-flags this job before printing.</div>
             </div>
-            <textarea placeholder="What happened, who caught it…" style="width:100%;padding:9px 10px;border:1.5px solid var(--line);border-radius:8px;font-size:13px;min-height:56px;resize:vertical;box-sizing:border-box;margin-bottom:8px"></textarea>
-            <button class="btn btn-ghost" style="width:100%" onclick="showToast('Reprint logged ✓')">Log reprint / remake</button>
           </div>
-          <div class="note red" style="margin:0 14px 14px;font-size:12px"><b>SAFEGUARD:</b> if cancelled or refunded in Shopify, the job auto-flags here before printing.</div>
+          <div>
+            <button class="jd-dropdown-btn" onclick="toggleDropdown('reprintPanel','reprintArrow')">
+              <span>⚑ Log reprint / remake</span>
+              <span id="reprintArrow" style="font-size:11px;transition:.2s">▼</span>
+            </button>
+            <div id="reprintPanel" class="jd-dropdown-panel">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+                <div><label style="font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;color:var(--ink-3);display:block;margin-bottom:4px">Qty to redo</label><input type="text" placeholder="e.g. 500" style="width:100%;padding:8px 10px;border:1.5px solid var(--line);border-radius:8px;font-size:13px;box-sizing:border-box"></div>
+                <div><label style="font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;color:var(--ink-3);display:block;margin-bottom:4px">Reason</label>
+                  <select style="width:100%;padding:8px 10px;border:1.5px solid var(--line);border-radius:8px;font-size:13px;box-sizing:border-box"><option>Press error</option><option>Wrong cut</option><option>Material fault</option><option>Colour off</option><option>Damaged in transit</option><option>Customer artwork error</option></select>
+                </div>
+              </div>
+              <textarea placeholder="What happened, who caught it…" style="width:100%;padding:9px 10px;border:1.5px solid var(--line);border-radius:8px;font-size:13px;min-height:56px;resize:vertical;box-sizing:border-box;margin-bottom:8px"></textarea>
+              <button class="btn btn-ghost" style="width:100%" onclick="showToast('Reprint logged ✓')">Log reprint / remake</button>
+            </div>
+          </div>
         </div>
-
       </div>
     </div>
 
     <!-- PROOFS TAB -->
     <div class="jd-panel" id="tab-proofs">
 
-      <!-- Upload new proof — shown first for quick access -->
-      <div class="seclabel" style="margin-top:0">Upload new proof</div>
+      <!-- Proof version history -->
+      <div class="seclabel" style="margin-top:0">Proof history</div>
+      <div class="pvlist" id="pvList" style="margin-bottom:14px">
+        <div class="pvrow">
+          <span class="pv-v">v2</span>
+          <div class="pv-body"><b>Proof v2 · sent to customer</b><span>11 Jun · 2:10pm · awaiting response</span></div>
+          <span class="pv-stat wait">Awaiting</span>
+        </div>
+        <div class="pvrow">
+          <span class="pv-v">v1</span>
+          <div class="pv-body"><b>Proof v1 · customer rejected</b><span>"Colour too dark, logo blurry" · 10 Jun</span></div>
+          <span class="pv-stat rej">Rejected</span>
+        </div>
+      </div>
+      <p class="hintline" style="margin-bottom:16px">Every version is saved. Customer sees the full history on their magic link.</p>
+
+      <!-- Upload new proof -->
+      <div class="seclabel">Upload new proof</div>
 
       <!-- Success state (hidden until sent) -->
       <div class="proof-success" id="proofSuccess">
         <div class="proof-success-icon">✅</div>
         <div class="proof-success-title">Proof sent to customer</div>
-        <div class="proof-success-sub" id="proofSuccessSub"></div>
+        <div class="proof-success-sub">hello@baysidebrewing.com · Job status → Awaiting Approval</div>
       </div>
 
       <!-- Upload form -->
@@ -1730,7 +1761,7 @@ td.thumb-cell{padding:6px 4px 6px 8px!important;width:44px}
         <div class="proof-file-preview" id="proofFilePreview" style="display:none">
           <span class="proof-file-icon">📄</span>
           <div>
-            <div class="proof-file-name" id="proofFileName">No file selected</div>
+            <div class="proof-file-name" id="proofFileName">bayside-label-v3.pdf</div>
             <div class="proof-file-size" id="proofFileSize">Ready to send</div>
           </div>
           <button class="proof-file-remove" onclick="clearProofFile()" title="Remove">✕</button>
@@ -1753,12 +1784,9 @@ td.thumb-cell{padding:6px 4px 6px 8px!important;width:44px}
         </p>
       </div>
 
-      <!-- Proof version history — populated dynamically -->
-      <div class="seclabel" style="margin-top:18px" id="pvHistoryLabel" style="display:none">Proof history</div>
-      <div class="pvlist" id="pvList" style="margin-bottom:8px"></div>
-      <p class="hintline" id="pvHintLine" style="margin-bottom:8px;display:none">Every version is saved. Customer sees the full history on their magic link.</p>
-
     </div>
+
+    <!-- CUSTOMER VIEW TAB -->
     <div class="jd-panel" id="tab-custview">
       <div class="note purple" style="margin-bottom:14px"><b>CUSTOMER PREVIEW</b> · This is exactly what the customer sees when they open their private link. No login required on their end.</div>
 
@@ -1785,8 +1813,8 @@ td.thumb-cell{padding:6px 4px 6px 8px!important;width:44px}
         <h3>Your StickySitch order</h3>
         <p>2,000 roll labels · 90×60mm · matte laminate</p>
         <div class="tline">
-          
-          
+          <div class="tstep done"><b>Order received</b><span>10 Jun · 9:14am</span></div>
+          <div class="tstep done"><b>Proof prepared</b><span>10 Jun · 11:02am</span></div>
           <div class="tstep now"><b>Your proof is ready</b><span>Please review below</span></div>
           <div class="tstep future"><b>In production</b><span>Printing, laminating &amp; cutting</span></div>
           <div class="tstep future" id="cvFinalStep"><b>Dispatched</b><span>Tracking emailed to you</span></div>
@@ -1836,11 +1864,11 @@ td.thumb-cell{padding:6px 4px 6px 8px!important;width:44px}
     <!-- HISTORY TAB (archive for this customer) -->
     <div class="jd-panel" id="tab-history">
       <div class="note purple" id="custHistoryNote" style="margin-bottom:14px;display:none"></div>
-<div class="arch-row">
+      <div class="arch-row">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
           <div>
             <div style="font-family:'Inter Tight';font-size:11px;font-weight:700;color:var(--lilac)">SS-0894</div>
-            
+            <div style="font-weight:600;font-size:14.5px;color:var(--navy);margin:2px 0" class="cv-hist-name"></div>
             <div style="font-size:12px;color:var(--ink-2)">2,000 roll labels · 90×60mm · 1st order</div>
             <div style="font-family:'Inter Tight';font-size:11px;color:var(--ink-3);margin-top:3px">Dispatched 2 Apr · AusPost 4B22…7810</div>
           </div>
@@ -1856,7 +1884,7 @@ td.thumb-cell{padding:6px 4px 6px 8px!important;width:44px}
         <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
           <div>
             <div style="font-family:'Inter Tight';font-size:11px;font-weight:700;color:var(--lilac)">SS-0731</div>
-            
+            <div style="font-weight:600;font-size:14.5px;color:var(--navy);margin:2px 0" class="cv-hist-name"></div>
             <div style="font-size:12px;color:var(--ink-2)">500 die-cut stickers · 90mm · coasters</div>
             <div style="font-family:'Inter Tight';font-size:11px;color:var(--ink-3);margin-top:3px">Dispatched 11 Feb</div>
           </div>
@@ -1906,8 +1934,8 @@ td.thumb-cell{padding:6px 4px 6px 8px!important;width:44px}
     <div class="arch-row">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
         <div>
-          <div style="font-family:'Inter Tight',sans-serif;font-size:11px;font-weight:700;color:var(--lilac)" id="previewJobId"></div>
-          
+          <div style="font-family:'Inter Tight';font-size:11px;font-weight:700;color:var(--lilac)">SS-1042</div>
+          <div style="font-weight:600;font-size:14.5px;color:var(--navy);margin:2px 0" class="cv-hist-name"></div>
           <div style="font-size:12px;color:var(--ink-2)">2,000 roll labels · 90×60mm · 2nd order</div>
           <div style="font-family:'Inter Tight';font-size:11px;color:var(--ink-3);margin-top:3px">Dispatched 14 Jun · AusPost 7C9F…2240</div>
         </div>
@@ -1923,7 +1951,7 @@ td.thumb-cell{padding:6px 4px 6px 8px!important;width:44px}
       <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
         <div>
           <div style="font-family:'Inter Tight';font-size:11px;font-weight:700;color:var(--lilac)">SS-0894</div>
-          
+          <div style="font-weight:600;font-size:14.5px;color:var(--navy);margin:2px 0" class="cv-hist-name"></div>
           <div style="font-size:12px;color:var(--ink-2)">2,000 roll labels · 1st order</div>
           <div style="font-family:'Inter Tight';font-size:11px;color:var(--ink-3);margin-top:3px">Dispatched 2 Apr</div>
         </div>
@@ -1939,78 +1967,14 @@ td.thumb-cell{padding:6px 4px 6px 8px!important;width:44px}
 </div>
 </section>
 
+
+
+
+</body>
+</html>
+
 <script>
-// Inline status dropdown in table row
-async function navStatSelect(sel){
-  var newStatus = sel.value;
-  if(!newStatus) return;
-  sel.value = ''; // reset to "Change…"
-  var row = sel.closest('tr');
-  if(!row) return;
-  // Update chip
-  var chip = row.querySelector('.chip');
-  if(chip){ chip.textContent=chipLabel(newStatus); chip.className='chip '+chipClass(newStatus); chip.dataset.statkey=newStatus; }
-  row.dataset.status = newStatus;
-  row.dataset.station = newStatus;
-  // Persist to Supabase
-  var jobId = row.dataset.jobId;
-  if(jobId){
-    window._currentJobId = jobId;
-    var db2 = getDB();
-    if(db2){ await db2.from('jobs').update({status:newStatus}).eq('id',jobId); }
-  }
-  updateScorecard();
-}
 
-
-// ── Notes display helpers ─────────────────────────────────────────────
-var _allNotesExpanded = false;
-function toggleAllNotes(){
-  _allNotesExpanded = !_allNotesExpanded;
-  var recent = document.getElementById('notesRecent');
-  var all    = document.getElementById('notesList');
-  var btn    = document.getElementById('notesToggleBtn');
-  if(_allNotesExpanded){
-    if(recent) recent.style.display='none';
-    if(all)    all.style.display='block';
-    if(btn)    btn.textContent='Show less';
-  } else {
-    if(recent) recent.style.display='block';
-    if(all)    all.style.display='none';
-    if(btn)    btn.textContent='See all';
-  }
-}
-
-function toggleActivityPanel(){
-  var panel = document.getElementById('activityPanel');
-  var arrow = document.getElementById('activityArrow');
-  if(!panel) return;
-  var open = panel.style.display !== 'none';
-  panel.style.display = open ? 'none' : 'block';
-  if(arrow) arrow.style.transform = open ? '' : 'rotate(180deg)';
-}
-
-// ── Rebuild notesRecent from notesList entries ─────────────────────────
-function syncRecentNotes(){
-  var all    = document.getElementById('notesList');
-  var recent = document.getElementById('notesRecent');
-  var btn    = document.getElementById('notesToggleBtn');
-  if(!all || !recent) return;
-  var entries = Array.from(all.querySelectorAll('.note-entry'));
-  var totalCount = entries.length;
-  // Show 2 most recent (first 2 in list since newest is prepended)
-  var recentHtml = entries.slice(0,2).map(function(e){return e.outerHTML;}).join('');
-  recent.innerHTML = recentHtml || '<div style="padding:12px 14px;font-family:\'DM Sans\',sans-serif;font-size:13px;color:var(--ink-3)">No notes yet.</div>';
-  if(btn) btn.style.display = totalCount > 2 ? 'block' : 'none';
-  if(btn) btn.textContent = 'See all '+totalCount+' notes';
-}
-
-// ── Update note author label with current user ─────────────────────────
-function updateNoteAuthorLabel(){
-  var label = document.getElementById('noteAuthorLabel');
-  if(!label || !CURRENT_MEMBER) return;
-  label.innerHTML = 'Logged as <b>'+(CURRENT_MEMBER.name||'Team')+(CURRENT_ROLE==='admin'?' (Admin)':' (Staff)')+'</b>';
-}
 // Navigation
 // ── Role management ───────────────────────────────────────────────────
 var CURRENT_ROLE = 'admin'; // 'admin' | 'staff'
@@ -2185,14 +2149,6 @@ function applyFrontFilters(){
   } else if(sort==='oldest'){
     visible.sort(function(a,b){return (a.dataset.placed||'').localeCompare(b.dataset.placed||'');});
     visible.forEach(function(r){tbody.appendChild(r);});
-  } else if(sort==='product'){
-    visible.sort(function(a,b){
-      var diff = productSortKey(a)-productSortKey(b);
-      if(diff!==0)return diff;
-      return (a.dataset.due||'').localeCompare(b.dataset.due||'');
-    });
-    visible.forEach(function(r){tbody.appendChild(r);});
-    insertProductDividers(tbody, visible);
   } else {
     visible.sort(function(a,b){return (b.dataset.placed||'').localeCompare(a.dataset.placed||'');});
     visible.forEach(function(r){tbody.appendChild(r);});
@@ -2240,14 +2196,6 @@ function applyProdFilters(){
   } else if(sort==='oldest'){
     visible.sort(function(a,b){return (a.dataset.placed||'').localeCompare(b.dataset.placed||'');});
     visible.forEach(function(r){tbody.appendChild(r);});
-  } else if(sort==='product'){
-    visible.sort(function(a,b){
-      var diff = productSortKey(a)-productSortKey(b);
-      if(diff!==0)return diff;
-      return (a.dataset.due||'').localeCompare(b.dataset.due||'');
-    });
-    visible.forEach(function(r){tbody.appendChild(r);});
-    insertProductDividers(tbody, visible);
   } else {
     visible.sort(function(a,b){return (a.dataset.due||'').localeCompare(b.dataset.due||'');});
     visible.forEach(function(r){tbody.appendChild(r);});
@@ -2260,26 +2208,6 @@ function applyProdFilters(){
   });
 }
 
-
-// Product type sort order and divider helper
-var PRODUCT_SORT_ORDER = {rolls:0, sheets:1, individual:2, bumper:3, large:4};
-function productSortKey(r){ return PRODUCT_SORT_ORDER[r.dataset.product||'']||99; }
-var PRODUCT_LABELS_MAP = {rolls:'Labels on Rolls', sheets:'Sticker Sheets', individual:'Individual Stickers', bumper:'Bumper Stickers', large:'Large Format'};
-function insertProductDividers(tbody, rows){
-  Array.from(tbody.querySelectorAll('.product-div')).forEach(function(d){d.remove();});
-  var lastProduct = null;
-  rows.forEach(function(r){
-    var p = r.dataset.product||'';
-    if(p !== lastProduct){
-      var div = document.createElement('tr');
-      div.className = 'product-div date-div';
-      div.innerHTML = '<td colspan="14" style="background:var(--paper);padding:7px 14px;font-family:\'Inter Tight\',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)">'+(PRODUCT_LABELS_MAP[p]||p)+'</td>';
-      tbody.insertBefore(div, r);
-      lastProduct = p;
-    }
-  });
-}
-
 // Date divider helpers
 var MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 var DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
@@ -2289,71 +2217,29 @@ function formatDueLabel(dateStr){
   var m=parseInt(dateStr.substr(4,2))-1;
   var d=parseInt(dateStr.substr(6,2));
   var dt=new Date(y,m,d);
-  return DAYS[dt.getDay()]+' '+d+' '+MONTHS[m];
+  return DAYS[dt.getDay()]+' · '+d+' '+MONTHS[m]+' '+y;
 }
-
 function insertDateDividers(tbody, visibleRows, colspan){
   colspan=colspan||13;
-  Array.from(tbody.querySelectorAll('.date-div')).forEach(function(d){d.remove();});
-
-  var today=new Date(); today.setHours(0,0,0,0);
-  var tomorrow=new Date(today); tomorrow.setDate(today.getDate()+1);
-
-  var groups={};
-  visibleRows.forEach(function(r){
-    var due=r.dataset.due||'no-date';
-    if(!groups[due])groups[due]=0;
-    groups[due]++;
-  });
-
   var lastDue=null;
+  var groups={};
+  visibleRows.forEach(function(r){groups[r.dataset.due]=(groups[r.dataset.due]||0)+1;});
   visibleRows.forEach(function(r){
-    var due=r.dataset.due||'';
-    if(due===lastDue)return;
-    lastDue=due;
-
-    var dueDt=null,isToday=false,isTomorrow=false,isOverdue=false;
-    if(due&&due.length>=8){
-      var yy=parseInt(due.substr(0,4));
-      var mo=parseInt(due.substr(4,2))-1;
-      var dd=parseInt(due.substr(6,2));
-      dueDt=new Date(yy,mo,dd);
-      isToday=(dueDt.getTime()===today.getTime());
-      isTomorrow=(dueDt.getTime()===tomorrow.getTime());
-      isOverdue=(dueDt<today);
+    var due=r.dataset.due;
+    if(due!==lastDue){
+      lastDue=due;
+      var div=document.createElement('tr');
+      div.className='date-div';
+      var label=formatDueLabel(due);
+      var count=groups[due];
+      var isToday=(due==='20240612'); // Wed 12 Jun = prototype "today"
+      var isTomorrow=(due==='20240613');
+      var badge=isToday?' <span style="background:var(--lilac);color:#fff;font-size:9px;padding:2px 7px;border-radius:999px;font-weight:800;margin-left:4px">TODAY</span>':isTomorrow?' <span style="background:var(--lilac-soft);color:var(--lilac);font-size:9px;padding:2px 7px;border-radius:999px;font-weight:800;margin-left:4px">TOMORROW</span>':'';
+      div.innerHTML='<td colspan="'+colspan+'"><div class="div-label">'+label+badge+'</div></td>';
+      tbody.insertBefore(div,r);
     }
-
-    var count=groups[due]||0;
-    var DFULL=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-    var MFULL=['January','February','March','April','May','June','July','August','September','October','November','December'];
-
-    var dateLabel='No due date';
-    var tagHtml='';
-    if(dueDt){
-      dateLabel=DFULL[dueDt.getDay()]+' '+dueDt.getDate()+' '+MFULL[dueDt.getMonth()];
-      if(isToday){dateLabel='Today \u2014 '+DFULL[dueDt.getDay()]+' '+dueDt.getDate()+' '+MFULL[dueDt.getMonth()];tagHtml='<span style="background:#D97706;color:#fff;font-size:9px;font-weight:800;padding:2px 8px;border-radius:999px;margin-left:8px">TODAY</span>';}
-      else if(isTomorrow){tagHtml='<span style="background:var(--lilac);color:#fff;font-size:9px;font-weight:800;padding:2px 8px;border-radius:999px;margin-left:8px">TOMORROW</span>';}
-      else if(isOverdue){tagHtml='<span style="background:#DC2626;color:#fff;font-size:9px;font-weight:800;padding:2px 8px;border-radius:999px;margin-left:8px">OVERDUE</span>';}
-    }
-
-    var subMsg=count+(count===1?' job':' jobs')+(isToday?' \u00b7 get it done!':isTomorrow?' \u00b7 due tomorrow':isOverdue?' \u00b7 needs attention':' \u00b7');
-    var bgColor=isToday?'#FEF9C3':isOverdue?'#FEF2F2':'#fff';
-    var borderColor=isToday?'#D97706':isOverdue?'#DC2626':'var(--line)';
-    var labelColor=isToday?'#92400E':isOverdue?'#991B1B':'var(--navy)';
-    var subColor=isToday?'#A16207':isOverdue?'#B91C1C':'var(--ink-3)';
-
-    var div=document.createElement('tr');
-    div.className='date-div';
-    div.innerHTML='<td colspan="'+colspan+'" style="padding:0;border:none">'
-      +'<div style="background:'+bgColor+';border:1.5px solid '+borderColor+';border-radius:12px;padding:12px 16px;margin:12px 0 4px">'
-      +'<div style="font-family:\'Inter Tight\',sans-serif;font-size:15px;font-weight:800;color:'+labelColor+';display:flex;align-items:center">'
-      +dateLabel+tagHtml+'</div>'
-      +'<div style="font-family:\'DM Sans\',sans-serif;font-size:12px;color:'+subColor+';margin-top:2px">'+subMsg+'</div>'
-      +'</div></td>';
-    tbody.insertBefore(div,r);
   });
 }
-
 
 // ── Status sequence (for bulk change + nav) ──────────────────────────
 var STATUS_SEQ=['new','prepress','awaiting','revision','print','lam','cut','qa','pickup','pickedup','dispatched','outsource','hold'];
@@ -2512,8 +2398,8 @@ function setCut(mode,btn){
   btn.classList.add('active');
 }
 
-// Quick view data drawn from JOB_DATA (populated by loadBoard)
-var QV_DATA={};
+// ── Quick view popup ──────────────────────────────────────────────────
+var QV_DATA={}; // Quick view data drawn from JOB_DATA
 var SRC_LABEL={'shopify':'Shopify','email':'Email','fb':'Facebook','ig':'Instagram'};
 var SRC_CLASS={'shopify':'shopify','email':'email','fb':'fb','ig':'ig'};
 
@@ -3134,72 +3020,19 @@ function toggleReprint(){
 // Imposition calculator
 function calcImpo(){
   var perSheet=parseInt(document.getElementById('impoPerSheet').value)||0;
-  // Use real job quantity from JOB_DATA, fallback to 0
-  var d=window._currentJobId?JOB_DATA[window._currentJobId]:null;
-  var ordered=d?parseInt((d.qty||'0').replace(/,/g,''))||0:0;
-  var orderedEl=document.getElementById('impoOrderedCount');
-  if(orderedEl)orderedEl.textContent=ordered?ordered.toLocaleString():'—';
+  var ordered=2000;
   var result=document.getElementById('impoResult');
-  if(!perSheet||perSheet<1||!ordered){if(result)result.style.display='none';return;}
+  if(!perSheet||perSheet<1){if(result)result.style.display='none';return;}
   var exact=ordered/perSheet;
   var copies=Math.ceil(exact);
   var produced=copies*perSheet;
   var extra=produced-ordered;
   document.getElementById('impoCopies').textContent=copies;
   document.getElementById('impoPerSheetStat').innerHTML='<b style="color:#fff">'+perSheet+'</b> stickers/sheet';
-  document.getElementById('impoExtraStat').textContent=(extra>0?'+'+extra+' stickers extra':'Exact — no extra stickers');
+  document.getElementById('impoExtraStat').textContent='+'+extra+' stickers extra for customer';
   document.getElementById('impoExact').textContent='Exact: '+exact.toFixed(2)+' copies → rounded up to '+copies;
-  // Update ordered count inline
-  var orderedSpan=document.querySelector('#impositionSection b[style*="color:var(--ink)"]');
-  if(orderedSpan)orderedSpan.textContent=ordered.toLocaleString();
   if(result)result.style.display='block';
-  document.getElementById('impoSaved').style.display='none';
   updateCustSheetLayout();
-}
-
-async function saveImposition(){
-  var perSheet=parseInt(document.getElementById('impoPerSheet').value)||0;
-  if(!perSheet||perSheet<1){alert('Enter stickers per sheet first.');return;}
-  var d=window._currentJobId?JOB_DATA[window._currentJobId]:null;
-  var ordered=d?parseInt((d.qty||'0').replace(/,/g,''))||0:0;
-  var copies=Math.ceil(ordered/perSheet);
-  var btn=document.getElementById('impoSaveBtn');
-  if(btn){btn.textContent='Saving…';btn.disabled=true;}
-  // Save to Supabase
-  var db2=getDB();
-  if(db2&&window._currentJobId){
-    var {error}=await db2.from('jobs').update({
-      imposition_per_sheet: perSheet,
-      imposition_copies:    copies,
-      status:               'prepress'
-    }).eq('id',window._currentJobId);
-    if(error){
-      console.error('saveImposition error:', error);
-      showToast('Save failed: '+error.message);
-      if(btn){btn.textContent='✓ Confirm & save imposition';btn.disabled=false;}
-      return;
-    }
-    // Update local cache
-    if(d){d.impoPerSheet=perSheet;d.impoCopies=copies;d.status='prepress';d.statusLabel='Prepress';}
-  }
-  // Update UI
-  document.getElementById('impoResult').style.display='none';
-  var saved=document.getElementById('impoSaved');
-  var summary=document.getElementById('impoSavedSummary');
-  if(saved)saved.style.display='block';
-  if(summary)summary.textContent=perSheet+' per sheet · '+copies+' copies to print';
-  // Update status badge
-  var badge=document.getElementById('jdStatusBadge');
-  if(badge){badge.textContent='Prepress';badge.className='jd-status-badge prepress';}
-  showToast('Imposition saved · job moved to Prepress ✓');
-  if(btn){btn.textContent='✓ Confirm & save imposition';btn.disabled=false;}
-}
-
-function resetImposition(){
-  document.getElementById('impoSaved').style.display='none';
-  document.getElementById('impoResult').style.display='none';
-  document.getElementById('impoPerSheet').value='';
-  document.getElementById('impoPerSheet').focus();
 }
 
 
@@ -3271,14 +3104,9 @@ var STATUS_LABELS={
   'pickedup':'Picked Up','awaiting_pickup':'Awaiting Pickup','outsource':'Outsource'
 };
 function openJobFromRow(row){
-  // Read job ID from data attribute — avoids reading concatenated text like "SS-0001#1234"
-  var jobId = (row && row.dataset && row.dataset.jobId)
-    ? row.dataset.jobId
-    : (function(){
-        var idEl = row ? row.querySelector('.tbl-id,.jid') : null;
-        // firstChild is the text node before any badge divs
-        return idEl ? (idEl.firstChild ? idEl.firstChild.textContent.trim() : idEl.textContent.trim()) : '';
-      })();
+  // Get job ID from the row
+  var idEl=row?row.querySelector('.tbl-id,.jid'):null;
+  var jobId=idEl?idEl.textContent.replace(/[↳\s]/g,'').trim():'';
   window._currentJobId=jobId;
   window._currentJobProduct=row?row.dataset.product:'';
   var prodActive=document.getElementById('production')&&document.getElementById('production').classList.contains('show');
@@ -3441,8 +3269,6 @@ async function sendProof(){
   var timeStr=now.getDate()+' '+months[now.getMonth()]+' · '+
     now.toLocaleTimeString('en-AU',{hour:'numeric',minute:'2-digit',hour12:true});
   var list=document.getElementById('pvList');
-  var pvLabel=document.getElementById('pvHistoryLabel');
-  var pvHint=document.getElementById('pvHintLine');
   if(list){
     var newRow=document.createElement('div');
     newRow.className='pvrow';
@@ -3587,58 +3413,9 @@ function filterProdByStatus(status){
 // Full job data for each prototype job
 var JOB_DATA = {}; // Populated from Supabase by loadBoard()
 
-async function populateJobDetail(jobId){
-  console.log('[populateJobDetail] called with jobId:', jobId);
-  // Show loading state
-  var nameEl2=document.getElementById('jdName');
-  if(nameEl2&&!JOB_DATA[jobId])nameEl2.textContent='Loading…';
+function populateJobDetail(jobId){
   var d=JOB_DATA[jobId];
-  // If not in cache, try fetching from Supabase
-  if(!d){
-    var db2=getDB();
-    console.log('[populateJobDetail] not in cache, db:', !!db2);
-    if(db2){
-      var {data:job}=await db2.from('active_jobs').select('*, job_items(*)').eq('id',jobId).single();
-      if(job){
-        console.log('[populateJobDetail] Supabase returned:', job.id, job.business_name);
-        var item=(job.job_items||[])[0]||{};
-        d={
-          id:job.id, shopify:job.shopify_order_number||null, paid:job.paid||false,
-          src:job.source||'manual', srcLabel:(job.source||'Manual').charAt(0).toUpperCase()+(job.source||'manual').slice(1),
-          name:job.business_name||'Unknown', contact:job.contact_name||'',
-          email:job.customer_email||'', phone:job.customer_phone||'',
-          address:job.address_full||'', addr:job.address_full||'',
-          product:PRODUCT_LABELS_MAP[item.product_type]||item.product_type||'',
-          qty:item.quantity?item.quantity.toLocaleString():'—',
-          shape:item.shape||'', size:fmtSize(item.width_mm,item.height_mm),
-          material:item.material||'', lam:item.laminate||'',
-          dispatch:fmtDispatch(job.dispatch_method,job.courier), courier:job.courier||'',
-          placed:fmtDate(job.placed_at), due:fmtDate(job.due_date),
-          dueAlert:job.due_date&&new Date(job.due_date)<new Date(),
-          artFile:job.artwork_filename||'artwork.pdf', artwork_url:job.artwork_url||null, artUrl:job.artwork_url||null,
-          status:job.status, statusLabel:chipLabel(job.status),
-          productKey:item.product_type||'individual',
-          outsourceSupplier:job.outsource_supplier||'TBC',
-          outsourceDest:job.outsource_dest||'Our factory',
-          invoice_url:job.invoice_url||null, invoice_filename:job.invoice_filename||null,
-          thread_url:job.thread_url||null,
-          cancellationReason:job.cancellation_reason||null,
-          cancelledAt:job.cancelled_at?fmtDate(job.cancelled_at):null,
-          refundedAmount:job.refunded_amount||null,
-          refundedAt:job.refunded_at?fmtDate(job.refunded_at):null,
-          shopify_order_group:job.shopify_order_group||null, parent_job_id:job.parent_job_id||null
-        };
-        JOB_DATA[jobId]=d;
-      }
-    }
-  }
-  if(!d){
-    console.warn('[populateJobDetail] No data found for jobId:', jobId);
-    var nameEl=document.getElementById('jdName');
-    if(nameEl)nameEl.textContent='Job not found — check Supabase connection';
-    return;
-  }
-  console.log('[populateJobDetail] populating with:', d.name);
+  if(!d)return; // Unknown job — keep existing content
 
   // ID line
   var idEl=document.getElementById('jdId');
@@ -3700,19 +3477,6 @@ async function populateJobDetail(jobId){
   // Status badge
   var badge=document.getElementById('jdStatusBadge');
   if(badge){badge.textContent=d.statusLabel;badge.className='jd-status-badge '+d.status;}
-
-
-  // ── Outsource section visibility ─────────────────────────────────
-  var outsourceSec=document.getElementById('outsourceSection');
-  if(outsourceSec){
-    outsourceSec.style.display=(d.productKey==='rolls')?'block':'none';
-    if(d.productKey==='rolls'){
-      var outSup=document.getElementById('outSupplierDisplay');
-      var outDest=document.getElementById('outDestDisplay');
-      if(outSup)outSup.textContent=d.outsourceSupplier||'To be confirmed';
-      if(outDest)outDest.textContent=d.outsourceDest||'Our factory';
-    }
-  }
 
   // ── Cancellation / refund banner ──────────────────────────────────
   var cancelBanner=document.getElementById('cancelBanner');
@@ -3779,12 +3543,6 @@ async function populateJobDetail(jobId){
   // Close picker on job open
   var picker=document.getElementById('jdStatusPicker');
   if(picker)picker.classList.remove('open');
-  // Reset notes expanded state
-  _allNotesExpanded=false;
-  var notesAll=document.getElementById('notesList');if(notesAll)notesAll.style.display='none';
-  var notesRecent=document.getElementById('notesRecent');if(notesRecent)notesRecent.style.display='block';
-  var actPanel=document.getElementById('activityPanel');if(actPanel)actPanel.style.display='none';
-  updateNoteAuthorLabel();
   // Show invoice / thread references
   // Merge stored URLs from Supabase into JOB_INVOICES for display
   if(d && (d.invoice_url || d.thread_url)){
@@ -3809,21 +3567,8 @@ async function populateJobDetail(jobId){
   var impoEdit=document.getElementById('impositionSection');
   var impoLock=document.getElementById('impositionLocked');
   var isSheets=d.productKey==='sheets';
-  var isPrepress=(d.status==='prepress'||d.status==='new');
-  if(impoEdit)impoEdit.style.display=(isSheets&&(isPrepress||d.impoCopies))?'block':'none';
-  // Pre-fill saved imposition values
-  var impoInput=document.getElementById('impoPerSheet');
-  var impoSavedEl=document.getElementById('impoSaved');
-  var impoResultEl=document.getElementById('impoResult');
-  var impoSummary=document.getElementById('impoSavedSummary');
-  if(impoInput) impoInput.value='';
-  if(impoSavedEl) impoSavedEl.style.display='none';
-  if(impoResultEl) impoResultEl.style.display='none';
-  if(d.impoPerSheet&&d.impoCopies){
-    if(impoInput) impoInput.value=d.impoPerSheet;
-    if(impoSavedEl) impoSavedEl.style.display='block';
-    if(impoSummary) impoSummary.textContent=d.impoPerSheet+' per sheet · '+d.impoCopies+' copies to print';
-  }
+  var isPrepress=d.status==='prepress';
+  if(impoEdit)impoEdit.style.display=(isSheets&&isPrepress)?'block':'none';
   if(impoLock){
     if(isSheets&&!isPrepress){
       impoLock.style.display='block';
@@ -3882,7 +3627,7 @@ function updateCustSheetLayout(){
 
 // ── Proof thumbnails — live in rows ──────────────────────────────────
 var PROOF_THUMBNAILS = {};
-// Proof thumbnails populated dynamically from Supabase via loadBoard()
+// Seed with example approved proof for SS-1028 (Sunday Roasters - Print stage)
 // In real build these load from Supabase storage URLs
 
 function storeThumbnail(jobId, src, type, approved){
@@ -4176,7 +3921,21 @@ async function sendOutsourceTrackingToCustomer(){
   showToast('Tracking sent to customer. Shopify order fulfilled ✓');
 }
 
-
+// Show outsource section when job is outsourced
+var _origPopulate=populateJobDetail;
+function populateJobDetail(jobId){
+  _origPopulate(jobId);
+  var d=JOB_DATA[jobId];
+  var sec=document.getElementById('outsourceSection');
+  if(sec&&d){
+    sec.style.display=(d.productKey==='rolls')?'block':'none';
+    // Populate outsource details
+    var sup=document.getElementById('outSupplierDisplay');
+    var dest=document.getElementById('outDestDisplay');
+    if(sup)sup.textContent=d.outsourceSupplier||'To be confirmed';
+    if(dest)dest.textContent=d.outsourceDest||'Our factory';
+  }
+}
 
 
 // ── Machship CSV export (from selection) ─────────────────────────────
@@ -4670,8 +4429,7 @@ function applyThumbToCell(cell, thumb){
 
 // ── Customer database for autofill ────────────────────────────────────
 var CUSTOMER_DB = [
-
-  {name:'Hartley Hot Sauce',   contact:'Sarah Hartley',   email:'hartley@hotsauce.com.au',     phone:'0411 234 567', address:'22 Church St, Richmond VIC 3121',   orders:2, tags:['Repeat']},
+    {name:'Hartley Hot Sauce',   contact:'Sarah Hartley',   email:'hartley@hotsauce.com.au',     phone:'0411 234 567', address:'22 Church St, Richmond VIC 3121',   orders:2, tags:['Repeat']},
   {name:"Tilly's Candles",     contact:'Tilly Marsh',     email:'tilly@tillyscandles.com',      phone:'0415 678 901', address:'',                                  orders:1, tags:['New']},
   {name:'North St Coffee',     contact:'',                email:'orders@northstcoffee.com.au',  phone:'0413 456 789', address:'4 North St, Newtown VIC 3220',      orders:3, tags:['Repeat']},
   {name:'Vela Studio',         contact:'Pia Nguyen',      email:'hello@velastudio.com.au',      phone:'0416 789 012', address:'40 Rokeby St, Collingwood VIC 3066',orders:2, tags:['Repeat']},
@@ -5307,948 +5065,84 @@ async function fetchScorecard(){
 
 
 
-// ── Grafted: live board functions (loadBoard, buildJobRow, buildJobCard, etc.) ──
-var PRODUCT_LABELS = {
-  rolls:'Roll labels', sheets:'Sticker sheets',
-  individual:'Individual stickers', bumper:'Bumper stickers', large:'Large format'
-};
-
-var PRODUCT_THUMBS = {
-  rolls:{emoji:'🏷️',cls:'rolls'}, sheets:{emoji:'📋',cls:'sheets'},
-  individual:{emoji:'⭐',cls:'individual'}, bumper:{emoji:'🚗',cls:'bumper'},
-  large:{emoji:'🖼️',cls:'large'}
-};
-
-function fmtDate(d){
-  if(!d)return '—';
-  var dt=new Date(d);
-  return dt.getDate()+' '+'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split(' ')[dt.getMonth()];
+// ── New layout helpers (added in rebuild) ───────────────────────────
+function toggleDropdown(panelId, arrowId){
+  var p=document.getElementById(panelId); var a=document.getElementById(arrowId);
+  if(!p)return; var open=p.style.display!=='none';
+  p.style.display=open?'none':'block';
+  if(a)a.style.transform=open?'':'rotate(180deg)';
 }
+function toggleActivityPanel(){ toggleDropdown('activityPanel','activityArrow'); }
+function toggleReprint(){ toggleDropdown('reprintPanel','reprintArrow'); }
 
-function fmtSize(w,h){
-  if(w&&h) return w+' × '+h+' mm';
-  if(w)    return w+' mm';
-  return '—';
-}
-
-function fmtDispatch(method, courier){
-  var m = method==='road'?'Road dispatch':method==='same-day'?'Same day courier':method==='pickup'?'Pickup':'—';
-  return courier ? m+' · '+courier : m;
-}
-
-function chipClass(status){
-  var map={new:'new',prepress:'prepress',awaiting:'awaiting',revision:'revision',
-    print:'print',lam:'lam',cut:'cut',qa:'qa',outsource:'outsource',
-    pickup:'pickup',pickedup:'pickedup',hold:'hold',dispatched:'dispatched',
-    cancelled:'cancelled',refunded:'refunded'};
-  return map[status]||'new';
-}
-
-function chipLabel(status){
-  return (STATUS_META[status]||[status])[0]||status;
-}
-
-function buildJobRow(job){
-  var items   = job.job_items||[];
-  var item    = items[0]||{};
-  var ptype   = item.product_type||'individual';
-  var thumb   = PRODUCT_THUMBS[ptype]||PRODUCT_THUMBS.individual;
-  var size    = fmtSize(item.width_mm, item.height_mm);
-  var qty     = items.reduce(function(s,it){return s+(it.quantity||0);},0);
-  var qtyStr  = qty > 0 ? qty.toLocaleString() : '—';
-  var prodLbl = ptype==='large'&&item.product_subtype ? item.product_subtype : (PRODUCT_LABELS[ptype]||ptype);
-  var src     = job.source||'shopify';
-  var status  = job.status||'new';
-  var due     = fmtDate(job.due_date);
-  var placed  = fmtDate(job.placed_at);
-  var dueAlert= job.due_date && new Date(job.due_date) < new Date() && status!=='dispatched'&&status!=='pickedup';
-
-  var dueSortKey = job.due_date ? job.due_date.replace(/-/g,'') : '';
-  return '<tr data-status="'+status+'" data-station="'+status+'" data-product="'+ptype+'"'
-    +' data-placed="'+placed+'" data-due="'+dueSortKey+'" data-job-id="'+job.id+'" onclick="openJobFromRow(this)">'
-    +'<td onclick="event.stopPropagation()"><input type="checkbox" class="row-check" onchange="rowCheckAuto(this)"></td>'
-    +'<td><button class="prio-btn prio-off" onclick="event.stopPropagation();togglePrio(this)" title="Set priority">⚡</button></td>'
-    +'<td class="thumb-cell"><div class="row-thumb '+thumb.cls+'" onclick="event.stopPropagation();downloadArtwork(this)">'
-    +thumb.emoji+'<span class="thumb-dl">⬇</span><span class="proof-tick">✓</span></div></td>'
-    +'<td class="tbl-id">'+job.id+(job.shopify_order_number?'<div class="shopify-ref">'+job.shopify_order_number+'</div>':'')+'</td>'
-    +'<td class="tbl-cust"><div style="font-weight:600;font-size:14px;color:var(--navy)">'+(job.business_name||'Unknown')+'</div>'
-    +(job.contact_name?'<div class="tbl-id" style="font-size:11px;margin-top:1px">'+job.contact_name+'</div>':'')+'</td>'
-    +'<td><span class="src '+src+'">'+src.charAt(0).toUpperCase()+src.slice(1)+'</span></td>'
-    +'<td>'+prodLbl+'</td>'
-    +'<td>'+size+'</td>'
-    +'<td>'+qtyStr+'</td>'
-    +'<td>'+placed+'</td>'
-    +'<td><span class="chip '+chipClass(status)+'" data-statkey="'+status+'">'+chipLabel(status)+'</span>'
-    +' <select class="inline-stat-sel" onclick="event.stopPropagation()" onchange="event.stopPropagation();navStatSelect(this)">'
-    +'<option value="">Change…</option>'
-    +'<option value="new">New</option><option value="prepress">Prepress</option>'
-    +'<option value="awaiting">Awaiting Approval</option><option value="revision">Artwork Revision</option>'
-    +'<option value="print">Print</option><option value="lam">Laminate</option>'
-    +'<option value="cut">Cut</option><option value="qa">QA &amp; Packing</option>'
-    +'<option value="outsource">Outsource</option><option value="pickup">Awaiting Pickup</option>'
-    +'<option value="pickedup">Picked Up</option><option value="dispatched">Dispatched</option>'
-    +'<option value="hold">On Hold</option><option value="cancelled">Cancelled</option>'
-    +'</select></td>'
-    +'<td>'+(dueAlert?'<span style="color:var(--red);font-weight:600">⚡ '+due+'</span>':due)+'</td>'
-    +'<td>'+fmtDispatch(job.dispatch_method, job.courier)+'</td>'
-    +'</tr>';
-}
-
-function buildJobCard(job){
-  var items  = job.job_items||[];
-  var item   = items[0]||{};
-  var ptype  = item.product_type||'individual';
-  var thumb  = PRODUCT_THUMBS[ptype]||PRODUCT_THUMBS.individual;
-  var size   = fmtSize(item.width_mm, item.height_mm);
-  var qty    = items.reduce(function(s,it){return s+(it.quantity||0);},0);
-  var qtyStr = qty > 0 ? qty.toLocaleString() : '—';
-  var prodLbl= ptype==='large'&&item.product_subtype?item.product_subtype:(PRODUCT_LABELS[ptype]||ptype);
-  var status = job.status||'new';
-  var src    = job.source||'shopify';
-  var due    = fmtDate(job.due_date);
-  var dueAlert = job.due_date && new Date(job.due_date) < new Date() && status!=='dispatched'&&status!=='pickedup';
-  var mat    = item.material||'';
-  var lam    = item.laminate||'';
-
-  var dueSortKeyC = job.due_date ? job.due_date.replace(/-/g,'') : '';
-  return '<div class="fcard" data-status="'+status+'" data-station="'+status+'" data-product="'+ptype+'" data-due="'+dueSortKeyC+'" data-job-id="'+job.id+'" onclick="openJobFromRow(this)">'
-    +'<div class="fc-head">'
-    +'<div class="fc-thumb" style="background:linear-gradient(135deg,#6B5CE7,#2C2545)">'+thumb.emoji+'</div>'
-    +'<div class="fc-headtext">'
-    +'<div style="display:flex;gap:6px;align-items:center;margin-bottom:3px;flex-wrap:wrap">'
-    +'<span class="job-id-label">'+job.id+'</span>'
-    +'<span class="chip '+chipClass(status)+'" style="font-size:10px">'+chipLabel(status)+'</span>'
-    +'<span class="src '+src+'">'+src.charAt(0).toUpperCase()+src.slice(1)+'</span>'
-    +'</div>'
-    +'<div class="fc-make">'+qtyStr+' · '+prodLbl+'</div>'
-    +'<div class="fc-cust">'+(job.business_name||'Unknown')+'</div>'
-    +'</div></div>'
-    +'<div class="fc-sg">'
-    +'<div><div class="k">Size</div><div class="v">'+size+'</div></div>'
-    +(mat?'<div><div class="k">Material</div><div class="v">'+mat+'</div></div>':'')
-    +(lam?'<div><div class="k">Laminate</div><div class="v">'+lam+'</div></div>':'')
-    +'</div>'
-    +'<div class="fc-foot">'
-    +'<span class="fc-due'+(dueAlert?' late':'')+'">'+( dueAlert?'⚡ Overdue · ':'📅 Due ')+due+'</span>'
-    +'<span class="fc-dispatch">'+fmtDispatch(job.dispatch_method, job.courier)+'</span>'
-    +'</div></div>';
-}
-
-async function loadBoard(){
-  db = getDB(); if(!db) return;
-  var {data:jobs, error} = await db
-    .from('active_jobs')
-    .select('*, job_items(*)')
-    .order('due_date', {ascending:true});
-
-  if(error){console.error('loadBoard error:', error); return;}
-
-  // ── Populate JOB_DATA for job detail lookups ─────────────────────
-  jobs.forEach(function(job){
-    var item = (job.job_items||[])[0]||{};
-    JOB_DATA[job.id] = {
-      id: job.id, shopify: job.shopify_order_number||null, paid: job.paid,
-      src: job.source, srcLabel: (job.source||'').charAt(0).toUpperCase()+(job.source||'').slice(1),
-      name: job.business_name||'Unknown', contact: job.contact_name||'—',
-      email: job.customer_email||'', phone: job.customer_phone||'',
-      address: job.address_full||'', addr: job.address_full||'',
-      product: PRODUCT_LABELS[item.product_type]||item.product_type||'',
-      qty: item.quantity ? item.quantity.toLocaleString() : '—',
-      shape: item.shape||'', size: fmtSize(item.width_mm, item.height_mm),
-      material: item.material||'', lam: item.laminate||'',
-      dispatch: fmtDispatch(job.dispatch_method, job.courier), courier: job.courier||'',
-      placed: fmtDate(job.placed_at), due: fmtDate(job.due_date),
-      dueAlert: job.due_date && new Date(job.due_date)<new Date(),
-      artFile: job.artwork_filename||'artwork.pdf', artSize: job.artwork_size_bytes
-        ? Math.round(job.artwork_size_bytes/1024/1024*10)/10+' MB' : '',
-      status: job.status, statusLabel: chipLabel(job.status),
-      shopify_order_group: job.shopify_order_group||null,
-      parent_job_id: job.parent_job_id||null,
-      productKey: item.product_type||'individual',
-      outsourceSupplier: job.outsource_supplier||'TBC',
-      outsourceDest: job.outsource_dest||'Our factory',
-      invoice_url:   job.invoice_url||null,
-      invoice_filename: job.invoice_filename||null,
-      thread_url:    job.thread_url||null,
-      cancellationReason: job.cancellation_reason||null,
-      cancelledAt:   job.cancelled_at?fmtDate(job.cancelled_at):null,
-      refundedAmount: job.refunded_amount||null,
-      refundedAt:    job.refunded_at?fmtDate(job.refunded_at):null,
-      impoPerSheet: job.imposition_per_sheet||null,
-      impoCopies:   job.imposition_copies||null
-    };
-  });
-
-  // ── Render tables ─────────────────────────────────────────────────
-  var fTbody = document.querySelector('#fTable tbody');
-  var pTbody = document.querySelector('#pTable tbody');
-  if(fTbody){
-    fTbody.innerHTML = jobs.length ? jobs.map(buildJobRow).join('') : '<tr><td colspan="13" class="empty-board-cell">No active jobs</td></tr>';
-  }
-  if(pTbody){
-    pTbody.innerHTML = jobs.length ? jobs.map(buildJobRow).join('') : '<tr><td colspan="13" class="empty-board-cell">No active jobs</td></tr>';
-  }
-
-  // ── Render card views ─────────────────────────────────────────────
-  var fCards = document.getElementById('fCardView');
-  var pCards = document.getElementById('pCardView');
-  var cardHtml = jobs.length ? jobs.map(buildJobCard).join('') : '<p class="empty-board-cell">No active jobs</p>';
-  if(fCards) fCards.innerHTML = cardHtml;
-  if(pCards) pCards.innerHTML = cardHtml;
-
-  // Re-apply filters and scorecard
-  applyFrontFilters();
-  applyProdFilters();
-  updateScorecard();
-  fetchScorecard();
-  refreshAllThumbs();
-}
-
-function subscribeRealtime(){
-  db = getDB(); if(!db) return;
-  db.channel('board-changes')
-    .on('postgres_changes', {event:'INSERT', schema:'public', table:'jobs'}, function(payload){
-      loadBoard(); showToast('New job on the board');
-    })
-    .on('postgres_changes', {event:'UPDATE', schema:'public', table:'jobs'}, function(payload){
-      // Update just the changed row without full reload
-      var job = payload.new;
-      if(!job||!job.id) return;
-      document.querySelectorAll('#fTable tbody tr, #pTable tbody tr').forEach(function(row){
-        var idEl=row.querySelector('.tbl-id');
-        if(!idEl||idEl.textContent.trim()!==job.id) return;
-        row.dataset.status=job.status;
-        row.dataset.station=job.status;
-        var chip=row.querySelector('.chip');
-        if(chip){chip.textContent=chipLabel(job.status);chip.className='chip '+chipClass(job.status);chip.dataset.statkey=job.status;}
-      });
-      updateScorecard();
-    })
-    .subscribe();
-}
-
-
-// Inline status dropdown in table row
-async function navStatSelect(sel){
-  var newStatus = sel.value;
-  if(!newStatus) return;
-  sel.value = ''; // reset to "Change…"
-  var row = sel.closest('tr');
-  if(!row) return;
-  // Update chip
-  var chip = row.querySelector('.chip');
-  if(chip){ chip.textContent=chipLabel(newStatus); chip.className='chip '+chipClass(newStatus); chip.dataset.statkey=newStatus; }
-  row.dataset.status = newStatus;
-  row.dataset.station = newStatus;
-  // Persist to Supabase
-  var jobId = row.dataset.jobId;
-  if(jobId){
-    window._currentJobId = jobId;
-    var db2 = getDB();
-    if(db2){ await db2.from('jobs').update({status:newStatus}).eq('id',jobId); }
-  }
-  updateScorecard();
-}
-
-
-// ── Notes display helpers ─────────────────────────────────────────────
-var _allNotesExpanded = false;
+var _allNotesExpanded=false;
 function toggleAllNotes(){
-  _allNotesExpanded = !_allNotesExpanded;
-  var recent = document.getElementById('notesRecent');
-  var all    = document.getElementById('notesList');
-  var btn    = document.getElementById('notesToggleBtn');
-  if(_allNotesExpanded){
-    if(recent) recent.style.display='none';
-    if(all)    all.style.display='block';
-    if(btn)    btn.textContent='Show less';
-  } else {
-    if(recent) recent.style.display='block';
-    if(all)    all.style.display='none';
-    if(btn)    btn.textContent='See all';
-  }
+  _allNotesExpanded=!_allNotesExpanded;
+  var r=document.getElementById('notesRecent'),a=document.getElementById('notesList'),b=document.getElementById('notesToggleBtn');
+  if(_allNotesExpanded){if(r)r.style.display='none';if(a)a.style.display='block';if(b)b.textContent='Show less';}
+  else{if(r)r.style.display='block';if(a)a.style.display='none';if(b)b.textContent='See all';}
 }
-
-function toggleActivityPanel(){
-  var panel = document.getElementById('activityPanel');
-  var arrow = document.getElementById('activityArrow');
-  if(!panel) return;
-  var open = panel.style.display !== 'none';
-  panel.style.display = open ? 'none' : 'block';
-  if(arrow) arrow.style.transform = open ? '' : 'rotate(180deg)';
-}
-
-// ── Rebuild notesRecent from notesList entries ─────────────────────────
 function syncRecentNotes(){
-  var all    = document.getElementById('notesList');
-  var recent = document.getElementById('notesRecent');
-  var btn    = document.getElementById('notesToggleBtn');
-  if(!all || !recent) return;
-  var entries = Array.from(all.querySelectorAll('.note-entry'));
-  var totalCount = entries.length;
-  // Show 2 most recent (first 2 in list since newest is prepended)
-  var recentHtml = entries.slice(0,2).map(function(e){return e.outerHTML;}).join('');
-  recent.innerHTML = recentHtml || '<div style="padding:12px 14px;font-family:\'DM Sans\',sans-serif;font-size:13px;color:var(--ink-3)">No notes yet.</div>';
-  if(btn) btn.style.display = totalCount > 2 ? 'block' : 'none';
-  if(btn) btn.textContent = 'See all '+totalCount+' notes';
+  var all=document.getElementById('notesList'),recent=document.getElementById('notesRecent'),btn=document.getElementById('notesToggleBtn');
+  if(!all||!recent)return;
+  var entries=Array.from(all.querySelectorAll('.note-entry'));
+  recent.innerHTML=entries.slice(0,2).map(function(e){return e.outerHTML;}).join('')||'<div style="padding:12px 14px;font-family:\'DM Sans\',sans-serif;font-size:13px;color:var(--ink-3)">No notes yet.</div>';
+  if(btn){btn.style.display=entries.length>2?'block':'none';btn.textContent='See all '+entries.length+' notes';}
+}
+function updateNoteAuthorLabel(){
+  var label=document.getElementById('noteAuthorLabel');
+  if(!label||!CURRENT_MEMBER)return;
+  label.innerHTML='Logged as <b>'+(CURRENT_MEMBER.name||'Team')+(CURRENT_ROLE==='admin'?' (Admin)':' (Staff)')+'</b>';
 }
 
-// ── Update note author label with current user ─────────────────────────
-function updateNoteAuthorLabel(){
-  var label = document.getElementById('noteAuthorLabel');
-  if(!label || !CURRENT_MEMBER) return;
-  label.innerHTML = 'Logged as <b>'+(CURRENT_MEMBER.name||'Team')+(CURRENT_ROLE==='admin'?' (Admin)':' (Staff)')+'</b>';
+async function navStatSelect(sel){
+  var newStatus=sel.value; if(!newStatus)return;
+  var row=sel.closest('tr')||sel.closest('.fcard'); if(!row)return;
+  sel.className='stat-pill-select '+chipClass(newStatus); sel.dataset.statkey=newStatus;
+  row.dataset.status=newStatus; row.dataset.station=newStatus;
+  var jobId=row.dataset.jobId;
+  if(jobId){ window._currentJobId=jobId; var db2=getDB(); if(db2)await db2.from('jobs').update({status:newStatus}).eq('id',jobId); }
 }
+
+function calcImpo(){
+  var perSheet=parseInt(document.getElementById('impoPerSheet').value)||0;
+  var d=window._currentJobId?JOB_DATA[window._currentJobId]:null;
+  var ordered=d?parseInt((d.qty||'0').replace(/,/g,''))||0:0;
+  var orderedEl=document.getElementById('impoOrderedCount'); if(orderedEl)orderedEl.textContent=ordered?ordered.toLocaleString():'—';
+  var result=document.getElementById('impoResult'); if(!perSheet||!ordered){if(result)result.style.display='none';return;}
+  var exact=ordered/perSheet,copies=Math.ceil(exact),extra=(copies*perSheet)-ordered;
+  document.getElementById('impoCopies').textContent=copies;
+  document.getElementById('impoPerSheetStat').innerHTML='<b style="color:#fff">'+perSheet+'</b> stickers/sheet';
+  document.getElementById('impoExtraStat').textContent=(extra>0?'+'+extra+' extra':'Exact — no extra');
+  document.getElementById('impoExact').textContent='Exact: '+exact.toFixed(2)+' → rounded to '+copies;
+  if(result)result.style.display='block';
+  document.getElementById('impoSaved').style.display='none';
+}
+async function saveImposition(){
+  var perSheet=parseInt(document.getElementById('impoPerSheet').value)||0;
+  if(!perSheet){alert('Enter stickers per sheet first.');return;}
+  var d=window._currentJobId?JOB_DATA[window._currentJobId]:null;
+  var ordered=d?parseInt((d.qty||'0').replace(/,/g,''))||0:0;
+  var copies=Math.ceil(ordered/perSheet);
+  var btn=document.getElementById('impoSaveBtn'); if(btn){btn.textContent='Saving…';btn.disabled=true;}
+  var db2=getDB();
+  if(db2&&window._currentJobId){ await db2.from('jobs').update({imposition_per_sheet:perSheet,imposition_copies:copies,status:'prepress'}).eq('id',window._currentJobId); if(d){d.impoPerSheet=perSheet;d.impoCopies=copies;d.status='prepress';} }
+  document.getElementById('impoResult').style.display='none';
+  var saved=document.getElementById('impoSaved'),summary=document.getElementById('impoSavedSummary');
+  if(saved)saved.style.display='block'; if(summary)summary.textContent=perSheet+' per sheet · '+copies+' copies';
+  var badge=document.getElementById('jdStatusBadge'); if(badge){badge.value='prepress';badge.className='stat-pill-select jd-stat-select prepress';}
+  showToast('Imposition saved · moved to Prepress ✓');
+  if(btn){btn.textContent='✓ Confirm & save imposition';btn.disabled=false;}
+}
+function resetImposition(){
+  document.getElementById('impoSaved').style.display='none';
+  document.getElementById('impoResult').style.display='none';
+  document.getElementById('impoPerSheet').value='';
+}
+
+async function manualCancelJob(){ if(confirm('Mark this job as Cancelled?')) await changeJobStatus('cancelled'); }
+async function manualRefundJob(){ if(confirm('Mark this job as Refunded?')) await changeJobStatus('refunded'); }
 
 </script>
-
-<!-- QUICK VIEW MODAL -->
-<div class="qv-overlay" id="qvOverlay" onclick="closeQV(event)">
-  <div class="qv-modal" id="qvModal">
-    <div class="qv-head">
-      <div>
-        <div id="qvId" style="font-family:'Inter Tight';font-size:11.5px;font-weight:700;color:var(--lilac);letter-spacing:.05em"></div>
-        <div id="qvName" style="font-family:'Inter Tight';font-weight:800;font-size:20px;color:var(--navy);margin-top:2px"></div>
-        <div id="qvMeta" style="font-size:12px;color:var(--ink-2);margin-top:2px;display:flex;align-items:center;gap:7px;flex-wrap:wrap"></div>
-      </div>
-      <button class="qv-close" onclick="closeQV()">✕</button>
-    </div>
-    <div class="qv-body">
-      <div class="qv-art">🖼️<span class="qv-artlabel" id="qvArtFile">pdf · 4.2 MB</span></div>
-      <div class="qv-grid" id="qvGrid"></div>
-      <div class="qv-acts">
-        <button class="btn btn-ghost eye-btn" style="font-size:13px" onclick="alert('Downloads print-ready artwork file.')">⬇ Artwork</button>
-        <button class="btn btn-honey" style="font-size:12.5px;flex:1;padding:10px" onclick="alert('Upload proof → customer emailed → Awaiting Approval.')">Upload proof & send</button>
-        <button class="btn btn-ghost" style="font-size:12.5px;flex:1;padding:10px" onclick="closeQV();openJob()">Open full detail →</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<!-- ── NEW JOB FORM MODAL ──────────────────────────────────────── -->
-<div class="jf-overlay" id="jfOverlay">
-  <div class="jf-modal">
-
-    <!-- Header -->
-    <div class="jf-head">
-      <button class="jf-close" onclick="closeJobForm()" title="Close">✕</button>
-      <h2>New job</h2>
-      <button class="jf-submit-head" onclick="submitJob()">Add to board →</button>
-    </div>
-
-    <div class="jf-body">
-
-      <!-- § 1 SOURCE -->
-      <div class="jf-section">
-        <div class="jf-section-head">
-          <div class="jf-section-num">1</div>
-          <h3>Where did this order come from?</h3>
-        </div>
-        <div class="jf-pills" id="jfSourcePills">
-          <button class="jf-pill src-email" onclick="selectJFPill('source',this,'email')">📧 Email</button>
-          <button class="jf-pill src-fb"    onclick="selectJFPill('source',this,'facebook')">📘 Facebook</button>
-          <button class="jf-pill src-ig"    onclick="selectJFPill('source',this,'instagram')">📷 Instagram</button>
-          <button class="jf-pill src-phone" onclick="selectJFPill('source',this,'phone')">📞 Phone</button>
-          <button class="jf-pill src-walkin" onclick="selectJFPill('source',this,'walkin')">🚶 Walk-in</button>
-        </div>
-        <input type="hidden" id="jfSource" value="">
-        <div class="jf-error" id="jfSourceErr">Please select a source.</div>
-      </div>
-
-      <!-- § 2 CUSTOMER -->
-      <div class="jf-section">
-        <div class="jf-section-head">
-          <div class="jf-section-num">2</div>
-          <h3>Customer details</h3>
-        </div>
-        <!-- Customer search with autofill -->
-        <div class="jf-field jf-autocomplete">
-          <label>Customer / business name <span class="req">*</span></label>
-          <input class="jf-input" id="jfCustName" type="text"
-            placeholder="Start typing name, email or contact…"
-            oninput="showAutofill(this)"
-            onblur="hideAutofill()"
-            autocomplete="off">
-          <div class="jf-error" id="jfCustNameErr">Customer name is required.</div>
-          <!-- Returning customer tag -->
-          <div class="jf-returning-tag" id="jfReturningTag">✓ Returning customer</div>
-          <!-- Autocomplete dropdown -->
-          <div class="jf-ac-list" id="jfAcList"></div>
-        </div>
-        <div class="jf-field">
-          <label>Contact name</label>
-          <input class="jf-input" id="jfContactName" type="text" placeholder="e.g. James Whitfield">
-        </div>
-        <div class="jf-row">
-          <div class="jf-field">
-            <label>Email <span class="req">*</span></label>
-            <input class="jf-input" id="jfCustEmail" type="email" placeholder="hello@example.com" autocomplete="off">
-            <div class="jf-error" id="jfCustEmailErr">Email is required for the proof link.</div>
-          </div>
-          <div class="jf-field">
-            <label>Phone</label>
-            <input class="jf-input" id="jfCustPhone" type="tel" placeholder="04XX XXX XXX" autocomplete="off">
-          </div>
-        </div>
-      </div>
-
-      <!-- § 3 JOB ITEMS -->
-      <div class="jf-section">
-        <div class="jf-section-head">
-          <div class="jf-section-num">3</div>
-          <h3>Job items</h3>
-        </div>
-        <div id="jfItemsContainer">
-          <!-- First item built by JS -->
-        </div>
-        <button class="jf-add-item" onclick="addJobItem()">+ Add another item to this order</button>
-      </div>
-
-      <!-- § 4 DISPATCH -->
-      <div class="jf-section">
-        <div class="jf-section-head">
-          <div class="jf-section-num">4</div>
-          <h3>Dispatch &amp; due date</h3>
-        </div>
-        <div class="jf-field">
-          <label>Dispatch method</label>
-          <div class="jf-pills">
-            <button class="jf-pill sel" onclick="selectJFDispatch('road',this)">Road dispatch</button>
-            <button class="jf-pill" onclick="selectJFDispatch('same-day',this)">Same day courier</button>
-            <button class="jf-pill" onclick="selectJFDispatch('pickup',this)">Pickup</button>
-          </div>
-          <input type="hidden" id="jfDispatch" value="road">
-        </div>
-        <!-- Courier selector — appears for road/same-day -->
-        <div class="jf-field" id="jfCourierWrap" style="margin-top:10px">
-          <label>Courier company</label>
-          <div class="jf-pills" id="jfCourierPills">
-            <!-- Populated by selectJFDispatch() -->
-          </div>
-          <input type="hidden" id="jfCourier" value="">
-        </div>
-
-        <div class="jf-address-wrap show" id="jfAddressWrap">
-          <div class="jf-field">
-            <label>Delivery address</label>
-            <input class="jf-input" id="jfAddress" type="text" placeholder="Street, suburb, state, postcode">
-          </div>
-        </div>
-        <div class="jf-row">
-          <div class="jf-field">
-            <label>Due date <span class="req">*</span></label>
-            <input class="jf-input" id="jfDueDate" type="date">
-            <div class="jf-due-hint" id="jfDueDateHint">Auto-set from order date. Edit for rush jobs.</div>
-          </div>
-          <div class="jf-field">
-            <label>Order value (optional)</label>
-            <input class="jf-input" id="jfValue" type="text" placeholder="e.g. $320.00">
-          </div>
-        </div>
-      </div>
-
-      <!-- § 5 OUTSOURCE -->
-      <div class="jf-section">
-        <div class="jf-section-head">
-          <div class="jf-section-num">5</div>
-          <h3>Outsource</h3>
-        </div>
-        <div class="jf-field">
-          <label>Is this job outsourced?</label>
-          <div style="display:flex;gap:8px;margin-bottom:10px">
-            <button id="jfOutNo"  class="jf-pill sel" onclick="setOutsource(false,this)">No — printed in-house</button>
-            <button id="jfOutYes" class="jf-pill"     onclick="setOutsource(true,this)">Yes — send to supplier</button>
-          </div>
-          <input type="hidden" id="jfOutsource" value="false">
-        </div>
-        <div id="jfOutsourceFields" style="display:none">
-          <div class="jf-field">
-            <label>Supplier</label>
-            <input class="jf-input" id="jfOutsourceSupplier" type="text" placeholder="e.g. Ball &amp; Doggett, local trade printer">
-          </div>
-          <div class="jf-field">
-            <label>Delivered to</label>
-            <div style="display:flex;gap:8px">
-              <button id="jfDestFactory"  class="jf-pill sel" onclick="setOutDest('factory',this)">Our factory</button>
-              <button id="jfDestCustomer" class="jf-pill"     onclick="setOutDest('customer',this)">Direct to customer</button>
-            </div>
-            <input type="hidden" id="jfOutsourceDest" value="factory">
-          </div>
-          <div class="jf-field">
-            <label>Courier</label>
-            <div style="display:flex;gap:8px;flex-wrap:wrap">
-              <button class="jf-pill" onclick="setOutCourier('StarTrack',this)">StarTrack</button>
-              <button class="jf-pill" onclick="setOutCourier('TNT',this)">TNT</button>
-              <button class="jf-pill" onclick="setOutCourier('Titan',this)">Titan Couriers</button>
-              <button class="jf-pill" onclick="setOutCourier('NTS',this)">NTS</button>
-            </div>
-            <input type="hidden" id="jfOutsourceCourier" value="">
-          </div>
-          <div style="background:var(--green-soft);border-radius:9px;padding:10px 13px;display:flex;align-items:flex-start;gap:8px">
-            <span>🔒</span>
-            <span style="font-family:'DM Sans',sans-serif;font-size:12.5px;color:#007A4A">Outsource details are <b>internal only</b>. The customer sees a standard StickySitch order — no supplier, no third-party information is shared with them.</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- § 6 REFERENCES -->
-      <div class="jf-section">
-        <div class="jf-section-head">
-          <div class="jf-section-num">6</div>
-          <h3>References</h3>
-        </div>
-
-        <!-- Invoice PDF upload -->
-        <div class="jf-field">
-          <label>Invoice / quote PDF</label>
-          <div class="jf-file-drop" id="invDropZone"
-            ondragover="event.preventDefault();this.classList.add('drag')"
-            ondragleave="this.classList.remove('drag')"
-            ondrop="handleInvDrop(event)">
-            <input type="file" accept=".pdf" onchange="handleInvFile(this)" id="jfInvoiceFile">
-            <div class="jf-file-drop-icon">🧾</div>
-            <div class="jf-file-drop-label">Drop invoice PDF here or tap to browse</div>
-            <div class="jf-file-drop-sub">PDF from Xero, Rounded or any invoicing tool</div>
-          </div>
-          <div class="jf-file-selected" id="invFilePreview">
-            <span style="font-size:20px">📄</span>
-            <span class="jf-file-name" id="invFileName">invoice.pdf</span>
-            <button class="jf-file-clear" onclick="clearInvFile()">✕</button>
-          </div>
-        </div>
-
-        <!-- HelpScout / email thread URL -->
-        <div class="jf-field" style="margin-top:12px">
-          <label>Email thread URL <span style="font-weight:400;color:var(--ink-3)">(optional)</span></label>
-          <input class="jf-input" id="jfThreadUrl" type="url"
-            placeholder="Paste HelpScout conversation URL…"
-            autocomplete="off">
-        </div>
-      </div>
-
-      <!-- § 7 ARTWORK -->
-      <div class="jf-section">
-        <div class="jf-section-head">
-          <div class="jf-section-num">7</div>
-          <h3>Artwork</h3>
-        </div>
-        <div class="jf-pills" id="jfArtworkPills">
-          <button class="jf-pill" onclick="selectJFPill('artwork',this,'upload')">⬆ Upload now</button>
-          <button class="jf-pill sel" onclick="selectJFPill('artwork',this,'pending')">⏳ Customer to send</button>
-          <button class="jf-pill" onclick="selectJFPill('artwork',this,'have')">✓ Already have it</button>
-        </div>
-        <input type="hidden" id="jfArtwork" value="pending">
-        <div class="jf-custom-wrap" id="jfUploadWrap" style="margin-top:10px">
-          <input class="jf-input" type="file" accept=".pdf,.ai,.eps,.png,.jpg" style="padding:8px">
-        </div>
-      </div>
-
-      <!-- § 8 NOTES -->
-      <div class="jf-section">
-        <div class="jf-section-head">
-          <div class="jf-section-num">8</div>
-          <h3>Internal notes</h3>
-        </div>
-        <div class="jf-field">
-          <label>Notes for the team</label>
-          <textarea class="jf-input" id="jfNotes" rows="3" placeholder="e.g. Match Pantone 1805 C, customer confirmed colour…" style="resize:vertical"></textarea>
-        </div>
-      </div>
-
-    </div><!-- /jf-body -->
-
-    <!-- Footer -->
-    <div class="jf-footer">
-      <button class="jf-cancel" onclick="closeJobForm()">Cancel</button>
-      <button class="jf-submit" onclick="submitJob()">Add to board →</button>
-    </div>
-
-  </div>
-</div>
-
-<!-- Toast -->
-<div class="jf-toast" id="jfToast">✓ <span id="jfToastMsg">Job added to board</span></div>
-
-
-<!-- ====== CUSTOMERS LIST ====== -->
-<section class="screen" id="customers">
-<div class="app">
-  <div class="app-header">
-    <div class="brand">Sticky<span>Sitch</span></div>
-    <div class="header-right"><span class="role">Admin</span><div class="avatar-wrap">
-      <div class="avatar" id="avatarBtn" onclick="toggleAvatarMenu(this)" title="Account">D</div>
-      <div class="avatar-menu" id="avatarMenu">
-        <div class="avatar-menu-head">
-          <div class="avatar-menu-name" id="menuName">David Pham</div>
-          <div class="avatar-menu-role" id="menuRole">Admin · Full access</div>
-          <div class="avatar-menu-email" id="menuEmail">david@stickysitch.com.au</div>
-        </div>
-        <button class="avatar-menu-item" onclick="toggleAvatarMenu();alert('Settings coming in Phase 2.')">⚙ Settings</button>
-        <div class="avatar-menu-divider"></div>
-        <button class="avatar-menu-item admin-only" onclick="openTeamModal();document.querySelectorAll('.avatar-menu').forEach(function(m){m.classList.remove('show')})" style="color:var(--lilac);border-color:var(--lilac-line)">👥 Manage team</button>
-        <button class="avatar-menu-item danger" onclick="doLogout()">→ Sign out</button>
-      </div>
-    </div></div>
-  </div>
-  <div class="app-body">
-    <div class="mainnav">
-      <button class="admin-nav-btn" onclick="go('frontend')">Frontend</button>
-      <button onclick="go('production')">Production</button>
-      <button class="active admin-nav-btn">Customers</button>
-    </div>
-
-    <!-- Search + Add -->
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap">
-      <input type="text" placeholder="Search business, email, contact…" style="flex:1;min-width:200px;padding:11px 14px;border:1.5px solid var(--line);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;background:#fff;color:var(--ink)">
-      <select style="padding:11px 13px;border:1.5px solid var(--line);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13.5px;color:var(--ink);background:#fff">
-        <option>All terms</option>
-        <option>Prepaid</option>
-        <option>30 Day EOD Account</option>
-        <option>14 Day Account</option>
-        <option>Net 30</option>
-      </select>
-      <select style="padding:11px 13px;border:1.5px solid var(--line);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13.5px;color:var(--ink);background:#fff">
-        <option>All customers</option>
-        <option>VIP</option>
-        <option>Repeat</option>
-        <option>Wholesale</option>
-        <option>New</option>
-      </select>
-      <button onclick="go('custprofile')" style="background:var(--lilac);color:#fff;border:none;border-radius:10px;padding:11px 16px;font-family:'Inter Tight',sans-serif;font-weight:700;font-size:13px;cursor:pointer;white-space:nowrap">+ Add customer</button>
-    </div>
-
-    <!-- Stats strip -->
-    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-bottom:18px">
-      <div style="background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:16px 16px 14px">
-        <div style="font-family:'Inter Tight',sans-serif;font-size:32px;font-weight:800;line-height:1;color:var(--lilac);margin-bottom:6px">47</div>
-        <div style="font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)">Total customers</div>
-      </div>
-      <div style="background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:16px 16px 14px">
-        <div style="font-family:'Inter Tight',sans-serif;font-size:32px;font-weight:800;line-height:1;color:var(--green);margin-bottom:6px">12</div>
-        <div style="font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)">Active this month</div>
-      </div>
-      <div style="background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:16px 16px 14px">
-        <div style="font-family:'Inter Tight',sans-serif;font-size:32px;font-weight:800;line-height:1;color:#C8970A;margin-bottom:6px">8</div>
-        <div style="font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)">Repeat (3+ orders)</div>
-      </div>
-      <div style="background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:16px 16px 14px">
-        <div style="font-family:'Inter Tight',sans-serif;font-size:32px;font-weight:800;line-height:1;color:var(--lilac);margin-bottom:6px">3</div>
-        <div style="font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)">VIP accounts</div>
-      </div>
-    </div>
-
-    <!-- Customer table -->
-    <div class="tbl-wrap">
-      <table class="cust-table">
-        <thead>
-          <tr>
-            <th>Business</th>
-            <th>Contact</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Delivery address</th>
-            <th>Terms</th>
-            <th>Orders</th>
-            <th>Last order</th>
-            <th>Tags</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr onclick="go('custprofile')">
-            <td><div class="cust-biz"></div></td>
-            <td>James Whitfield</td>
-            <td><span class="cust-email"></span></td>
-            <td>0412 555 123</td>
-            <td style="font-size:12px;color:var(--ink-2)">12 Bay St, Port Melbourne VIC 3207</td>
-            <td><span class="cust-terms prepaid">Prepaid</span></td>
-            <td><span class="cust-count">7 orders</span></td>
-            <td style="color:var(--ink-2);font-size:12.5px">10 Jun 2024</td>
-            <td><span class="cust-tag vip">VIP</span> <span class="cust-tag repeat">Repeat</span></td>
-            <td><button class="cust-menu-btn" onclick="event.stopPropagation()">···</button></td>
-          </tr>
-          <tr onclick="go('custprofile')">
-            <td><div class="cust-biz">Sunday Roasters</div></td>
-            <td>Maya Chen</td>
-            <td><span class="cust-email">hello@sundayroasters.com.au</span></td>
-            <td>0414 567 890</td>
-            <td style="font-size:12px;color:var(--ink-2)">88 Smith St, Fitzroy VIC 3065</td>
-            <td><span class="cust-terms account">30 Day EOD</span></td>
-            <td><span class="cust-count">12 orders</span></td>
-            <td style="color:var(--ink-2);font-size:12.5px">5 Jun 2024</td>
-            <td><span class="cust-tag vip">VIP</span> <span class="cust-tag wholesale">Wholesale</span></td>
-            <td><button class="cust-menu-btn" onclick="event.stopPropagation()">···</button></td>
-          </tr>
-          <tr onclick="go('custprofile')">
-            <td><div class="cust-biz">Hartley Hot Sauce</div></td>
-            <td>Sarah Hartley</td>
-            <td><span class="cust-email">hartley@hotsauce.com.au</span></td>
-            <td>0411 234 567</td>
-            <td style="font-size:12px;color:var(--ink-2)">22 Church St, Richmond VIC 3121</td>
-            <td><span class="cust-terms prepaid">Prepaid</span></td>
-            <td><span class="cust-count">3 orders</span></td>
-            <td style="color:var(--ink-2);font-size:12.5px">8 Jun 2024</td>
-            <td><span class="cust-tag repeat">Repeat</span></td>
-            <td><button class="cust-menu-btn" onclick="event.stopPropagation()">···</button></td>
-          </tr>
-          <tr onclick="go('custprofile')">
-            <td><div class="cust-biz">North St Coffee</div></td>
-            <td>—</td>
-            <td><span class="cust-email">orders@northstcoffee.com.au</span></td>
-            <td>0413 456 789</td>
-            <td style="font-size:12px;color:var(--ink-2)">4 North St, Newtown VIC 3220</td>
-            <td><span class="cust-terms account">14 Day Account</span></td>
-            <td><span class="cust-count">5 orders</span></td>
-            <td style="color:var(--ink-2);font-size:12.5px">10 Jun 2024</td>
-            <td><span class="cust-tag repeat">Repeat</span></td>
-            <td><button class="cust-menu-btn" onclick="event.stopPropagation()">···</button></td>
-          </tr>
-          <tr onclick="go('custprofile')">
-            <td><div class="cust-biz">Vela Studio</div></td>
-            <td>Pia Nguyen</td>
-            <td><span class="cust-email">hello@velastudio.com.au</span></td>
-            <td>0416 789 012</td>
-            <td style="font-size:12px;color:var(--ink-2)">Studio 3, 40 Rokeby St, Collingwood VIC 3066</td>
-            <td><span class="cust-terms prepaid">Prepaid</span></td>
-            <td><span class="cust-count">4 orders</span></td>
-            <td style="color:var(--ink-2);font-size:12.5px">8 Jun 2024</td>
-            <td><span class="cust-tag repeat">Repeat</span></td>
-            <td><button class="cust-menu-btn" onclick="event.stopPropagation()">···</button></td>
-          </tr>
-          <tr onclick="go('custprofile')">
-            <td><div class="cust-biz">Ridgeline Apparel</div></td>
-            <td>Tom Ridgeway</td>
-            <td><span class="cust-email">studio@ridgeline.com.au</span></td>
-            <td>0417 890 123</td>
-            <td style="font-size:12px;color:var(--ink-2)">14 Industrial Dr, Braybrook VIC 3019</td>
-            <td><span class="cust-terms account">30 Day Account</span></td>
-            <td><span class="cust-count">9 orders</span></td>
-            <td style="color:var(--ink-2);font-size:12.5px">6 Jun 2024</td>
-            <td><span class="cust-tag wholesale">Wholesale</span> <span class="cust-tag repeat">Repeat</span></td>
-            <td><button class="cust-menu-btn" onclick="event.stopPropagation()">···</button></td>
-          </tr>
-          <tr onclick="go('custprofile')">
-            <td><div class="cust-biz">Tilly's Candles</div></td>
-            <td>Tilly Marsh</td>
-            <td><span class="cust-email">tilly@tillyscandles.com</span></td>
-            <td>0415 678 901</td>
-            <td style="font-size:12px;color:var(--ink-2)">—</td>
-            <td><span class="cust-terms prepaid">Prepaid</span></td>
-            <td><span class="cust-count">2 orders</span></td>
-            <td style="color:var(--ink-2);font-size:12.5px">10 Jun 2024</td>
-            <td><span class="cust-tag new">New</span></td>
-            <td><button class="cust-menu-btn" onclick="event.stopPropagation()">···</button></td>
-          </tr>
-          <tr onclick="go('custprofile')">
-            <td><div class="cust-biz">Coastal Print Co.</div></td>
-            <td>—</td>
-            <td><span class="cust-email">orders@coastalprint.com.au</span></td>
-            <td>0418 901 234</td>
-            <td style="font-size:12px;color:var(--ink-2)">Unit 7, 2 Coastal Rd, Williamstown VIC 3016</td>
-            <td><span class="cust-terms net30">Net 30</span></td>
-            <td><span class="cust-count">6 orders</span></td>
-            <td style="color:var(--ink-2);font-size:12.5px">4 Jun 2024</td>
-            <td><span class="cust-tag trade">Trade</span></td>
-            <td><button class="cust-menu-btn" onclick="event.stopPropagation()">···</button></td>
-          </tr>
-          <tr onclick="go('custprofile')">
-            <td><div class="cust-biz">Blue Mountain Oils</div></td>
-            <td>—</td>
-            <td><span class="cust-email">orders@bluemountainoils.com.au</span></td>
-            <td>0419 012 345</td>
-            <td style="font-size:12px;color:var(--ink-2)">Pickup only — Braybrook VIC 3019</td>
-            <td><span class="cust-terms prepaid">Prepaid</span></td>
-            <td><span class="cust-count">2 orders</span></td>
-            <td style="color:var(--ink-2);font-size:12.5px">3 Jun 2024</td>
-            <td><span class="cust-tag new">New</span></td>
-            <td><button class="cust-menu-btn" onclick="event.stopPropagation()">···</button></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</div>
-</section>
-
-<!-- ====== CUSTOMER PROFILE ====== -->
-<section class="screen" id="custprofile">
-<div class="app">
-  <div class="app-header">
-    <div class="brand">Sticky<span>Sitch</span></div>
-    <div class="header-right"><span class="role">Admin</span><div class="avatar-wrap">
-      <div class="avatar" id="avatarBtn" onclick="toggleAvatarMenu(this)" title="Account">D</div>
-      <div class="avatar-menu" id="avatarMenu">
-        <div class="avatar-menu-head">
-          <div class="avatar-menu-name" id="menuName">David Pham</div>
-          <div class="avatar-menu-role" id="menuRole">Admin · Full access</div>
-          <div class="avatar-menu-email" id="menuEmail">david@stickysitch.com.au</div>
-        </div>
-        <button class="avatar-menu-item" onclick="toggleAvatarMenu();alert('Settings coming in Phase 2.')">⚙ Settings</button>
-        <div class="avatar-menu-divider"></div>
-        <button class="avatar-menu-item admin-only" onclick="openTeamModal();document.querySelectorAll('.avatar-menu').forEach(function(m){m.classList.remove('show')})" style="color:var(--lilac);border-color:var(--lilac-line)">👥 Manage team</button>
-        <button class="avatar-menu-item danger" onclick="doLogout()">→ Sign out</button>
-      </div>
-    </div></div>
-  </div>
-  <div class="app-body">
-    <button class="cp-back" onclick="go('customers')">← Back to customers</button>
-
-    <!-- Header -->
-    <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:6px">
-      <div>
-        <div class="cp-biz"></div>
-        <div class="cp-contact">
-          <span>👤 James Whitfield</span>
-          <span id="cpEmail"></span>
-          <span>📞 0412 555 123</span>
-          <span>📍 12 Bay St, Port Melbourne VIC 3207</span>
-        </div>
-        <div style="display:flex;gap:7px;align-items:center">
-          <span class="cust-tag vip">VIP</span>
-          <span class="cust-tag repeat">Repeat</span>
-          <span class="cust-terms prepaid" style="font-family:'Inter Tight',sans-serif;font-size:12px;font-weight:700">· Prepaid</span>
-        </div>
-      </div>
-      <div style="display:flex;gap:8px">
-        <button style="background:#fff;border:1.5px solid var(--line);border-radius:9px;padding:9px 14px;font-family:'Inter Tight',sans-serif;font-weight:700;font-size:12.5px;cursor:pointer;color:var(--ink-2)">✏ Edit details</button>
-        <button style="background:var(--lilac);color:#fff;border:none;border-radius:9px;padding:9px 14px;font-family:'Inter Tight',sans-serif;font-weight:700;font-size:12.5px;cursor:pointer" onclick="go('frontend')">+ New job</button>
-      </div>
-    </div>
-
-    <!-- Stats -->
-    <div class="cp-stats">
-      <div class="cp-stat">
-        <div class="cp-stat-num">7</div>
-        <div class="cp-stat-label">Total orders</div>
-      </div>
-      <div class="cp-stat">
-        <div class="cp-stat-num" style="color:var(--green)">$4,820</div>
-        <div class="cp-stat-label">Total spent</div>
-      </div>
-      <div class="cp-stat">
-        <div class="cp-stat-num" style="font-size:14px;margin-top:4px">Mar 2023</div>
-        <div class="cp-stat-label">First order</div>
-      </div>
-      <div class="cp-stat">
-        <div class="cp-stat-num" style="font-size:14px;margin-top:4px">10 Jun 2024</div>
-        <div class="cp-stat-label">Last order</div>
-      </div>
-    </div>
-
-    <!-- Active jobs -->
-    <div class="cp-section">Active jobs <span style="background:var(--lilac);color:#fff;font-family:'Inter Tight',sans-serif;font-size:11px;font-weight:700;padding:5px 12px;border-radius:999px">2</span></div>
-    <div class="tbl-wrap" style="margin-bottom:18px">
-      <table class="cp-jobs-table">
-        <thead><tr><th>Job #</th><th>Product</th><th>Qty</th><th>Size</th><th>Status</th><th>Due</th></tr></thead>
-        <tbody>
-          <tr onclick="go('job')">
-            <td style="font-family:'Inter Tight',sans-serif;font-weight:600;color:var(--lilac)" id="cvSibJob1"></td>
-            <td>Roll labels</td><td>2,000</td><td>90 × 60 mm</td>
-            <td><span class="chip new">New</span></td>
-            <td style="color:#D92B4B;font-weight:700">⚡ 13 Jun</td>
-          </tr>
-          <tr onclick="go('job')">
-            <td style="font-family:'Inter Tight',sans-serif;font-weight:600;color:var(--lilac)" id="cvSibJob2"></td>
-            <td>Individual stickers</td><td>500</td><td>70 mm</td>
-            <td><span class="chip new">New</span></td>
-            <td style="color:#D92B4B;font-weight:700">⚡ 13 Jun</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Order history -->
-    <div class="cp-section">Order history</div>
-    <div class="tbl-wrap" style="margin-bottom:18px">
-      <table class="cp-jobs-table">
-        <thead><tr><th>Order</th><th>Date</th><th>Product</th><th>Qty</th><th>Value</th><th>Status</th></tr></thead>
-        <tbody>
-          
-          <tr><td style="font-family:'Inter Tight',sans-serif;font-weight:600;color:var(--lilac)">#3891</td><td style="color:var(--ink-2)">14 Apr 2024</td><td>Roll labels</td><td>2,000</td><td style="font-weight:700">$520</td><td><span class="chip dispatched">Dispatched</span></td></tr>
-          <tr><td style="font-family:'Inter Tight',sans-serif;font-weight:600;color:var(--lilac)">#3744</td><td style="color:var(--ink-2)">2 Feb 2024</td><td>Roll labels</td><td>1,500</td><td style="font-weight:700">$440</td><td><span class="chip dispatched">Dispatched</span></td></tr>
-          <tr><td style="font-family:'Inter Tight',sans-serif;font-weight:600;color:var(--lilac)">#3512</td><td style="color:var(--ink-2)">19 Nov 2023</td><td>Roll labels</td><td>3,000</td><td style="font-weight:700">$720</td><td><span class="chip dispatched">Dispatched</span></td></tr>
-          <tr><td style="font-family:'Inter Tight',sans-serif;font-weight:600;color:var(--lilac)">#3290</td><td style="color:var(--ink-2)">7 Aug 2023</td><td>Sticker sheets</td><td>500</td><td style="font-weight:700">$310</td><td><span class="chip dispatched">Dispatched</span></td></tr>
-          <tr><td style="font-family:'Inter Tight',sans-serif;font-weight:600;color:var(--lilac)">#3101</td><td style="color:var(--ink-2)">22 May 2023</td><td>Roll labels</td><td>1,000</td><td style="font-weight:700">$290</td><td><span class="chip dispatched">Dispatched</span></td></tr>
-          <tr><td style="font-family:'Inter Tight',sans-serif;font-weight:600;color:var(--lilac)">#2944</td><td style="color:var(--ink-2)">11 Mar 2023</td><td>Roll labels</td><td>500</td><td style="font-weight:700">$180</td><td><span class="chip dispatched">Dispatched</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Notes -->
-    <div class="cp-section">Customer notes</div>
-    <div id="cpNotesList" style="margin-bottom:10px">
-      <div class="note-entry">
-        <div class="note-meta"><b>David</b><span>Apr 2024</span></div>
-        <div class="note-body">Always wants matte lam. Artwork usually very sharp — minimal prepress time. Preferred dispatch: Road.</div>
-      </div>
-      <div class="note-entry">
-        <div class="note-meta"><b>Emmanuel</b><span>Nov 2023</span></div>
-        <div class="note-body">Pantone 1805 C for the red. Confirmed by James via email — keep on file for all future orders.</div>
-      </div>
-    </div>
-    <div style="background:#fff;border:1.5px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:20px">
-      <textarea id="cpNoteText" class="cp-note-area" placeholder="Add a note about this customer…" style="border-radius:12px 12px 0 0;border:none;border-bottom:1px solid var(--line)"></textarea>
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--paper)">
-        <span style="font-family:'Inter Tight',sans-serif;font-size:11px;color:var(--ink-3)">Logged as <b>David (Admin)</b></span>
-        <button onclick="addCpNote()" style="background:var(--lilac);color:#fff;border:none;border-radius:8px;padding:7px 14px;font-family:'Inter Tight',sans-serif;font-weight:700;font-size:12px;cursor:pointer">Add note</button>
-      </div>
-    </div>
-
-  </div>
-</div>
-</section>
-
-
-<!-- Team management modal -->
-<div class="team-overlay" id="teamOverlay" onclick="if(event.target===this)closeTeamModal()">
-  <div class="team-modal">
-    <div class="team-modal-head">
-      <span class="team-modal-title">Team access</span>
-      <button class="team-modal-close" onclick="closeTeamModal()">✕</button>
-    </div>
-
-    <!-- Current members list -->
-    <div id="teamMemberList"></div>
-
-    <!-- Add new member -->
-    <div class="team-add-section">
-      <div class="team-add-title">Add team member</div>
-      <div class="team-field">
-        <label>Full name</label>
-        <input class="team-input" id="newMemberName" type="text" placeholder="e.g. Emmanuel">
-      </div>
-      <div class="team-field">
-        <label>Username</label>
-        <input class="team-input" id="newMemberUsername" type="text" placeholder="e.g. emmanuel" autocapitalize="none">
-      </div>
-      <div class="team-field">
-        <label>Email</label>
-        <input class="team-input" id="newMemberEmail" type="email" placeholder="e.g. emmanuel@example.com" autocapitalize="none">
-      </div>
-      <div class="team-field">
-        <label>Password</label>
-        <input class="team-input" id="newMemberPassword" type="password" placeholder="Min 8 characters">
-      </div>
-      <div class="team-field">
-        <label>Role</label>
-        <div class="team-role-toggle">
-          <button class="team-role-pill" id="roleAdmin" onclick="selectNewRole('admin',this)">Admin</button>
-          <button class="team-role-pill sel" id="roleStaff" onclick="selectNewRole('staff',this)">Staff</button>
-        </div>
-        <div style="font-family:'DM Sans',sans-serif;font-size:12px;color:var(--ink-3)" id="roleDescription">
-          Staff can view and action jobs in production. Cannot access frontend, customers or archive.
-        </div>
-      </div>
-      <button class="team-add-btn" onclick="addTeamMember()">Add member →</button>
-    </div>
-
-    <div style="margin-top:16px;background:#FEF9C3;border-radius:10px;padding:11px 13px;font-family:'DM Sans',sans-serif;font-size:12px;color:#713F12">
-      <b>Live build:</b> Usernames and roles are stored in your Supabase <code>profiles</code> table. Passwords are handled by Supabase Auth — no plain-text passwords stored anywhere. You manage access from here, not the Supabase dashboard.
-    </div>
-  </div>
-</div>
-
-
 </body>
 </html>
