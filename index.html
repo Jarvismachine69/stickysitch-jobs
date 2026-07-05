@@ -1270,7 +1270,7 @@ select.stat-pill-select.refunded{background-color:#FEF3C7!important;color:#78350
       <div class="proof-success" id="proofSuccess">
         <div class="proof-success-icon">✅</div>
         <div class="proof-success-title">Proof sent to customer</div>
-        <div class="proof-success-sub">hello@baysidebrewing.com · Job status → Awaiting Approval</div>
+        <div class="proof-success-sub">hello@ · Job status → Awaiting Approval</div>
       </div>
 
       <!-- Upload form -->
@@ -1288,7 +1288,7 @@ select.stat-pill-select.refunded{background-color:#FEF3C7!important;color:#78350
         <div class="proof-file-preview" id="proofFilePreview" style="display:none">
           <span class="proof-file-icon">📄</span>
           <div>
-            <div class="proof-file-name" id="proofFileName">bayside-label-v3.pdf</div>
+            <div class="proof-file-name" id="proofFileName"></div>
             <div class="proof-file-size" id="proofFileSize">Ready to send</div>
           </div>
           <button class="proof-file-remove" onclick="clearProofFile()" title="Remove">✕</button>
@@ -1429,7 +1429,1063 @@ select.stat-pill-select.refunded{background-color:#FEF3C7!important;color:#78350
 </div>
 </section>
 
+<section class="screen" id="production">
+<div class="app">
+  <div class="app-header">
+    <div class="brand">Sticky<span>Sitch</span></div>
+    <div class="header-right">
+      <span class="role staff">Staff</span>
+      <div class="avatar-wrap">
+      <div class="avatar" id="avatarBtn" onclick="toggleAvatarMenu(this)" title="Account">D</div>
+      <div class="avatar-menu" id="avatarMenu">
+        <div class="avatar-menu-head">
+          <div class="avatar-menu-name" id="menuName">David Pham</div>
+          <div class="avatar-menu-role" id="menuRole">Admin · Full access</div>
+          <div class="avatar-menu-email" id="menuEmail">david@stickysitch.com.au</div>
+        </div>
+        <button class="avatar-menu-item" onclick="toggleAvatarMenu();alert('Settings coming in Phase 2.')">⚙ Settings</button>
+        <div class="avatar-menu-divider"></div>
+        <button class="avatar-menu-item admin-only" onclick="openTeamModal();document.querySelectorAll('.avatar-menu').forEach(function(m){m.classList.remove('show')})" style="color:var(--lilac);border-color:var(--lilac-line)">👥 Manage team</button>
+        <button class="avatar-menu-item danger" onclick="doLogout()">→ Sign out</button>
+      </div>
+    </div>
+    </div>
+  </div>
+  <div class="app-body">
+    <div class="mainnav">
+      <button class="admin-nav-btn" onclick="go('frontend')">Frontend</button>
+      <button class="active">Production</button>
+      <button class="admin-nav-btn" onclick="go('customers')">Customers</button>
+    </div>
+
+    <!-- Production scorecard -->
+    <div class="scorecard-grid" id="scorecardGrid">
+      <div class="sc-card" data-sc="all" onclick="filterByCard('',this)">
+        <div class="sc-card-count" id="sc-all">—</div>
+        <div class="sc-card-label">All active</div>
+      </div>
+      <div class="sc-card" data-sc="new" onclick="filterByCard('new',this)">
+        <div class="sc-card-count" id="sc-new">0</div>
+        <div class="sc-card-label"><span class="sc-card-dot" style="background:#7C3AED"></span>New</div>
+      </div>
+      <div class="sc-card" data-sc="prepress" onclick="filterByCard('prepress',this)">
+        <div class="sc-card-count" id="sc-prepress">0</div>
+        <div class="sc-card-label"><span class="sc-card-dot" style="background:#2563EB"></span>Prepress</div>
+      </div>
+      <div class="sc-card" data-sc="awaiting" onclick="filterByCard('awaiting',this)">
+        <div class="sc-card-count" id="sc-awaiting">0</div>
+        <div class="sc-card-label"><span class="sc-card-dot" style="background:#D97706"></span>Awaiting</div>
+      </div>
+      <div class="sc-card" data-sc="revision" onclick="filterByCard('revision',this)">
+        <div class="sc-card-count" id="sc-revision">0</div>
+        <div class="sc-card-label"><span class="sc-card-dot" style="background:#DC2626"></span>Revision</div>
+      </div>
+      <div class="sc-card" data-sc="print" onclick="filterByCard('print',this)">
+        <div class="sc-card-count" id="sc-print">0</div>
+        <div class="sc-card-label"><span class="sc-card-dot" style="background:#16A34A"></span>Print</div>
+      </div>
+      <div class="sc-card" data-sc="lam" onclick="filterByCard('lam',this)">
+        <div class="sc-card-count" id="sc-lam">0</div>
+        <div class="sc-card-label"><span class="sc-card-dot" style="background:#0D9488"></span>Laminate</div>
+      </div>
+      <div class="sc-card" data-sc="cut" onclick="filterByCard('cut',this)">
+        <div class="sc-card-count" id="sc-cut">0</div>
+        <div class="sc-card-label"><span class="sc-card-dot" style="background:#EA580C"></span>Cut</div>
+      </div>
+      <div class="sc-card" data-sc="qa" onclick="filterByCard('qa',this)">
+        <div class="sc-card-count" id="sc-qa">0</div>
+        <div class="sc-card-label"><span class="sc-card-dot" style="background:#7E22CE"></span>QA &amp; Pack</div>
+      </div>
+      <div class="sc-card" data-sc="outsource" onclick="filterByCard('outsource',this)">
+        <div class="sc-card-count" id="sc-outsource">0</div>
+        <div class="sc-card-label"><span class="sc-card-dot" style="background:#475569"></span>Outsource</div>
+      </div>
+      <div class="sc-card" data-sc="pickup" onclick="filterByCard('pickup',this)">
+        <div class="sc-card-count" id="sc-pickup">0</div>
+        <div class="sc-card-label"><span class="sc-card-dot" style="background:#0891B2"></span>Awaiting Pickup</div>
+      </div>
+      <div class="sc-card" data-sc="pickedup" onclick="filterByCard('pickedup',this)">
+        <div class="sc-card-count" id="sc-pickedup">0</div>
+        <div class="sc-card-label"><span class="sc-card-dot" style="background:#0369A1"></span>Picked Up</div>
+      </div>
+    </div>
+    <div class="controls">
+      <input class="search" id="pSearch" placeholder="Search order #, customer…" oninput="applyProdFilters()">
+      <select class="fsel grow" id="pProduct" onchange="applyProdFilters()">
+        <option value="">All products</option>
+        <option value="rolls">Labels on rolls</option>
+        <option value="sheets">Sticker sheets</option>
+        <option value="individual">Individual stickers</option>
+        <option value="bumper">Bumper stickers</option>
+        <option value="large">Large format</option>
+      </select>
+      <select class="fsel grow" id="pStation" onchange="applyProdFilters()">
+        <option value="active" selected>Active jobs</option>
+        <option value="">All statuses</option>
+        <option value="new">New</option>
+        <option value="prepress">Prepress</option>
+        <option value="awaiting">Awaiting Approval</option>
+        <option value="revision">Artwork Revision</option>
+        <option value="print">Print</option>
+        <option value="lam">Laminate</option>
+        <option value="cut">Cut</option>
+        <option value="qa">QA & Packing</option>
+        <option value="outsource">Outsource</option>
+        <option value="pickup">Awaiting Pickup</option>
+        <option value="pickedup">Picked Up</option>
+        <option value="hold">On Hold</option>
+        <option value="dispatched">Dispatched</option>
+      </select>
+      <select class="fsel" id="pSort" onchange="applyProdFilters()">
+        <option value="due" selected>Due: soonest</option>
+        <option value="newest">Newest first</option>
+        <option value="oldest">Oldest first</option>
+        <option value="priority">Priority first</option>
+        <option value="grouped">Group by due date</option>
+      </select>
+      <div class="layoutog">
+        <button class="active" id="pTblBtn" onclick="setProdLayout('table',this)">📋 Table</button>
+        <button id="pCardBtn" onclick="setProdLayout('cards',this)">📱 Cards</button>
+      </div>
+    </div>
+    <div id="pBatchBanner" style="display:none;background:var(--lilac-soft);border:1px solid var(--lilac-line);border-radius:10px;padding:10px 13px;font-size:12.5px;color:var(--navy-soft);margin-bottom:11px">⊞ Gang these into one print run to save material and setup.</div>
+
+    <!-- PRODUCTION TABLE -->
+    <div id="pTableView" class="auto-table">
+      <div class="bulk-bar" id="bulk-pTable">
+        <span class="bulk-count" id="bc-pTable">0 selected</span>
+        <select class="bulk-sel" id="bs-pTable">
+          <option value="">Change status to…</option>
+          <option value="new">New</option>
+          <option value="prepress">Prepress</option>
+          <option value="awaiting">Awaiting Approval</option>
+          <option value="revision">Artwork Revision</option>
+          <option value="print">Print</option>
+          <option value="lam">Laminate</option>
+          <option value="cut">Cut</option>
+          <option value="qa">QA & Packing</option>
+          <option value="outsource">Outsource</option>
+          <option value="pickup">Awaiting Pickup</option>
+          <option value="pickedup">Picked Up</option>
+          <option value="hold">On Hold</option>
+          <option value="dispatched">Dispatched</option>
+        </select>
+        <button class="bulk-apply" onclick="applyBulk('pTable')">Apply to selected</button>
+        <button onclick="exportSelectedMachship('pTable')" style="background:var(--green-soft);border:1.5px solid #00C27A;color:#007A4A;border-radius:8px;padding:8px 13px;font-family:'Inter Tight',sans-serif;font-size:12.5px;font-weight:700;cursor:pointer;white-space:nowrap">⬇ Machship</button>
+        <button onclick="bulkDownloadArtwork('pTable')" style="background:#EDE9FE;border:1.5px solid #7C3AED;color:#5B21B6;border-radius:8px;padding:8px 13px;font-family:'Inter Tight',sans-serif;font-size:12.5px;font-weight:700;cursor:pointer;white-space:nowrap">⬇ Artwork</button>
+        <button class="bulk-cancel" onclick="clearBulk('pTable')">Clear selection</button>
+      </div>
+      <div class="tbl-wrap">
+        <table id="pTable">
+          <thead>
+            <tr>
+              <th style="width:32px"><input type="checkbox" id="sa-pTable" onchange="selectAll(this,'pTable')"></th>
+              <th style="width:32px" title="Priority">⚡</th>
+              <th>Order #</th><th>Customer</th><th>Product</th><th>Shape</th>
+              <th>Size</th><th>Qty</th><th>Material</th><th>Lam</th>
+              <th>Due</th><th>Dispatch</th><th>Station</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td colspan="14" style="text-align:center;padding:48px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink-3)"><div style="font-size:24px;margin-bottom:8px">⏳</div>Connecting to board…</td></tr>
+          </tbody>
+        </table>
+      </div>
+      </div>
+
+    <!-- PRODUCTION CARDS (mobile) -->
+    <div id="pCardView" class="fcard-grid" style="display:none"></div>
+      <div class="fcard prio-auto" data-status="prepress" data-station="prepress" data-product="rolls" onclick="openJobFromRow(this,'production')">
+        <div class="fc-head">
+          <div class="fc-thumb" style="background:linear-gradient(135deg,#9A6B45,#5C3A22)">☕</div>
+          <div class="fc-headtext">
+            <div style="display:flex;gap:6px;align-items:center;margin-bottom:3px;flex-wrap:wrap">
+              <span style="font-family:'Inter Tight';font-size:11px;font-weight:700;color:var(--lilac)">SS-1042</span>
+              <span class="chip prepress" style="font-size:10px">Prepress</span>
+            </div>
+            <div class="fc-make">2,000 · Roll labels</div>
+            <div class="fc-cust"></div>
+          </div>
+        </div>
+        <div class="fc-sg">
+          <div><div class="k">Size</div><div class="v">90 × 60 mm</div></div>
+          <div><div class="k">Material</div><div class="v">Gloss paper</div></div>
+          <div><div class="k">Shape</div><div class="v">Rounded rect</div></div>
+          <div><div class="k">Laminate</div><div class="v">Matte</div></div>
+        </div>
+        <div class="fc-foot"><span class="fc-due late">⚡ Due 13 Jun</span><span class="src shopify">Shopify</span></div>
+        <div class="fc-acts">
+          <button class="btn btn-ghost small" onclick="event.stopPropagation();alert('Download artwork')">⬇ Artwork</button>
+          <button class="btn btn-ghost small" onclick="event.stopPropagation();alert('Show cutline layer')">✂ Cutline</button>
+        </div>
+        <button class="btn btn-honey big" onclick="event.stopPropagation();openJob()">Upload proof & send →</button>
+      </div>
+
+      <div class="grouplabel">QA & Packing</div>
+      <div class="fcard" data-status="qa" data-station="qa" data-product="individual" onclick="openJobFromRow(this,'production')">
+        <div class="fc-head">
+          <div class="fc-thumb" style="background:linear-gradient(135deg,#3FA76A,#1B3A2E)">🏔️</div>
+          <div class="fc-headtext">
+            <div style="display:flex;gap:6px;align-items:center;margin-bottom:3px;flex-wrap:wrap">
+              <span style="font-family:'Inter Tight';font-size:11px;font-weight:700;color:var(--lilac)">SS-1022</span>
+              <span class="chip qa" style="font-size:10px">QA & Pack</span>
+            </div>
+            <div class="fc-make">2,500 · Individual stickers</div>
+            <div class="fc-cust">Ridgeline Apparel</div>
+          </div>
+        </div>
+        <div class="fc-sg">
+          <div><div class="k">Size</div><div class="v">60 mm</div></div>
+          <div><div class="k">Material</div><div class="v">White vinyl</div></div>
+          <div><div class="k">Shape</div><div class="v">Custom</div></div>
+          <div><div class="k">Laminate</div><div class="v">Gloss</div></div>
+        </div>
+        <div class="fc-foot"><span class="fc-due">📅 Due 14 Jun</span><span class="src email">Email</span></div>
+        <div class="fc-acts">
+          <button class="btn btn-ghost small" onclick="event.stopPropagation();alert('Flag reprint: qty + reason → P&L')">⚑ Flag reprint</button>
+          <button class="btn btn-ghost small" onclick="event.stopPropagation();alert('Download artwork')">⬇ Artwork</button>
+        </div>
+        <div style="background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:12px;margin-top:4px">
+          <p style="font-family:'Inter Tight';font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);margin-bottom:9px">Dispatch</p>
+          <div class="dispatch-tabs">
+            <button class="active" onclick="event.stopPropagation();setDispatch2('delivery',this)">Road / Courier</button>
+            <button onclick="event.stopPropagation();setDispatch2('pickup',this)">Pickup</button>
+          </div>
+          <div id="dForm2">
+            <div class="rr"><label>Tracking number</label><input type="text" placeholder="e.g. 7C9F3A0012240"></div>
+            <button class="btn btn-honey big" onclick="event.stopPropagation();alert('Tracking pushed to Shopify → customer emailed → Dispatched')">Add tracking & dispatch →</button>
+          </div>
+          <div id="pForm2" style="display:none">
+            <div class="note amber"><b>AUTO EMAIL:</b> Customer emailed with pickup address and hours.</div>
+            <button class="btn btn-honey big" onclick="event.stopPropagation();alert('Customer emailed → Awaiting Pickup status')">Confirm ready for pickup →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ====== JOB DETAIL ====== -->
+
+
+<section class="screen" id="job">
+<div class="app">
+  <div class="app-header">
+    <div class="brand">Sticky<span>Sitch</span></div>
+    <div class="header-right">
+      <span class="role">Admin</span>
+      <div class="avatar-wrap">
+      <div class="avatar" id="avatarBtn" onclick="toggleAvatarMenu(this)" title="Account">D</div>
+      <div class="avatar-menu" id="avatarMenu">
+        <div class="avatar-menu-head">
+          <div class="avatar-menu-name" id="menuName">David Pham</div>
+          <div class="avatar-menu-role" id="menuRole">Admin · Full access</div>
+          <div class="avatar-menu-email" id="menuEmail">david@stickysitch.com.au</div>
+        </div>
+        <button class="avatar-menu-item" onclick="toggleAvatarMenu();alert('Settings coming in Phase 2.')">⚙ Settings</button>
+        <div class="avatar-menu-divider"></div>
+        <button class="avatar-menu-item admin-only" onclick="openTeamModal();document.querySelectorAll('.avatar-menu').forEach(function(m){m.classList.remove('show')})" style="color:var(--lilac);border-color:var(--lilac-line)">👥 Manage team</button>
+        <button class="avatar-menu-item danger" onclick="doLogout()">→ Sign out</button>
+      </div>
+    </div>
+    </div>
+  </div>
+  <div class="app-body">
+    <button class="back-btn" onclick="go('frontend')">← Back to board</button>
+
+    <div class="jd-id" id="jdId">SS-1042 · Shopify #4042 · <span style="color:var(--green)">Paid ✓</span> · <span class="src shopify">Shopify</span></div>
+    <div class="jd-name" id="jdName"></div>
+
+    <!-- Customer details block -->
+    <div id="jdCustView" style="margin-top:6px;margin-bottom:4px">
+      <div style="display:flex;flex-wrap:wrap;gap:6px 20px;align-items:baseline">
+        <span style="font-family:'DM Sans',sans-serif;font-size:13.5px;color:var(--ink-2)"><b style="color:var(--ink);font-weight:600"></b></span>
+        <span style="font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink-3)">hello@</span>
+        <span style="font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink-3)"></span>
+        <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:var(--lilac);font-weight:600">2nd order</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;margin-top:4px">
+        <span style="font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink-2)">📍 </span>
+        <button onclick="toggleCustEdit()" id="jdCustEditBtn" style="font-family:'Inter Tight',sans-serif;font-size:11px;font-weight:700;background:none;border:1.5px solid var(--line);border-radius:7px;padding:3px 10px;cursor:pointer;color:var(--ink-2)" class="admin-only">Edit</button>
+      </div>
+    </div>
+    <!-- Customer edit panel (admin only) -->
+    <div id="jdCustEdit" style="display:none;background:#fff;border:1.5px solid var(--lilac-line);border-radius:12px;padding:14px;margin-bottom:8px">
+      <div style="font-family:'Inter Tight',sans-serif;font-weight:800;font-size:13px;color:var(--navy);margin-bottom:10px">Edit customer details</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+        <div><label style="font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);display:block;margin-bottom:4px">Contact name</label><input id="editCustName" class="jf-input" value="" style="width:100%;padding:9px 11px;border:1.5px solid var(--line);border-radius:9px;font-size:14px"></div>
+        <div><label style="font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);display:block;margin-bottom:4px">Email</label><input id="editCustEmail" class="jf-input" value="hello@" style="width:100%;padding:9px 11px;border:1.5px solid var(--line);border-radius:9px;font-size:14px"></div>
+        <div><label style="font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);display:block;margin-bottom:4px">Phone</label><input id="editCustPhone" class="jf-input" value="" style="width:100%;padding:9px 11px;border:1.5px solid var(--line);border-radius:9px;font-size:14px"></div>
+        <div><label style="font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);display:block;margin-bottom:4px">Delivery address</label><input id="editCustAddr" class="jf-input" value="" style="width:100%;padding:9px 11px;border:1.5px solid var(--line);border-radius:9px;font-size:14px"></div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button onclick="saveCustEdit()" style="background:var(--lilac);color:#fff;border:none;border-radius:9px;padding:9px 18px;font-family:'Inter Tight',sans-serif;font-weight:700;font-size:13px;cursor:pointer">Save</button>
+        <button onclick="toggleCustEdit()" style="background:#fff;border:1.5px solid var(--line);border-radius:9px;padding:9px 14px;font-family:'Inter Tight',sans-serif;font-weight:600;font-size:13px;cursor:pointer;color:var(--ink-2)">Cancel</button>
+      </div>
+    </div>
+
+    <!-- Cancellation / refund banner -->
+    <div class="cancel-banner" id="cancelBanner">
+      <div class="cancel-banner-title" id="cancelBannerTitle">🚫 Order cancelled</div>
+      <div class="cancel-banner-detail" id="cancelBannerDetail"></div>
+    </div>
+
+    <!-- Sibling jobs panel — shows for split orders -->
+    <div class="sibling-panel" id="siblingPanel" style="display:none">
+      <div class="sibling-title">🔗 Split order — sibling jobs</div>
+      <div id="siblingCards"></div>
+    </div>
+
+    <div class="note purple" id="jdPartNote" style="margin-top:6px"><b>PART 1 OF 2 · ORDER #4042</b> · Sibling: 500 individual stickers (SS-1042b) · split by product</div>
+
+    <div class="jd-status-wrap">
+      <span class="jd-status-label">Status</span>
+      <span class="jd-status-badge prepress" id="jdStatusBadge" onclick="toggleStatusPicker()" title="Tap to change status">Prepress</span>
+    </div>
+
+    <!-- Status picker — opens when badge is tapped -->
+    <div class="jd-status-picker" id="jdStatusPicker">
+      <div class="jd-status-picker-label">Select new status</div>
+      <div class="jd-status-pills">
+        <button class="jd-status-pill new"       onclick="changeJobStatus('new')">New</button>
+        <button class="jd-status-pill prepress"  onclick="changeJobStatus('prepress')">Prepress</button>
+        <button class="jd-status-pill awaiting"  onclick="changeJobStatus('awaiting')">Awaiting Approval</button>
+        <button class="jd-status-pill revision"  onclick="changeJobStatus('revision')">Artwork Revision</button>
+        <button class="jd-status-pill print"     onclick="changeJobStatus('print')">Print</button>
+        <button class="jd-status-pill lam"       onclick="changeJobStatus('lam')">Laminate</button>
+        <button class="jd-status-pill cut"       onclick="changeJobStatus('cut')">Cut</button>
+        <button class="jd-status-pill qa"        onclick="changeJobStatus('qa')">QA &amp; Packing</button>
+        <button class="jd-status-pill outsource" onclick="changeJobStatus('outsource')">Outsource</button>
+        <button class="jd-status-pill pickup"    onclick="changeJobStatus('pickup')">Awaiting Pickup</button>
+        <button class="jd-status-pill pickedup"  onclick="changeJobStatus('pickedup')">Picked Up</button>
+        <button class="jd-status-pill hold"      onclick="changeJobStatus('hold')">On Hold</button>
+        <button class="jd-status-pill dispatched" onclick="changeJobStatus('dispatched')">Dispatched</button>
+      </div>
+    </div>
+
+    <!-- JOB DETAIL TABS -->
+    <div class="jd-tabs">
+      <button class="jd-tab active" onclick="setJobTab('details',this)">Details</button>
+      <button class="jd-tab" onclick="setJobTab('proofs',this)">Proofs</button>
+      <button class="jd-tab" onclick="setJobTab('custview',this)">Customer view</button>
+      <button class="jd-tab" onclick="setJobTab('history',this)">History</button>
+    </div>
+
+    <!-- DETAILS TAB -->
+    <div class="jd-panel show" id="tab-details">
+
+      <div class="jd-two-col">
+        <!-- LEFT: Artwork + Imposition -->
+        <div class="jd-left-col">
+          <div class="artbox-tall" id="artboxSection">
+            <div class="artbox-thumb-big" id="artThumbBig">🖼️</div>
+            <div>
+              <b style="font-size:13px;color:var(--navy)" id="jdArtFile">No artwork attached</b>
+              <span style="font-size:11px;color:var(--ink-2);display:block;margin-top:2px" id="jdArtSize"></span>
+            </div>
+            <a id="jdArtDownload" href="#" target="_blank" rel="noopener"
+              style="display:none;background:var(--navy);color:#fff;border:none;border-radius:9px;padding:10px;font-family:'Inter Tight',sans-serif;font-weight:700;font-size:13px;cursor:pointer;text-decoration:none;text-align:center">
+              ⬇ Download artwork
+            </a>
+          </div>
+          <!-- Imposition — sticker sheets only -->
+          <div id="impositionSection" style="display:none;background:#fff;border:1.5px solid var(--lilac-line);border-radius:13px;padding:14px">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+              <span style="font-family:'Inter Tight',sans-serif;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)">Imposition</span>
+              <span style="background:var(--lilac);color:#fff;font-family:'Inter Tight',sans-serif;font-size:9px;font-weight:800;padding:2px 8px;border-radius:999px">STICKER SHEETS</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+              <span style="font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink-2)">Stickers per sheet</span>
+              <input type="number" id="impoPerSheet" min="1" max="200" placeholder="e.g. 24" oninput="calcImpo()"
+                style="width:80px;padding:8px 10px;border:1.5px solid var(--line);border-radius:8px;font-family:'Inter Tight',sans-serif;font-size:15px;font-weight:700;text-align:center">
+              <span style="font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink-3)">for <b style="color:var(--ink)" id="impoOrderedCount">—</b> ordered</span>
+            </div>
+            <div id="impoResult" style="display:none;background:var(--navy);border-radius:10px;padding:13px 16px;margin-top:10px">
+              <div style="font-family:'Inter Tight',sans-serif;font-weight:800;font-size:28px;color:#FFE234;line-height:1" id="impoCopies">5</div>
+              <div style="font-family:'Inter Tight',sans-serif;font-size:11px;font-weight:600;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.1em;margin-top:2px">COPIES TO PRINT</div>
+              <div style="display:flex;gap:16px;margin-top:8px;flex-wrap:wrap">
+                <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:rgba(255,255,255,.75)" id="impoPerSheetStat"><b style="color:#fff">24</b> stickers/sheet</span>
+                <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:#FFE234;font-weight:700" id="impoExtraStat">+20 extra</span>
+              </div>
+              <div style="font-family:'Inter Tight',sans-serif;font-size:10.5px;color:rgba(255,255,255,.4);margin-top:4px" id="impoExact"></div>
+              <button onclick="saveImposition()" id="impoSaveBtn" style="margin-top:12px;width:100%;background:#FFE234;color:var(--navy);border:none;border-radius:9px;padding:10px;font-family:'Inter Tight',sans-serif;font-weight:800;font-size:13px;cursor:pointer">✓ Confirm &amp; save imposition</button>
+            </div>
+            <div id="impoSaved" style="display:none;background:var(--green-soft);border:1.5px solid var(--green);border-radius:10px;padding:10px 13px;margin-top:8px;font-family:'Inter Tight',sans-serif;font-size:13px;font-weight:700;color:#007A4A">
+              ✓ Imposition saved — <span id="impoSavedSummary"></span>
+              <button onclick="resetImposition()" style="background:none;border:none;color:#007A4A;font-size:12px;cursor:pointer;text-decoration:underline;margin-left:6px">Edit</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: Spec list + dispatch -->
+        <div class="jd-right-col">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+            <span class="seclabel" style="margin:0">Job details</span>
+            <button id="specEditBtn" onclick="toggleSpecEdit()" class="admin-only" style="font-family:'Inter Tight',sans-serif;font-size:11px;font-weight:700;background:none;border:1.5px solid var(--line);border-radius:7px;padding:4px 11px;cursor:pointer;color:var(--ink-2)">✏ Edit</button>
+          </div>
+          <div class="spec-list" id="specViewMode">
+            <div class="spec-row"><span class="k">Product</span><span class="v" id="sv-product"></span></div>
+            <div class="spec-row"><span class="k">Quantity</span><span class="v" id="sv-qty"></span></div>
+            <div class="spec-row"><span class="k">Shape</span><span class="v" id="sv-shape"></span></div>
+            <div class="spec-row"><span class="k">Size</span><span class="v" id="sv-size"></span></div>
+            <div class="spec-row"><span class="k">Material</span><span class="v" id="sv-material"></span></div>
+            <div class="spec-row"><span class="k">Laminate</span><span class="v" id="sv-lam"></span></div>
+            <div class="spec-row"><span class="k">Dispatch</span><span class="v" id="sv-dispatch"></span></div>
+            <div class="spec-row"><span class="k">Delivery to</span><span class="v" id="sv-delivery"></span></div>
+            <div class="spec-row"><span class="k">Order placed</span><span class="v" id="sv-placed"></span></div>
+            <div class="spec-row" style="background:var(--lilac-soft)"><span class="k" style="color:var(--lilac)">Due date</span><span class="v" id="sv-due" style="color:var(--lilac);font-weight:700"></span></div>
+          </div>
+          <p style="font-family:'DM Sans',sans-serif;font-size:11px;color:var(--ink-3);margin:6px 2px 0">Due date auto-set: rolls = 3 days, all others = 2 days. Editable for rush jobs.</p>
+          <div id="specEditMode" style="display:none;margin-top:10px"></div>
+          <!-- Outsource details (rolls only) -->
+          <div id="outsourceSection" style="display:none;background:var(--paper);border:1.5px solid var(--line);border-radius:12px;padding:13px;margin-top:10px">
+            <div style="font-family:'Inter Tight',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);margin-bottom:8px">Outsource details</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+              <div><div style="font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-bottom:4px">Supplier</div><div style="font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink)" id="outSupplierDisplay">—</div></div>
+              <div><div style="font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-bottom:4px">Delivering to</div><div style="font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink)" id="outDestDisplay">Direct to customer</div></div>
+            </div>
+            <div style="font-family:'DM Sans',sans-serif;font-size:12px;color:var(--ink-3);padding:8px;background:#fff;border-radius:8px">When you receive tracking from your supplier, enter it in the dispatch panel below — it emails the customer automatically.</div>
+          </div>
+          <!-- Dispatch panels -->
+          <div id="pickupActions" style="display:none;margin-top:10px">
+            <div style="background:var(--green-soft);border:1.5px solid var(--green);border-radius:11px;padding:12px 14px">
+              <div style="font-family:'Inter Tight',sans-serif;font-size:11px;font-weight:700;color:#007A4A;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">📦 Pickup job</div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <button onclick="markPickupReady()" style="background:var(--green);color:#fff;border:none;border-radius:9px;padding:10px 14px;font-family:'Inter Tight',sans-serif;font-weight:700;font-size:13px;cursor:pointer">✓ Ready for pickup</button>
+                <button onclick="markPickedUp()" style="background:#fff;border:1.5px solid var(--green);color:#007A4A;border-radius:9px;padding:10px 14px;font-family:'Inter Tight',sans-serif;font-weight:700;font-size:13px;cursor:pointer">Picked up ✓</button>
+              </div>
+            </div>
+          </div>
+          <div id="roadDispatchActions" style="display:none;margin-top:10px">
+            <div style="background:#EFF6FF;border:1.5px solid #3B82F6;border-radius:11px;padding:12px 14px">
+              <div style="font-family:'Inter Tight',sans-serif;font-size:11px;font-weight:700;color:#1D4ED8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">🚚 Road dispatch</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+                <input id="roadTrackingInput" type="text" placeholder="Tracking number" style="padding:9px 11px;border:1.5px solid #BFDBFE;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;background:#fff">
+                <select id="roadCourierSelect" style="padding:9px 11px;border:1.5px solid #BFDBFE;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;background:#fff">
+                  <option value="">Select courier…</option>
+                  <option value="StarTrack">StarTrack</option>
+                  <option value="TNT">TNT</option>
+                  <option value="Titan Couriers">Titan Couriers</option>
+                  <option value="NTS">NTS</option>
+                  <option value="Uber Courier">Uber Courier</option>
+                </select>
+              </div>
+              <button onclick="sendRoadTracking()" style="width:100%;background:#3B82F6;color:#fff;border:none;border-radius:9px;padding:10px 14px;font-family:'Inter Tight',sans-serif;font-weight:700;font-size:13px;cursor:pointer">Send tracking → mark dispatched</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Internal notes -->
+      <div style="margin-top:14px">
+        <div style="background:#fff;border:1.5px solid var(--line);border-radius:14px;overflow:hidden">
+          <div style="padding:11px 14px 10px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between">
+            <span style="font-family:'Inter Tight',sans-serif;font-size:12px;font-weight:800;color:var(--navy)">📝 Internal notes</span>
+            <button onclick="toggleAllNotes()" id="notesToggleBtn" style="font-family:'Inter Tight',sans-serif;font-size:11px;color:var(--lilac);background:none;border:none;cursor:pointer;font-weight:700;display:none">See all</button>
+          </div>
+          <div id="notesRecent"></div>
+          <div id="notesList" style="display:none"></div>
+          <div style="border-top:1px solid var(--line)">
+            <textarea id="newNoteText" placeholder="Add a note… visible to the whole team" style="width:100%;padding:11px 14px;border:none;outline:none;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);resize:none;min-height:56px;background:transparent;box-sizing:border-box"></textarea>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 12px;border-top:1px solid var(--line);background:var(--paper)">
+              <span style="font-family:'Inter Tight',sans-serif;font-size:11px;color:var(--ink-3)" id="noteAuthorLabel">Logged as <b>David (Admin)</b></span>
+              <button onclick="addNote()" style="background:var(--lilac);color:#fff;border:none;border-radius:8px;padding:6px 13px;font-family:'Inter Tight',sans-serif;font-weight:700;font-size:12px;cursor:pointer">Add note</button>
+            </div>
+          </div>
+        </div>
+        <div class="jd-dropdown-row">
+          <div>
+            <button class="jd-dropdown-btn" onclick="toggleDropdown('activityPanel','activityArrow')"><span>📋 Activity log</span><span id="activityArrow" style="font-size:11px;transition:.2s">▼</span></button>
+            <div id="activityPanel" class="jd-dropdown-panel"><div id="activityLogList"><div class="logrow"><span class="t">—</span><span style="color:var(--ink-3)">No activity yet</span></div></div><div class="note red" style="margin-top:10px;font-size:12px"><b>SAFEGUARD:</b> cancelled or refunded in Shopify auto-flags this job before printing.</div></div>
+          </div>
+          <div>
+            <button class="jd-dropdown-btn" onclick="toggleDropdown('reprintPanel','reprintArrow')"><span>⚑ Log reprint / remake</span><span id="reprintArrow" style="font-size:11px;transition:.2s">▼</span></button>
+            <div id="reprintPanel" class="jd-dropdown-panel">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+                <div><label style="font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;color:var(--ink-3);display:block;margin-bottom:4px">Qty to redo</label><input type="text" placeholder="e.g. 500" style="width:100%;padding:8px 10px;border:1.5px solid var(--line);border-radius:8px;font-size:13px;box-sizing:border-box"></div>
+                <div><label style="font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;color:var(--ink-3);display:block;margin-bottom:4px">Reason</label><select style="width:100%;padding:8px 10px;border:1.5px solid var(--line);border-radius:8px;font-size:13px;box-sizing:border-box"><option>Press error</option><option>Wrong cut</option><option>Material fault</option><option>Colour off</option><option>Damaged in transit</option><option>Customer artwork error</option></select></div>
+              </div>
+              <textarea placeholder="What happened, who caught it…" style="width:100%;padding:9px 10px;border:1.5px solid var(--line);border-radius:8px;font-size:13px;min-height:56px;resize:vertical;box-sizing:border-box;margin-bottom:8px"></textarea>
+              <button class="btn btn-ghost" style="width:100%" onclick="showToast('Reprint logged ✓')">Log reprint / remake</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROOFS TAB -->
+    <div class="jd-panel" id="tab-proofs">
+
+      <!-- Proof version history -->
+      <div class="seclabel" style="margin-top:0">Proof history</div>
+      <div class="pvlist" id="pvList" style="margin-bottom:14px">
+        <div class="pvrow">
+          <span class="pv-v">v2</span>
+          <div class="pv-body"><b>Proof v2 · sent to customer</b><span>11 Jun · 2:10pm · awaiting response</span></div>
+          <span class="pv-stat wait">Awaiting</span>
+        </div>
+        <div class="pvrow">
+          <span class="pv-v">v1</span>
+          <div class="pv-body"><b>Proof v1 · customer rejected</b><span>"Colour too dark, logo blurry" · 10 Jun</span></div>
+          <span class="pv-stat rej">Rejected</span>
+        </div>
+      </div>
+      <p class="hintline" style="margin-bottom:16px">Every version is saved. Customer sees the full history on their magic link.</p>
+
+      <!-- Upload new proof -->
+      <div class="seclabel">Upload new proof</div>
+
+      <!-- Success state (hidden until sent) -->
+      <div class="proof-success" id="proofSuccess">
+        <div class="proof-success-icon">✅</div>
+        <div class="proof-success-title">Proof sent to customer</div>
+        <div class="proof-success-sub">hello@ · Job status → Awaiting Approval</div>
+      </div>
+
+      <!-- Upload form -->
+      <div id="proofUploadForm">
+        <div class="proof-upload-zone" id="proofDropZone"
+          ondragover="event.preventDefault();this.classList.add('drag')"
+          ondragleave="this.classList.remove('drag')"
+          ondrop="handleProofDrop(event)">
+          <input type="file" accept=".pdf,.jpg,.jpeg,.png,.ai,.eps" onchange="handleProofFile(this)">
+          <div class="proof-upload-icon">📄</div>
+          <div class="proof-upload-title">Drop proof file here or click to browse</div>
+          <div class="proof-upload-sub">PDF, JPG, PNG, AI, EPS · Max 50 MB</div>
+        </div>
+
+        <div class="proof-file-preview" id="proofFilePreview" style="display:none">
+          <span class="proof-file-icon">📄</span>
+          <div>
+            <div class="proof-file-name" id="proofFileName"></div>
+            <div class="proof-file-size" id="proofFileSize">Ready to send</div>
+          </div>
+          <button class="proof-file-remove" onclick="clearProofFile()" title="Remove">✕</button>
+        </div>
+
+        <textarea class="proof-message" id="proofMessage" placeholder="Optional message to customer (e.g. 'Updated the logo placement and adjusted the red — let us know if this looks right.')"></textarea>
+
+        <div class="proof-send-row">
+          <button id="proofSendBtn" onclick="sendProof()" disabled
+            style="flex:2;background:var(--lilac);color:#fff;border:none;border-radius:10px;padding:12px 18px;font-family:'Inter Tight',sans-serif;font-weight:700;font-size:14px;cursor:pointer;opacity:.4;transition:.15s">
+            📤 Send proof to customer
+          </button>
+          <button onclick="document.getElementById('proofMessage').focus()"
+            style="flex:1;background:#fff;border:1.5px solid var(--line);border-radius:10px;padding:12px;font-family:'Inter Tight',sans-serif;font-weight:600;font-size:13px;cursor:pointer;color:var(--ink-2)">
+            ✏ Add message
+          </button>
+        </div>
+        <p style="font-family:'DM Sans',sans-serif;font-size:11.5px;color:var(--ink-3);margin-top:8px;text-align:center">
+          Sending emails the customer their private proof link · job moves to <b>Awaiting Approval</b>
+        </p>
+      </div>
+
+    </div>
+
+    <!-- CUSTOMER VIEW TAB -->
+    <div class="jd-panel" id="tab-custview">
+      <div class="note purple" style="margin-bottom:14px"><b>CUSTOMER PREVIEW</b> · This is exactly what the customer sees when they open their private link. No login required on their end.</div>
+
+      <!-- Sheet layout block — only shows for sticker sheets with imposition set -->
+      <div class="cust-sheet-layout" id="custSheetLayout">
+        <div class="cust-sheet-title">📋 Print sheet layout</div>
+        <div class="cust-sheet-row">
+          <div class="cust-sheet-stat">
+            <div class="cust-sheet-stat-num" id="cslPerSheet">—</div>
+            <div class="cust-sheet-stat-label">Stickers per sheet</div>
+          </div>
+          <div class="cust-sheet-stat">
+            <div class="cust-sheet-stat-num" id="cslCopies">—</div>
+            <div class="cust-sheet-stat-label">Sheet copies</div>
+          </div>
+          <div class="cust-sheet-stat">
+            <div class="cust-sheet-stat-num" id="cslOrdered">—</div>
+            <div class="cust-sheet-stat-label">Stickers ordered</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cust-tracker">
+        <h3>Your StickySitch order</h3>
+        <p>2,000 roll labels · 90×60mm · matte laminate</p>
+        <div class="tline">
+          <div class="tstep done"><b>Order received</b><span>10 Jun · 9:14am</span></div>
+          <div class="tstep done"><b>Proof prepared</b><span>10 Jun · 11:02am</span></div>
+          <div class="tstep now"><b>Your proof is ready</b><span>Please review below</span></div>
+          <div class="tstep future"><b>In production</b><span>Printing, laminating &amp; cutting</span></div>
+          <div class="tstep future" id="cvFinalStep"><b>Dispatched</b><span>Tracking emailed to you</span></div>
+        </div>
+      </div>
+      <div style="background:#fff;border:1px solid var(--line);border-radius:13px;padding:16px">
+        <div class="segtog">
+          <button class="active" onclick="setCut(false,this)">Print + Cut</button>
+          <button onclick="setCut('print',this)">Print only</button>
+          <button onclick="setCut('cut',this)">Cut only</button>
+        </div>
+        <div class="proof-frame cutline" id="proofFrame">🏷️</div>
+        <div class="cutlbl" id="cutLabel">— — Pink dashed = cut line. Does not print.</div>
+        <div class="proof-cap" id="proofCap">Print + Cut preview</div>
+        <button class="btn btn-ghost" style="width:100%;margin-top:12px" onclick="alert('Downloads proof to customer device.')">⬇ Download proof</button>
+        <div style="margin-top:14px;background:var(--honey-soft);border:1px solid #F0D89A;border-radius:11px;padding:13px">
+          <p style="font-family:'Inter Tight';font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#8A5E0F;margin-bottom:8px">Before approving, check:</p>
+          <ul style="list-style:none;padding:0">
+            <li style="font-size:12px;color:#6E4D12;margin-bottom:5px">✓ Size correct (90 × 60 mm)</li>
+            <li style="font-size:12px;color:#6E4D12;margin-bottom:5px">✓ All spelling and wording</li>
+            <li style="font-size:12px;color:#6E4D12;margin-bottom:5px">✓ Colours as expected</li>
+            <li style="font-size:12px;color:#6E4D12;margin-bottom:5px">✓ Artwork is sharp, not pixelated</li>
+            <li style="font-size:12px;color:#6E4D12">✓ Cut line sits where expected</li>
+          </ul>
+        </div>
+        <div class="note red" style="margin-top:10px"><b>Heads up:</b> pixelated artwork is the file you supplied, not our printing. Send a higher-res file via "Request revision."</div>
+        <div class="btn-row">
+          <button class="btn btn-honey" onclick="approvePoof()">✓ Approve & print</button>
+          <button class="btn btn-ghost" onclick="togglePanel('revisionPanel')">Request revision</button>
+        </div>
+
+        <!-- Revision panel -->
+        <div class="action-panel" id="revisionPanel" style="margin-top:10px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+            <span style="font-family:'Inter Tight',sans-serif;font-weight:700;font-size:13px;color:var(--ink)">📝 What needs to change?</span>
+            <button onclick="togglePanel('revisionPanel')" style="background:none;border:none;cursor:pointer;color:var(--ink-3);font-size:18px;padding:0">✕</button>
+          </div>
+          <textarea id="revisionNotes" style="width:100%;padding:10px 12px;border:1.5px solid var(--line);border-radius:9px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);background:var(--paper);resize:vertical;min-height:80px;box-sizing:border-box" placeholder="e.g. Make logo bigger, background white, font looks different to brand guide…"></textarea>
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <button onclick="submitRevision()" style="flex:1;background:var(--red);color:#fff;border:none;border-radius:9px;padding:11px;font-family:'Inter Tight',sans-serif;font-weight:700;font-size:13px;cursor:pointer">Send request</button>
+            <button onclick="togglePanel('revisionPanel')" style="background:#fff;border:1.5px solid var(--line);border-radius:9px;padding:11px 14px;font-family:'Inter Tight',sans-serif;font-weight:600;font-size:13px;cursor:pointer;color:var(--ink-2)">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HISTORY TAB (archive for this customer) -->
+    <div class="jd-panel" id="tab-history">
+      <div class="note purple" style="margin-bottom:14px"><b>CUSTOMER HISTORY</b> · All past orders from hello@ · 2 previous jobs</div>
+      <div class="arch-row">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+          <div>
+            <div style="font-family:'Inter Tight';font-size:11px;font-weight:700;color:var(--lilac)">SS-0894</div>
+            <div style="font-weight:600;font-size:14.5px;color:var(--navy);margin:2px 0"></div>
+            <div style="font-size:12px;color:var(--ink-2)">2,000 roll labels · 90×60mm · 1st order</div>
+            <div style="font-family:'Inter Tight';font-size:11px;color:var(--ink-3);margin-top:3px">Dispatched 2 Apr · AusPost 4B22…7810</div>
+          </div>
+          <span class="chip dispatched">Dispatched</span>
+        </div>
+        <div class="arch-acts">
+          <button class="btn btn-honey small" onclick="alert('Clones as new order with artwork already attached.')">↻ Reorder</button>
+          <button class="btn btn-ghost small" onclick="alert('Log a remake against this past job.')">⚑ Reprint</button>
+          <button class="btn btn-ghost small" onclick="alert('Opens full detail for this past job.')">View</button>
+        </div>
+      </div>
+      <div class="arch-row">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+          <div>
+            <div style="font-family:'Inter Tight';font-size:11px;font-weight:700;color:var(--lilac)">SS-0731</div>
+            <div style="font-weight:600;font-size:14.5px;color:var(--navy);margin:2px 0"></div>
+            <div style="font-size:12px;color:var(--ink-2)">500 die-cut stickers · 90mm · coasters</div>
+            <div style="font-family:'Inter Tight';font-size:11px;color:var(--ink-3);margin-top:3px">Dispatched 11 Feb</div>
+          </div>
+          <span class="chip dispatched">Dispatched</span>
+        </div>
+        <div class="arch-acts">
+          <button class="btn btn-honey small" onclick="alert('Reorder cloned.')">↻ Reorder</button>
+          <button class="btn btn-ghost small" onclick="alert('Log reprint.')">⚑ Reprint</button>
+          <button class="btn btn-ghost small" onclick="alert('View past job.')">View</button>
+        </div>
+      </div>
+      <button class="btn btn-ghost" style="width:100%;margin-top:8px" onclick="go('archive')">View full archive →</button>
+    </div>
+  </div>
+</div>
+</section>
+
 <!-- ====== ARCHIVE ====== -->
+
+
+<section class="screen" id="customers">
+<div class="app">
+  <div class="app-header">
+    <div class="brand">Sticky<span>Sitch</span></div>
+    <div class="header-right"><span class="role">Admin</span><div class="avatar-wrap">
+      <div class="avatar" id="avatarBtn" onclick="toggleAvatarMenu(this)" title="Account">D</div>
+      <div class="avatar-menu" id="avatarMenu">
+        <div class="avatar-menu-head">
+          <div class="avatar-menu-name" id="menuName">David Pham</div>
+          <div class="avatar-menu-role" id="menuRole">Admin · Full access</div>
+          <div class="avatar-menu-email" id="menuEmail">david@stickysitch.com.au</div>
+        </div>
+        <button class="avatar-menu-item" onclick="toggleAvatarMenu();alert('Settings coming in Phase 2.')">⚙ Settings</button>
+        <div class="avatar-menu-divider"></div>
+        <button class="avatar-menu-item admin-only" onclick="openTeamModal();document.querySelectorAll('.avatar-menu').forEach(function(m){m.classList.remove('show')})" style="color:var(--lilac);border-color:var(--lilac-line)">👥 Manage team</button>
+        <button class="avatar-menu-item danger" onclick="doLogout()">→ Sign out</button>
+      </div>
+    </div></div>
+  </div>
+  <div class="app-body">
+    <div class="mainnav">
+      <button class="admin-nav-btn" onclick="go('frontend')">Frontend</button>
+      <button onclick="go('production')">Production</button>
+      <button class="active admin-nav-btn">Customers</button>
+    </div>
+
+    <!-- Search + Add -->
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap">
+      <input type="text" placeholder="Search business, email, contact…" style="flex:1;min-width:200px;padding:11px 14px;border:1.5px solid var(--line);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;background:#fff;color:var(--ink)">
+      <select style="padding:11px 13px;border:1.5px solid var(--line);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13.5px;color:var(--ink);background:#fff">
+        <option>All terms</option>
+        <option>Prepaid</option>
+        <option>30 Day EOD Account</option>
+        <option>14 Day Account</option>
+        <option>Net 30</option>
+      </select>
+      <select style="padding:11px 13px;border:1.5px solid var(--line);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13.5px;color:var(--ink);background:#fff">
+        <option>All customers</option>
+        <option>VIP</option>
+        <option>Repeat</option>
+        <option>Wholesale</option>
+        <option>New</option>
+      </select>
+      <button onclick="go('custprofile')" style="background:var(--lilac);color:#fff;border:none;border-radius:10px;padding:11px 16px;font-family:'Inter Tight',sans-serif;font-weight:700;font-size:13px;cursor:pointer;white-space:nowrap">+ Add customer</button>
+    </div>
+
+    <!-- Stats strip -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-bottom:18px">
+      <div style="background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:16px 16px 14px">
+        <div style="font-family:'Inter Tight',sans-serif;font-size:32px;font-weight:800;line-height:1;color:var(--lilac);margin-bottom:6px">47</div>
+        <div style="font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)">Total customers</div>
+      </div>
+      <div style="background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:16px 16px 14px">
+        <div style="font-family:'Inter Tight',sans-serif;font-size:32px;font-weight:800;line-height:1;color:var(--green);margin-bottom:6px">12</div>
+        <div style="font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)">Active this month</div>
+      </div>
+      <div style="background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:16px 16px 14px">
+        <div style="font-family:'Inter Tight',sans-serif;font-size:32px;font-weight:800;line-height:1;color:#C8970A;margin-bottom:6px">8</div>
+        <div style="font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)">Repeat (3+ orders)</div>
+      </div>
+      <div style="background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:16px 16px 14px">
+        <div style="font-family:'Inter Tight',sans-serif;font-size:32px;font-weight:800;line-height:1;color:var(--lilac);margin-bottom:6px">3</div>
+        <div style="font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)">VIP accounts</div>
+      </div>
+    </div>
+
+    <!-- Customer table -->
+    <div class="tbl-wrap">
+      <table class="cust-table">
+        <thead>
+          <tr>
+            <th>Business</th>
+            <th>Contact</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Delivery address</th>
+            <th>Terms</th>
+            <th>Orders</th>
+            <th>Last order</th>
+            <th>Tags</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr onclick="go('custprofile')">
+            <td><div class="cust-biz"></div></td>
+            <td></td>
+            <td><span class="cust-email">hello@</span></td>
+            <td></td>
+            <td style="font-size:12px;color:var(--ink-2)"></td>
+            <td><span class="cust-terms prepaid">Prepaid</span></td>
+            <td><span class="cust-count">7 orders</span></td>
+            <td style="color:var(--ink-2);font-size:12.5px">10 Jun 2024</td>
+            <td><span class="cust-tag vip">VIP</span> <span class="cust-tag repeat">Repeat</span></td>
+            <td><button class="cust-menu-btn" onclick="event.stopPropagation()">···</button></td>
+          </tr>
+          <tr onclick="go('custprofile')">
+            <td><div class="cust-biz">Sunday Roasters</div></td>
+            <td>Maya Chen</td>
+            <td><span class="cust-email">hello@sundayroasters.com.au</span></td>
+            <td>0414 567 890</td>
+            <td style="font-size:12px;color:var(--ink-2)">88 Smith St, Fitzroy VIC 3065</td>
+            <td><span class="cust-terms account">30 Day EOD</span></td>
+            <td><span class="cust-count">12 orders</span></td>
+            <td style="color:var(--ink-2);font-size:12.5px">5 Jun 2024</td>
+            <td><span class="cust-tag vip">VIP</span> <span class="cust-tag wholesale">Wholesale</span></td>
+            <td><button class="cust-menu-btn" onclick="event.stopPropagation()">···</button></td>
+          </tr>
+          <tr onclick="go('custprofile')">
+            <td><div class="cust-biz">Hartley Hot Sauce</div></td>
+            <td>Sarah Hartley</td>
+            <td><span class="cust-email">hartley@hotsauce.com.au</span></td>
+            <td>0411 234 567</td>
+            <td style="font-size:12px;color:var(--ink-2)">22 Church St, Richmond VIC 3121</td>
+            <td><span class="cust-terms prepaid">Prepaid</span></td>
+            <td><span class="cust-count">3 orders</span></td>
+            <td style="color:var(--ink-2);font-size:12.5px">8 Jun 2024</td>
+            <td><span class="cust-tag repeat">Repeat</span></td>
+            <td><button class="cust-menu-btn" onclick="event.stopPropagation()">···</button></td>
+          </tr>
+          <tr onclick="go('custprofile')">
+            <td><div class="cust-biz">North St Coffee</div></td>
+            <td>—</td>
+            <td><span class="cust-email">orders@northstcoffee.com.au</span></td>
+            <td>0413 456 789</td>
+            <td style="font-size:12px;color:var(--ink-2)">4 North St, Newtown VIC 3220</td>
+            <td><span class="cust-terms account">14 Day Account</span></td>
+            <td><span class="cust-count">5 orders</span></td>
+            <td style="color:var(--ink-2);font-size:12.5px">10 Jun 2024</td>
+            <td><span class="cust-tag repeat">Repeat</span></td>
+            <td><button class="cust-menu-btn" onclick="event.stopPropagation()">···</button></td>
+          </tr>
+          <tr onclick="go('custprofile')">
+            <td><div class="cust-biz">Vela Studio</div></td>
+            <td>Pia Nguyen</td>
+            <td><span class="cust-email">hello@velastudio.com.au</span></td>
+            <td>0416 789 012</td>
+            <td style="font-size:12px;color:var(--ink-2)">Studio 3, 40 Rokeby St, Collingwood VIC 3066</td>
+            <td><span class="cust-terms prepaid">Prepaid</span></td>
+            <td><span class="cust-count">4 orders</span></td>
+            <td style="color:var(--ink-2);font-size:12.5px">8 Jun 2024</td>
+            <td><span class="cust-tag repeat">Repeat</span></td>
+            <td><button class="cust-menu-btn" onclick="event.stopPropagation()">···</button></td>
+          </tr>
+          <tr onclick="go('custprofile')">
+            <td><div class="cust-biz">Ridgeline Apparel</div></td>
+            <td>Tom Ridgeway</td>
+            <td><span class="cust-email">studio@ridgeline.com.au</span></td>
+            <td>0417 890 123</td>
+            <td style="font-size:12px;color:var(--ink-2)">14 Industrial Dr, Braybrook VIC 3019</td>
+            <td><span class="cust-terms account">30 Day Account</span></td>
+            <td><span class="cust-count">9 orders</span></td>
+            <td style="color:var(--ink-2);font-size:12.5px">6 Jun 2024</td>
+            <td><span class="cust-tag wholesale">Wholesale</span> <span class="cust-tag repeat">Repeat</span></td>
+            <td><button class="cust-menu-btn" onclick="event.stopPropagation()">···</button></td>
+          </tr>
+          <tr onclick="go('custprofile')">
+            <td><div class="cust-biz">Tilly's Candles</div></td>
+            <td>Tilly Marsh</td>
+            <td><span class="cust-email">tilly@tillyscandles.com</span></td>
+            <td>0415 678 901</td>
+            <td style="font-size:12px;color:var(--ink-2)">—</td>
+            <td><span class="cust-terms prepaid">Prepaid</span></td>
+            <td><span class="cust-count">2 orders</span></td>
+            <td style="color:var(--ink-2);font-size:12.5px">10 Jun 2024</td>
+            <td><span class="cust-tag new">New</span></td>
+            <td><button class="cust-menu-btn" onclick="event.stopPropagation()">···</button></td>
+          </tr>
+          <tr onclick="go('custprofile')">
+            <td><div class="cust-biz">Coastal Print Co.</div></td>
+            <td>—</td>
+            <td><span class="cust-email">orders@coastalprint.com.au</span></td>
+            <td>0418 901 234</td>
+            <td style="font-size:12px;color:var(--ink-2)">Unit 7, 2 Coastal Rd, Williamstown VIC 3016</td>
+            <td><span class="cust-terms net30">Net 30</span></td>
+            <td><span class="cust-count">6 orders</span></td>
+            <td style="color:var(--ink-2);font-size:12.5px">4 Jun 2024</td>
+            <td><span class="cust-tag trade">Trade</span></td>
+            <td><button class="cust-menu-btn" onclick="event.stopPropagation()">···</button></td>
+          </tr>
+          <tr onclick="go('custprofile')">
+            <td><div class="cust-biz">Blue Mountain Oils</div></td>
+            <td>—</td>
+            <td><span class="cust-email">orders@bluemountainoils.com.au</span></td>
+            <td>0419 012 345</td>
+            <td style="font-size:12px;color:var(--ink-2)">Pickup only — Braybrook VIC 3019</td>
+            <td><span class="cust-terms prepaid">Prepaid</span></td>
+            <td><span class="cust-count">2 orders</span></td>
+            <td style="color:var(--ink-2);font-size:12.5px">3 Jun 2024</td>
+            <td><span class="cust-tag new">New</span></td>
+            <td><button class="cust-menu-btn" onclick="event.stopPropagation()">···</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ====== CUSTOMER PROFILE ====== -->
+
+
+<section class="screen" id="custprofile">
+<div class="app">
+  <div class="app-header">
+    <div class="brand">Sticky<span>Sitch</span></div>
+    <div class="header-right"><span class="role">Admin</span><div class="avatar-wrap">
+      <div class="avatar" id="avatarBtn" onclick="toggleAvatarMenu(this)" title="Account">D</div>
+      <div class="avatar-menu" id="avatarMenu">
+        <div class="avatar-menu-head">
+          <div class="avatar-menu-name" id="menuName">David Pham</div>
+          <div class="avatar-menu-role" id="menuRole">Admin · Full access</div>
+          <div class="avatar-menu-email" id="menuEmail">david@stickysitch.com.au</div>
+        </div>
+        <button class="avatar-menu-item" onclick="toggleAvatarMenu();alert('Settings coming in Phase 2.')">⚙ Settings</button>
+        <div class="avatar-menu-divider"></div>
+        <button class="avatar-menu-item admin-only" onclick="openTeamModal();document.querySelectorAll('.avatar-menu').forEach(function(m){m.classList.remove('show')})" style="color:var(--lilac);border-color:var(--lilac-line)">👥 Manage team</button>
+        <button class="avatar-menu-item danger" onclick="doLogout()">→ Sign out</button>
+      </div>
+    </div></div>
+  </div>
+  <div class="app-body">
+    <button class="cp-back" onclick="go('customers')">← Back to customers</button>
+
+    <!-- Header -->
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:6px">
+      <div>
+        <div class="cp-biz"></div>
+        <div class="cp-contact">
+          <span>👤 </span>
+          <span><a href="mailto:hello@" style="color:var(--lilac)">hello@</a></span>
+          <span>📞 </span>
+          <span>📍 </span>
+        </div>
+        <div style="display:flex;gap:7px;align-items:center">
+          <span class="cust-tag vip">VIP</span>
+          <span class="cust-tag repeat">Repeat</span>
+          <span class="cust-terms prepaid" style="font-family:'Inter Tight',sans-serif;font-size:12px;font-weight:700">· Prepaid</span>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button style="background:#fff;border:1.5px solid var(--line);border-radius:9px;padding:9px 14px;font-family:'Inter Tight',sans-serif;font-weight:700;font-size:12.5px;cursor:pointer;color:var(--ink-2)">✏ Edit details</button>
+        <button style="background:var(--lilac);color:#fff;border:none;border-radius:9px;padding:9px 14px;font-family:'Inter Tight',sans-serif;font-weight:700;font-size:12.5px;cursor:pointer" onclick="go('frontend')">+ New job</button>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="cp-stats">
+      <div class="cp-stat">
+        <div class="cp-stat-num">7</div>
+        <div class="cp-stat-label">Total orders</div>
+      </div>
+      <div class="cp-stat">
+        <div class="cp-stat-num" style="color:var(--green)">$4,820</div>
+        <div class="cp-stat-label">Total spent</div>
+      </div>
+      <div class="cp-stat">
+        <div class="cp-stat-num" style="font-size:14px;margin-top:4px">Mar 2023</div>
+        <div class="cp-stat-label">First order</div>
+      </div>
+      <div class="cp-stat">
+        <div class="cp-stat-num" style="font-size:14px;margin-top:4px">10 Jun 2024</div>
+        <div class="cp-stat-label">Last order</div>
+      </div>
+    </div>
+
+    <!-- Active jobs -->
+    <div class="cp-section">Active jobs <span style="background:var(--lilac);color:#fff;font-family:'Inter Tight',sans-serif;font-size:11px;font-weight:700;padding:5px 12px;border-radius:999px">2</span></div>
+    <div class="tbl-wrap" style="margin-bottom:18px">
+      <table class="cp-jobs-table">
+        <thead><tr><th>Job #</th><th>Product</th><th>Qty</th><th>Size</th><th>Status</th><th>Due</th></tr></thead>
+        <tbody>
+          <tr onclick="go('job')">
+            <td style="font-family:'Inter Tight',sans-serif;font-weight:600;color:var(--lilac)">SS-1042</td>
+            <td>Roll labels</td><td>2,000</td><td>90 × 60 mm</td>
+            <td><span class="chip new">New</span></td>
+            <td style="color:#D92B4B;font-weight:700">⚡ 13 Jun</td>
+          </tr>
+          <tr onclick="go('job')">
+            <td style="font-family:'Inter Tight',sans-serif;font-weight:600;color:var(--lilac)">SS-1042b</td>
+            <td>Individual stickers</td><td>500</td><td>70 mm</td>
+            <td><span class="chip new">New</span></td>
+            <td style="color:#D92B4B;font-weight:700">⚡ 13 Jun</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Order history -->
+    <div class="cp-section">Order history</div>
+    <div class="tbl-wrap" style="margin-bottom:18px">
+      <table class="cp-jobs-table">
+        <thead><tr><th>Order</th><th>Date</th><th>Product</th><th>Qty</th><th>Value</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td style="font-family:'Inter Tight',sans-serif;font-weight:600;color:var(--lilac)">#4042</td><td style="color:var(--ink-2)">10 Jun 2024</td><td>Roll labels + stickers</td><td>2,500</td><td style="font-weight:700">$680</td><td><span class="chip new">New</span></td></tr>
+          <tr><td style="font-family:'Inter Tight',sans-serif;font-weight:600;color:var(--lilac)">#3891</td><td style="color:var(--ink-2)">14 Apr 2024</td><td>Roll labels</td><td>2,000</td><td style="font-weight:700">$520</td><td><span class="chip dispatched">Dispatched</span></td></tr>
+          <tr><td style="font-family:'Inter Tight',sans-serif;font-weight:600;color:var(--lilac)">#3744</td><td style="color:var(--ink-2)">2 Feb 2024</td><td>Roll labels</td><td>1,500</td><td style="font-weight:700">$440</td><td><span class="chip dispatched">Dispatched</span></td></tr>
+          <tr><td style="font-family:'Inter Tight',sans-serif;font-weight:600;color:var(--lilac)">#3512</td><td style="color:var(--ink-2)">19 Nov 2023</td><td>Roll labels</td><td>3,000</td><td style="font-weight:700">$720</td><td><span class="chip dispatched">Dispatched</span></td></tr>
+          <tr><td style="font-family:'Inter Tight',sans-serif;font-weight:600;color:var(--lilac)">#3290</td><td style="color:var(--ink-2)">7 Aug 2023</td><td>Sticker sheets</td><td>500</td><td style="font-weight:700">$310</td><td><span class="chip dispatched">Dispatched</span></td></tr>
+          <tr><td style="font-family:'Inter Tight',sans-serif;font-weight:600;color:var(--lilac)">#3101</td><td style="color:var(--ink-2)">22 May 2023</td><td>Roll labels</td><td>1,000</td><td style="font-weight:700">$290</td><td><span class="chip dispatched">Dispatched</span></td></tr>
+          <tr><td style="font-family:'Inter Tight',sans-serif;font-weight:600;color:var(--lilac)">#2944</td><td style="color:var(--ink-2)">11 Mar 2023</td><td>Roll labels</td><td>500</td><td style="font-weight:700">$180</td><td><span class="chip dispatched">Dispatched</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Notes -->
+    <div class="cp-section">Customer notes</div>
+    <div id="cpNotesList" style="margin-bottom:10px">
+      <div class="note-entry">
+        <div class="note-meta"><b>David</b><span>Apr 2024</span></div>
+        <div class="note-body">Always wants matte lam. Artwork usually very sharp — minimal prepress time. Preferred dispatch: Road.</div>
+      </div>
+      <div class="note-entry">
+        <div class="note-meta"><b>Emmanuel</b><span>Nov 2023</span></div>
+        <div class="note-body">Pantone 1805 C for the red. Confirmed by James via email — keep on file for all future orders.</div>
+      </div>
+    </div>
+    <div style="background:#fff;border:1.5px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:20px">
+      <textarea id="cpNoteText" class="cp-note-area" placeholder="Add a note about this customer…" style="border-radius:12px 12px 0 0;border:none;border-bottom:1px solid var(--line)"></textarea>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--paper)">
+        <span style="font-family:'Inter Tight',sans-serif;font-size:11px;color:var(--ink-3)">Logged as <b>David (Admin)</b></span>
+        <button onclick="addCpNote()" style="background:var(--lilac);color:#fff;border:none;border-radius:8px;padding:7px 14px;font-family:'Inter Tight',sans-serif;font-weight:700;font-size:12px;cursor:pointer">Add note</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+</section>
+
+
+<!-- Team management modal -->
+<div class="team-overlay" id="teamOverlay" onclick="if(event.target===this)closeTeamModal()">
+  <div class="team-modal">
+    <div class="team-modal-head">
+      <span class="team-modal-title">Team access</span>
+      <button class="team-modal-close" onclick="closeTeamModal()">✕</button>
+    </div>
+
+    <!-- Current members list -->
+    <div id="teamMemberList"></div>
+
+    <!-- Add new member -->
+    <div class="team-add-section">
+      <div class="team-add-title">Add team member</div>
+      <div class="team-field">
+        <label>Full name</label>
+        <input class="team-input" id="newMemberName" type="text" placeholder="e.g. Emmanuel">
+      </div>
+      <div class="team-field">
+        <label>Username</label>
+        <input class="team-input" id="newMemberUsername" type="text" placeholder="e.g. emmanuel" autocapitalize="none">
+      </div>
+      <div class="team-field">
+        <label>Email</label>
+        <input class="team-input" id="newMemberEmail" type="email" placeholder="e.g. emmanuel@example.com" autocapitalize="none">
+      </div>
+      <div class="team-field">
+        <label>Password</label>
+        <input class="team-input" id="newMemberPassword" type="password" placeholder="Min 8 characters">
+      </div>
+      <div class="team-field">
+        <label>Role</label>
+        <div class="team-role-toggle">
+          <button class="team-role-pill" id="roleAdmin" onclick="selectNewRole('admin',this)">Admin</button>
+          <button class="team-role-pill sel" id="roleStaff" onclick="selectNewRole('staff',this)">Staff</button>
+        </div>
+        <div style="font-family:'DM Sans',sans-serif;font-size:12px;color:var(--ink-3)" id="roleDescription">
+          Staff can view and action jobs in production. Cannot access frontend, customers or archive.
+        </div>
+      </div>
+      <button class="team-add-btn" onclick="addTeamMember()">Add member →</button>
+    </div>
+
+    <div style="margin-top:16px;background:#FEF9C3;border-radius:10px;padding:11px 13px;font-family:'DM Sans',sans-serif;font-size:12px;color:#713F12">
+      <b>Live build:</b> Usernames and roles are stored in your Supabase <code>profiles</code> table. Passwords are handled by Supabase Auth — no plain-text passwords stored anywhere. You manage access from here, not the Supabase dashboard.
+    </div>
+  </div>
+</div>
+
+
+</body>
+</html>
+
+
 <section class="screen" id="archive">
 <div class="app">
   <div class="app-header">
@@ -3826,7 +4882,7 @@ function exportMachship(){
 }
 
 function parseAddress(addr){
-  // Try to parse "12 Bay St, Port Melbourne VIC 3207"
+  // Try to parse ""
   if(!addr||addr==='—')return{street:'',suburb:'',state:'',postcode:''};
   var postcode='',state='',suburb='',street='';
   // Extract postcode (4 digits at end)
