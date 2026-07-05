@@ -1975,6 +1975,216 @@ td.thumb-cell{padding:6px 4px 6px 8px!important;width:44px}
 
 <script>
 
+// ── Live board functions (loadBoard, buildJobRow, buildJobCard, etc.) ──
+var PRODUCT_LABELS = {
+  rolls:'Roll labels', sheets:'Sticker sheets',
+  individual:'Individual stickers', bumper:'Bumper stickers', large:'Large format'
+};
+
+var PRODUCT_THUMBS = {
+  rolls:{emoji:'🏷️',cls:'rolls'}, sheets:{emoji:'📋',cls:'sheets'},
+  individual:{emoji:'⭐',cls:'individual'}, bumper:{emoji:'🚗',cls:'bumper'},
+  large:{emoji:'🖼️',cls:'large'}
+};
+
+function fmtDate(d){
+  if(!d)return '—';
+  var dt=new Date(d);
+  return dt.getDate()+' '+'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split(' ')[dt.getMonth()];
+}
+
+function fmtSize(w,h){
+  if(w&&h) return w+' × '+h+' mm';
+  if(w)    return w+' mm';
+  return '—';
+}
+
+function fmtDispatch(method, courier){
+  var m = method==='road'?'Road dispatch':method==='same-day'?'Same day courier':method==='pickup'?'Pickup':'—';
+  return courier ? m+' · '+courier : m;
+}
+
+function chipClass(status){
+  var map={new:'new',prepress:'prepress',awaiting:'awaiting',revision:'revision',
+    print:'print',lam:'lam',cut:'cut',qa:'qa',outsource:'outsource',
+    pickup:'pickup',pickedup:'pickedup',hold:'hold',dispatched:'dispatched',
+    cancelled:'cancelled',refunded:'refunded'};
+  return map[status]||'new';
+}
+
+function chipLabel(status){
+  return (STATUS_META[status]||[status])[0]||status;
+}
+
+function buildJobRow(job){
+  var items   = job.job_items||[];
+  var item    = items[0]||{};
+  var ptype   = item.product_type||'individual';
+  var thumb   = PRODUCT_THUMBS[ptype]||PRODUCT_THUMBS.individual;
+  var size    = fmtSize(item.width_mm, item.height_mm);
+  var qty     = item.quantity ? item.quantity.toLocaleString() : '—';
+  var prodLbl = ptype==='large'&&item.product_subtype ? item.product_subtype : (PRODUCT_LABELS[ptype]||ptype);
+  var src     = job.source||'shopify';
+  var status  = job.status||'new';
+  var due     = fmtDate(job.due_date);
+  var placed  = fmtDate(job.placed_at);
+  var dueAlert= job.due_date && new Date(job.due_date) < new Date() && status!=='dispatched'&&status!=='pickedup';
+
+    var dueSortKey = job.due_date ? job.due_date.replace(/-/g,'') : '';
+  return '<tr data-status="'+status+'" data-station="'+status+'" data-product="'+ptype+'"'
+    +' data-placed="'+placed+'" data-due="'+dueSortKey+'" data-job-id="'+job.id+'" onclick="openJobFromRow(this)">'
+    +'<td onclick="event.stopPropagation()"><input type="checkbox" class="row-check" onchange="rowCheckAuto(this)"></td>'
+    +'<td><button class="prio-btn prio-off" onclick="event.stopPropagation();togglePrio(this)" title="Set priority">⚡</button></td>'
+    +'<td class="thumb-cell"><div class="row-thumb '+thumb.cls+'" onclick="event.stopPropagation();downloadArtwork(this)">'
+    +thumb.emoji+'<span class="thumb-dl">⬇</span><span class="proof-tick">✓</span></div></td>'
+    +'<td class="tbl-id">'+job.id+(job.shopify_order_number?'<div class="shopify-ref">'+job.shopify_order_number+'</div>':'')+'</td>'
+    +'<td class="tbl-cust"><div style="font-weight:600;font-size:14px;color:var(--navy)">'+(job.business_name||'Unknown')+'</div>'
+    +(job.contact_name?'<div class="tbl-id" style="font-size:11px;margin-top:1px">'+job.contact_name+'</div>':'')+'</td>'
+    +'<td><span class="src '+src+'">'+src.charAt(0).toUpperCase()+src.slice(1)+'</span></td>'
+    +'<td>'+prodLbl+'</td>'
+    +'<td>'+size+'</td>'
+    +'<td>'+qty+'</td>'
+    +'<td>'+placed+'</td>'
+    +'<td><span class="chip '+chipClass(status)+'" data-statkey="'+status+'">'+chipLabel(status)+'</span>'
+    +'<button class="nav-stat" onclick="event.stopPropagation();navStat(this,-1)">‹</button>'
+    +'<button class="nav-stat" onclick="event.stopPropagation();navStat(this,1)">›</button></td>'
+    +'<td>'+(dueAlert?'<span style="color:var(--red)">⚡ '+due+'</span>':due)+'</td>'
+    +'<td>'+fmtDispatch(job.dispatch_method, job.courier)+'</td>'
+    +'</tr>';
+}
+
+function buildJobCard(job){
+  var items  = job.job_items||[];
+  var item   = items[0]||{};
+  var ptype  = item.product_type||'individual';
+  var thumb  = PRODUCT_THUMBS[ptype]||PRODUCT_THUMBS.individual;
+  var size   = fmtSize(item.width_mm, item.height_mm);
+  var qty    = item.quantity ? item.quantity.toLocaleString() : '—';
+  var prodLbl= ptype==='large'&&item.product_subtype?item.product_subtype:(PRODUCT_LABELS[ptype]||ptype);
+  var status = job.status||'new';
+  var src    = job.source||'shopify';
+  var due    = fmtDate(job.due_date);
+  var dueAlert = job.due_date && new Date(job.due_date) < new Date() && status!=='dispatched'&&status!=='pickedup';
+  var mat    = item.material||'';
+  var lam    = item.laminate||'';
+
+    var dueSortKeyC = job.due_date ? job.due_date.replace(/-/g,'') : '';
+  return '<div class="fcard" data-status="'+status+'" data-station="'+status+'" data-product="'+ptype+'" data-due="'+dueSortKeyC+'" data-job-id="'+job.id+'" onclick="openJobFromRow(this)">'
+    +'<div class="fc-head">'
+    +'<div class="fc-thumb" style="background:linear-gradient(135deg,#6B5CE7,#2C2545)">'+thumb.emoji+'</div>'
+    +'<div class="fc-headtext">'
+    +'<div style="display:flex;gap:6px;align-items:center;margin-bottom:3px;flex-wrap:wrap">'
+    +'<span class="job-id-label">'+job.id+'</span>'
+    +'<span class="chip '+chipClass(status)+'" style="font-size:10px">'+chipLabel(status)+'</span>'
+    +'<span class="src '+src+'">'+src.charAt(0).toUpperCase()+src.slice(1)+'</span>'
+    +'</div>'
+    +'<div class="fc-make">'+qty+' · '+prodLbl+'</div>'
+    +'<div class="fc-cust">'+(job.business_name||'Unknown')+'</div>'
+    +'</div></div>'
+    +'<div class="fc-sg">'
+    +'<div><div class="k">Size</div><div class="v">'+size+'</div></div>'
+    +(mat?'<div><div class="k">Material</div><div class="v">'+mat+'</div></div>':'')
+    +(lam?'<div><div class="k">Laminate</div><div class="v">'+lam+'</div></div>':'')
+    +'</div>'
+    +'<div class="fc-foot">'
+    +'<span class="fc-due'+(dueAlert?' late':'')+'">'+( dueAlert?'⚡ Overdue · ':'📅 Due ')+due+'</span>'
+    +'<span class="fc-dispatch">'+fmtDispatch(job.dispatch_method, job.courier)+'</span>'
+    +'</div></div>';
+}
+
+async function loadBoard(){
+  db = getDB(); if(!db) return;
+  var {data:jobs, error} = await db
+    .from('active_jobs')
+    .select('*, job_items(*)')
+    .order('due_date', {ascending:true});
+
+  if(error){console.error('loadBoard error:', error); return;}
+
+  // ── Populate JOB_DATA for job detail lookups ─────────────────────
+  jobs.forEach(function(job){
+    var item = (job.job_items||[])[0]||{};
+    JOB_DATA[job.id] = {
+      id: job.id, shopify: job.shopify_order_number||null, paid: job.paid,
+      src: job.source, srcLabel: (job.source||'').charAt(0).toUpperCase()+(job.source||'').slice(1),
+      name: job.business_name||'Unknown', contact: job.contact_name||'—',
+      email: job.customer_email||'', phone: job.customer_phone||'',
+      address: job.address_full||'', addr: job.address_full||'',
+      product: PRODUCT_LABELS[item.product_type]||item.product_type||'',
+      qty: item.quantity ? item.quantity.toLocaleString() : '—',
+      shape: item.shape||'', size: fmtSize(item.width_mm, item.height_mm),
+      material: item.material||'', lam: item.laminate||'',
+      dispatch: fmtDispatch(job.dispatch_method, job.courier), courier: job.courier||'',
+      placed: fmtDate(job.placed_at), due: fmtDate(job.due_date),
+      dueAlert: job.due_date && new Date(job.due_date)<new Date(),
+      artFile: job.artwork_filename||'artwork.pdf', artSize: job.artwork_size_bytes
+        ? Math.round(job.artwork_size_bytes/1024/1024*10)/10+' MB' : '',
+      status: job.status, statusLabel: chipLabel(job.status),
+      shopify_order_group: job.shopify_order_group||null,
+      parent_job_id: job.parent_job_id||null,
+      productKey: item.product_type||'individual',
+      outsourceSupplier: job.outsource_supplier||'TBC',
+      outsourceDest: job.outsource_dest||'Our factory',
+      invoice_url:   job.invoice_url||null,
+      invoice_filename: job.invoice_filename||null,
+      thread_url:    job.thread_url||null,
+      cancellationReason: job.cancellation_reason||null,
+      cancelledAt:   job.cancelled_at?fmtDate(job.cancelled_at):null,
+      refundedAmount: job.refunded_amount||null,
+      refundedAt:    job.refunded_at?fmtDate(job.refunded_at):null
+    };
+  });
+
+  // ── Render tables ─────────────────────────────────────────────────
+  var fTbody = document.querySelector('#fTable tbody');
+  var pTbody = document.querySelector('#pTable tbody');
+  if(fTbody){
+    fTbody.innerHTML = jobs.length ? jobs.map(buildJobRow).join('') : '<tr><td colspan="13" class="empty-board-cell">No active jobs</td></tr>';
+  }
+  if(pTbody){
+    pTbody.innerHTML = jobs.length ? jobs.map(buildJobRow).join('') : '<tr><td colspan="13" class="empty-board-cell">No active jobs</td></tr>';
+  }
+
+  // ── Render card views ─────────────────────────────────────────────
+  var fCards = document.getElementById('fCardView');
+  var pCards = document.getElementById('pCardView');
+  var cardHtml = jobs.length ? jobs.map(buildJobCard).join('') : '<p class="empty-board-cell">No active jobs</p>';
+  if(fCards) fCards.innerHTML = cardHtml;
+  if(pCards) pCards.innerHTML = cardHtml;
+
+  // Re-apply filters and scorecard
+  applyFrontFilters();
+  applyProdFilters();
+  updateScorecard();
+  fetchScorecard();
+  refreshAllThumbs();
+}
+
+function subscribeRealtime(){
+  db = getDB(); if(!db) return;
+  db.channel('board-changes')
+    .on('postgres_changes', {event:'INSERT', schema:'public', table:'jobs'}, function(payload){
+      loadBoard(); showToast('New job on the board');
+    })
+    .on('postgres_changes', {event:'UPDATE', schema:'public', table:'jobs'}, function(payload){
+      // Update just the changed row without full reload
+      var job = payload.new;
+      if(!job||!job.id) return;
+      document.querySelectorAll('#fTable tbody tr, #pTable tbody tr').forEach(function(row){
+        var idEl=row.querySelector('.tbl-id');
+        if(!idEl||idEl.textContent.trim()!==job.id) return;
+        row.dataset.status=job.status;
+        row.dataset.station=job.status;
+        var chip=row.querySelector('.chip');
+        if(chip){chip.textContent=chipLabel(job.status);chip.className='chip '+chipClass(job.status);chip.dataset.statkey=job.status;}
+      });
+      updateScorecard();
+    })
+    .subscribe();
+}
+
+
+
 // Navigation
 // ── Role management ───────────────────────────────────────────────────
 var CURRENT_ROLE = 'admin'; // 'admin' | 'staff'
