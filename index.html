@@ -1255,7 +1255,7 @@ tr.prio-on:hover td,tr[data-prio="1"]:hover td{background:#FFE080!important}
               <th style="width:42px"></th>
               <th>Order #</th><th>Customer</th><th>Source</th>
               <th>Product</th><th>Size</th><th>Qty</th>
-              <th>Placed</th><th>Status</th><th>Due date</th><th>Dispatch</th>
+              <th>Placed</th><th>Status</th><th>Dispatch</th>
             </tr>
           </thead>
           <tbody>
@@ -2069,7 +2069,6 @@ function buildJobRow(job){
     +'<option value="hold"'+(status==="hold"?' selected':'')+'>On Hold</option>'
     +'<option value="cancelled"'+(status==="cancelled"?' selected':'')+'>Cancelled</option>'
     +'</select></td>'
-    +'<td>'+(dueAlert?'<span style="color:var(--red)">⚡ '+due+'</span>':due)+'</td>'
     +'<td>'+fmtDispatch(job.dispatch_method, job.courier)+'</td>'
     +'</tr>';
 }
@@ -2108,7 +2107,6 @@ function buildJobCard(job){
     +(lam?'<div><div class="k">Laminate</div><div class="v">'+lam+'</div></div>':'')
     +'</div>'
     +'<div class="fc-foot">'
-    +'<span class="fc-due'+(dueAlert?' late':'')+'">'+( dueAlert?'⚡ Overdue · ':'📅 Due ')+due+'</span>'
     +'<span class="fc-dispatch">'+fmtDispatch(job.dispatch_method, job.courier)+'</span>'
     +'</div></div>';
 }
@@ -2401,24 +2399,68 @@ function formatDueLabel(dateStr){
   return DAYS[dt.getDay()]+' · '+d+' '+MONTHS[m]+' '+y;
 }
 function insertDateDividers(tbody, visibleRows, colspan){
-  colspan=colspan||13;
-  var lastDue=null;
-  var groups={};
-  visibleRows.forEach(function(r){groups[r.dataset.due]=(groups[r.dataset.due]||0)+1;});
+  colspan = colspan || 13;
+  Array.from(tbody.querySelectorAll('.date-div')).forEach(function(d){ d.remove(); });
+
+  var today    = new Date(); today.setHours(0,0,0,0);
+  var tomorrow = new Date(today); tomorrow.setDate(today.getDate()+1);
+
+  // Count jobs per due key
+  var groups = {};
   visibleRows.forEach(function(r){
-    var due=r.dataset.due;
-    if(due!==lastDue){
-      lastDue=due;
-      var div=document.createElement('tr');
-      div.className='date-div';
-      var label=formatDueLabel(due);
-      var count=groups[due];
-      var isToday=(due==='20240612'); // Wed 12 Jun = prototype "today"
-      var isTomorrow=(due==='20240613');
-      var badge=isToday?' <span style="background:var(--lilac);color:#fff;font-size:9px;padding:2px 7px;border-radius:999px;font-weight:800;margin-left:4px">TODAY</span>':isTomorrow?' <span style="background:var(--lilac-soft);color:var(--lilac);font-size:9px;padding:2px 7px;border-radius:999px;font-weight:800;margin-left:4px">TOMORROW</span>':'';
-      div.innerHTML='<td colspan="'+colspan+'"><div class="div-label">'+label+badge+'</div></td>';
-      tbody.insertBefore(div,r);
+    var k = r.dataset.due || 'none';
+    groups[k] = (groups[k]||0) + 1;
+  });
+
+  var DFULL = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  var MFULL = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+  var lastDue = null;
+  visibleRows.forEach(function(r){
+    var due = r.dataset.due || '';
+    if(due === lastDue) return;
+    lastDue = due;
+
+    var dueDt = null, isToday=false, isTomorrow=false, isOverdue=false;
+    if(due && due.length >= 8){
+      var yy=parseInt(due.substr(0,4)), mo=parseInt(due.substr(4,2))-1, dd=parseInt(due.substr(6,2));
+      dueDt = new Date(yy, mo, dd);
+      isToday    = (dueDt.getTime() === today.getTime());
+      isTomorrow = (dueDt.getTime() === tomorrow.getTime());
+      isOverdue  = (dueDt < today);
     }
+
+    var count = groups[due] || 0;
+
+    // Format: "Fri · 26 Jun 2026"
+    var dateLabel = 'No due date';
+    if(dueDt){
+      dateLabel = DFULL[dueDt.getDay()]+' · '+dueDt.getDate()+' '+MFULL[dueDt.getMonth()]+' '+dueDt.getFullYear();
+    }
+
+    // Colours
+    var bg      = isToday ? '#1E1B4B' : isOverdue ? '#7F1D1D' : 'var(--navy)';
+    var subCol  = isToday ? '#C7D2FE' : isOverdue ? '#FCA5A5' : 'rgba(255,255,255,.55)';
+    var pill    = '';
+    if(isToday)    pill = '<span style="background:#818CF8;color:#fff;font-size:10px;font-weight:800;padding:2px 9px;border-radius:999px;margin-left:10px;letter-spacing:.04em">TODAY</span>';
+    if(isTomorrow) pill = '<span style="background:#7C3AED;color:#fff;font-size:10px;font-weight:800;padding:2px 9px;border-radius:999px;margin-left:10px;letter-spacing:.04em">TOMORROW</span>';
+    if(isOverdue)  pill = '<span style="background:#DC2626;color:#fff;font-size:10px;font-weight:800;padding:2px 9px;border-radius:999px;margin-left:10px;letter-spacing:.04em">OVERDUE</span>';
+
+    var sub = count + (count===1?' job':' jobs');
+    if(isToday)    sub += ' · get it done!';
+    else if(isOverdue) sub += ' · needs attention';
+
+    var div = document.createElement('tr');
+    div.className = 'date-div';
+    div.innerHTML = '<td colspan="'+colspan+'" style="padding:0;border:none">'
+      +'<div style="background:'+bg+';border-radius:12px;padding:13px 18px;margin:14px 0 3px;display:flex;align-items:center;justify-content:space-between">'
+      +'<div>'
+      +'<div style="font-family:\'Inter Tight\',sans-serif;font-size:16px;font-weight:800;color:#fff;display:flex;align-items:center">'+dateLabel+pill+'</div>'
+      +'<div style="font-family:\'DM Sans\',sans-serif;font-size:12px;color:'+subCol+';margin-top:2px">'+sub+'</div>'
+      +'</div>'
+      +'</div>'
+      +'</td>';
+    tbody.insertBefore(div, r);
   });
 }
 
