@@ -1493,27 +1493,22 @@ tr.prio-on td,tr[data-prio="1"] td{background:#FFF3CD!important}
 
     <div class="jd-status-wrap">
       <span class="jd-status-label">Status</span>
-      <span class="jd-status-badge prepress" id="jdStatusBadge" onclick="toggleStatusPicker()" title="Tap to change status">Prepress</span>
-    </div>
-
-    <!-- Status picker — opens when badge is tapped -->
-    <div class="jd-status-picker" id="jdStatusPicker">
-      <div class="jd-status-picker-label">Select new status</div>
-      <div class="jd-status-pills">
-        <button class="jd-status-pill new"       onclick="changeJobStatus('new')">New</button>
-        <button class="jd-status-pill prepress"  onclick="changeJobStatus('prepress')">Prepress</button>
-        <button class="jd-status-pill awaiting"  onclick="changeJobStatus('awaiting')">Awaiting Approval</button>
-        <button class="jd-status-pill revision"  onclick="changeJobStatus('revision')">Artwork Revision</button>
-        <button class="jd-status-pill print"     onclick="changeJobStatus('print')">Print</button>
-        <button class="jd-status-pill lam"       onclick="changeJobStatus('lam')">Laminate</button>
-        <button class="jd-status-pill cut"       onclick="changeJobStatus('cut')">Cut</button>
-        <button class="jd-status-pill qa"        onclick="changeJobStatus('qa')">QA &amp; Packing</button>
-        <button class="jd-status-pill outsource" onclick="changeJobStatus('outsource')">Outsource</button>
-        <button class="jd-status-pill pickup"    onclick="changeJobStatus('pickup')">Awaiting Pickup</button>
-        <button class="jd-status-pill pickedup"  onclick="changeJobStatus('pickedup')">Picked Up</button>
-        <button class="jd-status-pill hold"      onclick="changeJobStatus('hold')">On Hold</button>
-        <button class="jd-status-pill dispatched" onclick="changeJobStatus('dispatched')">Dispatched</button>
-      </div>
+      <select class="stat-pill-select jd-stat-select new" id="jdStatusBadge" onchange="changeJobStatus(this.value)">
+        <option value="new">New</option>
+        <option value="prepress">Prepress</option>
+        <option value="awaiting">Awaiting Approval</option>
+        <option value="revision">Artwork Revision</option>
+        <option value="print">Print</option>
+        <option value="lam">Laminate</option>
+        <option value="cut">Cut</option>
+        <option value="qa">QA &amp; Packing</option>
+        <option value="outsource">Outsource</option>
+        <option value="pickup">Awaiting Pickup</option>
+        <option value="pickedup">Picked Up</option>
+        <option value="hold">On Hold</option>
+        <option value="dispatched">Dispatched</option>
+        <option value="cancelled">Cancelled</option>
+      </select>
     </div>
 
     <!-- JOB DETAIL TABS -->
@@ -3643,8 +3638,6 @@ function populateJobDetail(jobId){
   // Highlight current status in picker
   updateStatusPillHighlight(d.status);
   // Close picker on job open
-  var picker=document.getElementById('jdStatusPicker');
-  if(picker)picker.classList.remove('open');
   // Show invoice / thread references
   // Merge stored URLs from Supabase into JOB_INVOICES for display
   if(d && (d.invoice_url || d.thread_url)){
@@ -4330,10 +4323,6 @@ function logInternalNote(text){
 
 
 // ── Status picker toggle ─────────────────────────────────────────────
-function toggleStatusPicker(){
-  var picker=document.getElementById('jdStatusPicker');
-  if(picker)picker.classList.toggle('open');
-}
 
 function updateStatusPillHighlight(currentStatus){
   document.querySelectorAll('.jd-status-pill').forEach(function(pill){
