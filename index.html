@@ -1070,6 +1070,12 @@ td.thumb-cell{padding:6px 4px 6px 8px!important;width:44px}
 .jd-dropdown-btn{background:var(--paper);border:1.5px solid var(--line);border-radius:12px;padding:10px 14px;font-family:'Inter Tight',sans-serif;font-weight:700;font-size:12.5px;color:var(--ink-2);cursor:pointer;display:flex;align-items:center;justify-content:space-between;width:100%;text-align:left}
 .jd-dropdown-panel{display:none;background:#fff;border:1.5px solid var(--line);border-top:none;border-radius:0 0 12px 12px;padding:14px}
 
+
+/* Priority highlight */
+tr.prio-on td,tr[data-prio="1"] td{background:#FFF3CD!important}
+tr.prio-on:hover td,tr[data-prio="1"]:hover td{background:#FFE080!important}
+.fcard.prio-on,.fcard[data-prio="1"]{background:#FFF3CD!important;border-color:#F0C040!important}
+
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -3642,19 +3648,15 @@ function populateJobDetail(jobId){
   // Customer details
   var custView=document.getElementById('jdCustView');
   if(custView){
-    var cv='<div class="jd-cust-inner">'
-      +(d.contact&&d.contact!=='—'?'<span class="jd-cust-name">'+d.contact+'</span>':'')
-      +'<span class="jd-cust-email">'+d.email+'</span>'
-      +'<span class="jd-cust-phone">'+d.phone+'</span>'
-      +(d.orderNote?'<span class="jd-cust-tag">'+d.orderNote+'</span>':'')
-      +'</div>'
-      +'<div class="jd-cust-addr">'
-      +'<span class="jd-cust-addr-text">📍 '+d.address+'</span>'
-      +'<button onclick="toggleCustEdit()" id="jdCustEditBtn" class="admin-only jd-cust-edit-btn">Edit</button>'
-      +'</div>';
+    var cv='';
+    if(d.contact&&d.contact!=='—') cv+='<span class="jd-cust-contact-name">'+d.contact+'</span>';
+    if(d.email)  cv+='<span class="jd-cust-contact-detail">'+d.email+'</span>';
+    if(d.phone)  cv+='<span class="jd-cust-contact-detail">'+d.phone+'</span>';
     custView.innerHTML=cv;
     applyRoleUI();
   }
+  var addrEl=document.getElementById('jdAddr');
+  if(addrEl) addrEl.textContent=d.addr||d.address||'';
 
   // Sibling / split order note
   var partNote=document.getElementById('jdPartNote');
@@ -3668,7 +3670,7 @@ function populateJobDetail(jobId){
   set('sv-product',d.product); set('sv-qty',d.qty); set('sv-shape',d.shape);
   set('sv-size',d.size); set('sv-material',d.material); set('sv-lam',d.lam);
   var dispVal=d.dispatch+(d.courier?(' · '+d.courier):'');
-  set('sv-dispatch',dispVal); set('sv-addr',d.addr); set('sv-placed',d.placed);
+  set('sv-dispatch',dispVal); set('sv-delivery',d.addr||d.address||''); set('sv-placed',d.placed);
   var dueEl=document.getElementById('sv-due');
   if(dueEl)dueEl.innerHTML=d.dueAlert?'<span style="color:#D92B4B">⚡ '+d.due+'</span>':d.due;
 
@@ -3681,12 +3683,16 @@ function populateJobDetail(jobId){
   // Artwork
   var artFile=document.getElementById('jdArtFile');
   var artSize=document.getElementById('jdArtSize');
-  if(artFile)artFile.textContent=d.artFile;
-  if(artSize)artSize.textContent=d.artSize+' · PDF · auto-linked at checkout';
+  var artDownload=document.getElementById('jdArtDownload');
+  var hasArt=!!(d.artwork_url||d.artUrl);
+  var artFn=d.artwork_filename||d.artFile||(hasArt?(d.artwork_url||d.artUrl).split('/').pop().split('?')[0]:'');
+  if(artFile)artFile.textContent=artFn||'No artwork attached';
+  if(artSize)artSize.textContent=hasArt?'Tap Download to open':'';
+  if(artDownload){artDownload.href=d.artwork_url||d.artUrl||'#';artDownload.style.display=hasArt?'block':'none';}
 
   // Status badge
   var badge=document.getElementById('jdStatusBadge');
-  if(badge){badge.textContent=d.statusLabel;badge.className='jd-status-badge '+d.status;}
+  if(badge){if(badge.tagName==='SELECT'){badge.value=d.status;badge.className='stat-pill-select jd-stat-select '+d.status;}else{badge.textContent=d.statusLabel;badge.className='jd-status-badge '+d.status;}}
 
   // ── Cancellation / refund banner ──────────────────────────────────
   var cancelBanner=document.getElementById('cancelBanner');
