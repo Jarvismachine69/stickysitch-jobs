@@ -1076,6 +1076,23 @@ tr.prio-on td,tr[data-prio="1"] td{background:#FFF3CD!important}
 tr.prio-on:hover td,tr[data-prio="1"]:hover td{background:#FFE080!important}
 .fcard.prio-on,.fcard[data-prio="1"]{background:#FFF3CD!important;border-color:#F0C040!important}
 
+
+select.stat-pill-select.new{background-color:#EDE9FD!important;color:#4B3ECC!important}
+select.stat-pill-select.prepress{background-color:#EDE9FD!important;color:#4B3ECC!important}
+select.stat-pill-select.awaiting{background-color:#FEF3C7!important;color:#92400E!important}
+select.stat-pill-select.revision{background-color:#FEE2E2!important;color:#991B1B!important}
+select.stat-pill-select.print{background-color:#DCFCE7!important;color:#14532D!important}
+select.stat-pill-select.lam{background-color:#DCFCE7!important;color:#14532D!important}
+select.stat-pill-select.cut{background-color:#DCFCE7!important;color:#14532D!important}
+select.stat-pill-select.qa{background-color:#DCFCE7!important;color:#14532D!important}
+select.stat-pill-select.dispatched{background-color:#D1FAE5!important;color:#064E3B!important}
+select.stat-pill-select.outsource{background-color:#F3E8FF!important;color:#6B21A8!important}
+select.stat-pill-select.pickup{background-color:#DCFCE7!important;color:#14532D!important}
+select.stat-pill-select.pickedup{background-color:#D1FAE5!important;color:#064E3B!important}
+select.stat-pill-select.hold{background-color:#FEF3C7!important;color:#92400E!important}
+select.stat-pill-select.cancelled{background-color:#FEE2E2!important;color:#7F1D1D!important}
+select.stat-pill-select.refunded{background-color:#FEF3C7!important;color:#78350F!important}
+
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -1140,503 +1157,7 @@ tr.prio-on:hover td,tr[data-prio="1"]:hover td{background:#FFE080!important}
       <!-- This week: jobs -->
       <div style="background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:16px 16px 14px">
         <div id="scJobsWeekCount" style="font-family:'Inter Tight',sans-serif;font-size:32px;font-weight:800;line-height:1;color:var(--lilac);margin-bottom:6px">—</div>
-        <div style="font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-bottom:7px">Jobs this week</div>
-        <div style="display:flex;align-items:center;gap:5px" id="scJobsWeekTrend">
-          <span style="font-family:'DM Sans',sans-serif;font-size:11px;color:var(--ink-3)">Loading…</span>
-        </div>
-      </div>
-
-      <!-- This week: revenue -->
-      <div style="background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:16px 16px 14px">
-        <div id="scRevWeekCount" style="font-family:'Inter Tight',sans-serif;font-size:32px;font-weight:800;line-height:1;color:var(--green);margin-bottom:6px">—</div>
-        <div style="font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-bottom:7px">Revenue this week</div>
-        <div style="display:flex;align-items:center;gap:5px" id="scRevWeekTrend">
-          <span style="font-family:'DM Sans',sans-serif;font-size:11px;color:var(--ink-3)">Loading…</span>
-        </div>
-      </div>
-
-      <!-- This month: jobs tally -->
-      <div style="background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:16px 16px 14px">
-        <div id="scJobsMonthCount" style="font-family:'Inter Tight',sans-serif;font-size:32px;font-weight:800;line-height:1;color:#C8970A;margin-bottom:6px">—</div>
-        <div style="font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-bottom:7px">Jobs this month</div>
-        <div style="display:flex;align-items:center;gap:5px" id="scJobsMonthTrend">
-          <span style="font-family:'DM Sans',sans-serif;font-size:11px;color:var(--ink-3)">Loading…</span>
-        </div>
-      </div>
-
-      <!-- This month: revenue -->
-      <div style="background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:16px 16px 14px">
-        <div id="scRevMonthCount" style="font-family:'Inter Tight',sans-serif;font-size:32px;font-weight:800;line-height:1;color:#4433CC;margin-bottom:6px">—</div>
-        <div style="font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-bottom:7px">Revenue this month</div>
-        <div style="display:flex;align-items:center;gap:5px" id="scRevMonthTrend">
-          <span style="font-family:'DM Sans',sans-serif;font-size:11px;color:var(--ink-3)">Loading…</span>
-        </div>
-      </div>
-
-    </div>
-
-
-    <div class="controls">
-      <input class="search" id="fSearch" placeholder="Search order #, customer, email…" oninput="applyFrontFilters()">
-      <select class="fsel grow" id="fStatus" onchange="applyFrontFilters()">
-        <option value="active" selected>Active jobs</option>
-        <option value="">All statuses</option>
-        <option value="new">New</option>
-        <option value="prepress">Prepress</option>
-        <option value="awaiting">Awaiting Approval</option>
-        <option value="revision">Artwork Revision</option>
-        <option value="print">Print</option>
-        <option value="lam">Laminate</option>
-        <option value="cut">Cut</option>
-        <option value="qa">QA & Packing</option>
-        <option value="outsource">Outsource</option>
-        <option value="pickup">Awaiting Pickup</option>
-        <option value="pickedup">Picked Up</option>
-        <option value="hold">On Hold</option>
-        <option value="dispatched">Dispatched</option>
-        <option value="cancelled">Cancelled</option>
-        <option value="refunded">Refunded</option>
-      </select>
-      <select class="fsel grow" id="fProduct" onchange="applyFrontFilters()">
-        <option value="">All products</option>
-        <option value="rolls">Labels on rolls</option>
-        <option value="sheets">Sticker sheets</option>
-        <option value="individual">Individual stickers</option>
-        <option value="bumper">Bumper stickers</option>
-        <option value="large">Large format</option>
-      </select>
-      <select class="fsel" id="fSort" onchange="applyFrontFilters()">
-        <option value="grouped" selected>Group by due date</option>
-        <option value="due">Due: soonest</option>
-        <option value="product">Sort by product</option>
-        <option value="newest">Newest first</option>
-        <option value="oldest">Oldest first</option>
-        <option value="priority">Priority first</option>
-      </select>
-      <div class="layoutog">
-        <button class="active" id="fTblBtn" onclick="setFrontLayout('table',this)">📋 Table</button>
-        <button id="fCardBtn" onclick="setFrontLayout('cards',this)">📱 Cards</button>
-      </div>
-      <button class="icon-btn" onclick="go('archive')">Archive →</button>
-      <button class="newjob-btn" onclick="openJobForm()">+ New job</button>
-    </div>
-
-    <!-- FRONTEND TABLE -->
-    <div id="fTableView" class="auto-table">
-      <div class="bulk-bar" id="bulk-fTable">
-        <span class="bulk-count" id="bc-fTable">0 selected</span>
-        <select class="bulk-sel" id="bs-fTable">
-          <option value="">Change status to…</option>
-          <option value="new">New</option>
-          <option value="prepress">Prepress</option>
-          <option value="awaiting">Awaiting Approval</option>
-          <option value="revision">Artwork Revision</option>
-          <option value="print">Print</option>
-          <option value="lam">Laminate</option>
-          <option value="cut">Cut</option>
-          <option value="qa">QA & Packing</option>
-          <option value="outsource">Outsource</option>
-          <option value="pickup">Awaiting Pickup</option>
-          <option value="pickedup">Picked Up</option>
-          <option value="hold">On Hold</option>
-          <option value="dispatched">Dispatched</option>
-        </select>
-        <button class="bulk-apply" onclick="applyBulk('fTable')">Apply to selected</button>
-        <button onclick="exportSelectedMachship('fTable')" style="background:var(--green-soft);border:1.5px solid #00C27A;color:#007A4A;border-radius:8px;padding:8px 13px;font-family:'Inter Tight',sans-serif;font-size:12.5px;font-weight:700;cursor:pointer;white-space:nowrap">⬇ Machship</button>
-        <button onclick="bulkDownloadArtwork('fTable')" style="background:#EDE9FE;border:1.5px solid #7C3AED;color:#5B21B6;border-radius:8px;padding:8px 13px;font-family:'Inter Tight',sans-serif;font-size:12.5px;font-weight:700;cursor:pointer;white-space:nowrap">⬇ Artwork</button>
-        <button class="bulk-cancel" onclick="clearBulk('fTable')">Clear selection</button>
-      </div>
-      <div class="tbl-wrap">
-        <table id="fTable">
-          <thead>
-            <tr>
-              <th style="width:32px"><input type="checkbox" id="sa-fTable" onchange="selectAll(this,'fTable')"></th>
-              <th style="width:32px" title="Priority">⚡</th>
-              <th style="width:42px"></th>
-              <th>Order #</th><th>Customer</th><th>Source</th>
-              <th>Product</th><th>Size</th><th>Qty</th>
-              <th>Placed</th><th>Status</th><th>Dispatch</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td colspan="14" style="text-align:center;padding:48px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink-3)">
-              <div style="margin-bottom:8px;font-size:24px">⏳</div>
-              Connecting to board…
-            </td></tr>
-          </tbody>
-        </table>
-      </div>
-      </div>
-
-    <!-- FRONTEND CARDS (mobile) -->
-        <div id="fCardView" class="fcard-grid" style="display:none"></div>
-</section>
-
-<!-- ====== PRODUCTION ====== -->
-<section class="screen" id="production">
-<div class="app">
-  <div class="app-header">
-    <div class="brand">Sticky<span>Sitch</span></div>
-    <div class="header-right">
-      <span class="role staff">Staff</span>
-      <div class="avatar-wrap">
-      <div class="avatar" id="avatarBtn" onclick="toggleAvatarMenu(this)" title="Account">D</div>
-      <div class="avatar-menu" id="avatarMenu">
-        <div class="avatar-menu-head">
-          <div class="avatar-menu-name" id="menuName">David Pham</div>
-          <div class="avatar-menu-role" id="menuRole">Admin · Full access</div>
-          <div class="avatar-menu-email" id="menuEmail">david@stickysitch.com.au</div>
-        </div>
-        <button class="avatar-menu-item" onclick="toggleAvatarMenu();alert('Settings coming in Phase 2.')">⚙ Settings</button>
-        <div class="avatar-menu-divider"></div>
-        <button class="avatar-menu-item admin-only" onclick="openTeamModal();document.querySelectorAll('.avatar-menu').forEach(function(m){m.classList.remove('show')})" style="color:var(--lilac);border-color:var(--lilac-line)">👥 Manage team</button>
-        <button class="avatar-menu-item danger" onclick="doLogout()">→ Sign out</button>
-      </div>
-    </div>
-    </div>
-  </div>
-  <div class="app-body">
-    <div class="mainnav">
-      <button class="admin-nav-btn" onclick="go('frontend')">Frontend</button>
-      <button class="active">Production</button>
-      <button class="admin-nav-btn" onclick="go('customers')">Customers</button>
-    </div>
-
-    <!-- Production scorecard -->
-    <div class="scorecard-grid" id="scorecardGrid">
-      <div class="sc-card" data-sc="all" onclick="filterByCard('',this)">
-        <div class="sc-card-count" id="sc-all">—</div>
-        <div class="sc-card-label">All active</div>
-      </div>
-      <div class="sc-card" data-sc="new" onclick="filterByCard('new',this)">
-        <div class="sc-card-count" id="sc-new">0</div>
-        <div class="sc-card-label"><span class="sc-card-dot" style="background:#7C3AED"></span>New</div>
-      </div>
-      <div class="sc-card" data-sc="prepress" onclick="filterByCard('prepress',this)">
-        <div class="sc-card-count" id="sc-prepress">0</div>
-        <div class="sc-card-label"><span class="sc-card-dot" style="background:#2563EB"></span>Prepress</div>
-      </div>
-      <div class="sc-card" data-sc="awaiting" onclick="filterByCard('awaiting',this)">
-        <div class="sc-card-count" id="sc-awaiting">0</div>
-        <div class="sc-card-label"><span class="sc-card-dot" style="background:#D97706"></span>Awaiting</div>
-      </div>
-      <div class="sc-card" data-sc="revision" onclick="filterByCard('revision',this)">
-        <div class="sc-card-count" id="sc-revision">0</div>
-        <div class="sc-card-label"><span class="sc-card-dot" style="background:#DC2626"></span>Revision</div>
-      </div>
-      <div class="sc-card" data-sc="print" onclick="filterByCard('print',this)">
-        <div class="sc-card-count" id="sc-print">0</div>
-        <div class="sc-card-label"><span class="sc-card-dot" style="background:#16A34A"></span>Print</div>
-      </div>
-      <div class="sc-card" data-sc="lam" onclick="filterByCard('lam',this)">
-        <div class="sc-card-count" id="sc-lam">0</div>
-        <div class="sc-card-label"><span class="sc-card-dot" style="background:#0D9488"></span>Laminate</div>
-      </div>
-      <div class="sc-card" data-sc="cut" onclick="filterByCard('cut',this)">
-        <div class="sc-card-count" id="sc-cut">0</div>
-        <div class="sc-card-label"><span class="sc-card-dot" style="background:#EA580C"></span>Cut</div>
-      </div>
-      <div class="sc-card" data-sc="qa" onclick="filterByCard('qa',this)">
-        <div class="sc-card-count" id="sc-qa">0</div>
-        <div class="sc-card-label"><span class="sc-card-dot" style="background:#7E22CE"></span>QA &amp; Pack</div>
-      </div>
-      <div class="sc-card" data-sc="outsource" onclick="filterByCard('outsource',this)">
-        <div class="sc-card-count" id="sc-outsource">0</div>
-        <div class="sc-card-label"><span class="sc-card-dot" style="background:#475569"></span>Outsource</div>
-      </div>
-      <div class="sc-card" data-sc="pickup" onclick="filterByCard('pickup',this)">
-        <div class="sc-card-count" id="sc-pickup">0</div>
-        <div class="sc-card-label"><span class="sc-card-dot" style="background:#0891B2"></span>Awaiting Pickup</div>
-      </div>
-      <div class="sc-card" data-sc="pickedup" onclick="filterByCard('pickedup',this)">
-        <div class="sc-card-count" id="sc-pickedup">0</div>
-        <div class="sc-card-label"><span class="sc-card-dot" style="background:#0369A1"></span>Picked Up</div>
-      </div>
-    </div>
-    <div class="controls">
-      <input class="search" id="pSearch" placeholder="Search order #, customer…" oninput="applyProdFilters()">
-      <select class="fsel grow" id="pProduct" onchange="applyProdFilters()">
-        <option value="">All products</option>
-        <option value="rolls">Labels on rolls</option>
-        <option value="sheets">Sticker sheets</option>
-        <option value="individual">Individual stickers</option>
-        <option value="bumper">Bumper stickers</option>
-        <option value="large">Large format</option>
-      </select>
-      <select class="fsel grow" id="pStation" onchange="applyProdFilters()">
-        <option value="active" selected>Active jobs</option>
-        <option value="">All statuses</option>
-        <option value="new">New</option>
-        <option value="prepress">Prepress</option>
-        <option value="awaiting">Awaiting Approval</option>
-        <option value="revision">Artwork Revision</option>
-        <option value="print">Print</option>
-        <option value="lam">Laminate</option>
-        <option value="cut">Cut</option>
-        <option value="qa">QA & Packing</option>
-        <option value="outsource">Outsource</option>
-        <option value="pickup">Awaiting Pickup</option>
-        <option value="pickedup">Picked Up</option>
-        <option value="hold">On Hold</option>
-        <option value="dispatched">Dispatched</option>
-        <option value="cancelled">Cancelled</option>
-        <option value="refunded">Refunded</option>
-      </select>
-      <select class="fsel" id="pSort" onchange="applyProdFilters()">
-        <option value="due" selected>Due: soonest</option>
-        <option value="product">Sort by product</option>
-        <option value="newest">Newest first</option>
-        <option value="oldest">Oldest first</option>
-        <option value="priority">Priority first</option>
-        <option value="grouped">Group by due date</option>
-      </select>
-      <div class="layoutog">
-        <button class="active" id="pTblBtn" onclick="setProdLayout('table',this)">📋 Table</button>
-        <button id="pCardBtn" onclick="setProdLayout('cards',this)">📱 Cards</button>
-      </div>
-    </div>
-    <div id="pBatchBanner" style="display:none;background:var(--lilac-soft);border:1px solid var(--lilac-line);border-radius:10px;padding:10px 13px;font-size:12.5px;color:var(--navy-soft);margin-bottom:11px">⊞ Gang these into one print run to save material and setup.</div>
-
-    <!-- PRODUCTION TABLE -->
-    <div id="pTableView" class="auto-table">
-      <div class="bulk-bar" id="bulk-pTable">
-        <span class="bulk-count" id="bc-pTable">0 selected</span>
-        <select class="bulk-sel" id="bs-pTable">
-          <option value="">Change status to…</option>
-          <option value="new">New</option>
-          <option value="prepress">Prepress</option>
-          <option value="awaiting">Awaiting Approval</option>
-          <option value="revision">Artwork Revision</option>
-          <option value="print">Print</option>
-          <option value="lam">Laminate</option>
-          <option value="cut">Cut</option>
-          <option value="qa">QA & Packing</option>
-          <option value="outsource">Outsource</option>
-          <option value="pickup">Awaiting Pickup</option>
-          <option value="pickedup">Picked Up</option>
-          <option value="hold">On Hold</option>
-          <option value="dispatched">Dispatched</option>
-        </select>
-        <button class="bulk-apply" onclick="applyBulk('pTable')">Apply to selected</button>
-        <button onclick="exportSelectedMachship('pTable')" style="background:var(--green-soft);border:1.5px solid #00C27A;color:#007A4A;border-radius:8px;padding:8px 13px;font-family:'Inter Tight',sans-serif;font-size:12.5px;font-weight:700;cursor:pointer;white-space:nowrap">⬇ Machship</button>
-        <button onclick="bulkDownloadArtwork('pTable')" style="background:#EDE9FE;border:1.5px solid #7C3AED;color:#5B21B6;border-radius:8px;padding:8px 13px;font-family:'Inter Tight',sans-serif;font-size:12.5px;font-weight:700;cursor:pointer;white-space:nowrap">⬇ Artwork</button>
-        <button class="bulk-cancel" onclick="clearBulk('pTable')">Clear selection</button>
-      </div>
-      <div class="tbl-wrap">
-        <table id="pTable">
-          <thead>
-            <tr>
-              <th style="width:32px"><input type="checkbox" id="sa-pTable" onchange="selectAll(this,'pTable')"></th>
-              <th style="width:32px" title="Priority">⚡</th>
-              <th>Order #</th><th>Customer</th><th>Product</th><th>Shape</th>
-              <th>Size</th><th>Qty</th><th>Material</th><th>Lam</th>
-              <th>Due</th><th>Dispatch</th><th>Station</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td colspan="14" style="text-align:center;padding:48px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink-3)">
-              <div style="margin-bottom:8px;font-size:24px">⏳</div>
-              Connecting to board…
-            </td></tr>
-          </tbody>
-        </table>
-      </div>
-      </div>
-
-    <!-- PRODUCTION CARDS (mobile) -->
-        <div id="pCardView" class="fcard-grid" style="display:none"></div>
-  </div>
-</div>
-</section>
-
-<!-- ====== JOB DETAIL ====== -->
-<section class="screen" id="job">
-<div class="app">
-  <div class="app-header">
-    <div class="brand">Sticky<span>Sitch</span></div>
-    <div class="header-right">
-      <span class="role">Admin</span>
-      <div class="avatar-wrap">
-      <div class="avatar" id="avatarBtn" onclick="toggleAvatarMenu(this)" title="Account">D</div>
-      <div class="avatar-menu" id="avatarMenu">
-        <div class="avatar-menu-head">
-          <div class="avatar-menu-name" id="menuName">David Pham</div>
-          <div class="avatar-menu-role" id="menuRole">Admin · Full access</div>
-          <div class="avatar-menu-email" id="menuEmail">david@stickysitch.com.au</div>
-        </div>
-        <button class="avatar-menu-item" onclick="toggleAvatarMenu();alert('Settings coming in Phase 2.')">⚙ Settings</button>
-        <div class="avatar-menu-divider"></div>
-        <button class="avatar-menu-item admin-only" onclick="openTeamModal();document.querySelectorAll('.avatar-menu').forEach(function(m){m.classList.remove('show')})" style="color:var(--lilac);border-color:var(--lilac-line)">👥 Manage team</button>
-        <button class="avatar-menu-item danger" onclick="doLogout()">→ Sign out</button>
-      </div>
-    </div>
-    </div>
-  </div>
-  <div class="app-body">
-    <button class="back-btn" onclick="go('frontend')">← Back to board</button>
-
-    <div class="jd-id" id="jdId"></div>
-    <div class="jd-cust-header">
-      <div class="jd-name" id="jdName"></div>
-      <div id="jdCustView" class="jd-cust-contact-row"></div>
-      <div class="jd-cust-addr-row">
-        <span style="font-size:14px">📍</span>
-        <span class="jd-cust-contact-detail" id="jdAddr"></span>
-        <button onclick="toggleCustEdit()" id="jdCustEditBtn" class="admin-only" style="font-family:'Inter Tight',sans-serif;font-size:11px;font-weight:700;background:none;border:1.5px solid var(--line);border-radius:7px;padding:3px 10px;cursor:pointer;color:var(--ink-2)">Edit</button>
-      </div>
-    </div>
-    <!-- Customer edit panel (admin only) -->
-    <div id="jdCustEdit" style="display:none;background:#fff;border:1.5px solid var(--lilac-line);border-radius:12px;padding:14px;margin-bottom:8px">
-      <div style="font-family:'Inter Tight',sans-serif;font-weight:800;font-size:13px;color:var(--navy);margin-bottom:10px">Edit customer details</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
-        <div><label style="font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);display:block;margin-bottom:4px">Contact name</label><input id="editCustName" class="jf-input" value="" style="width:100%;padding:9px 11px;border:1.5px solid var(--line);border-radius:9px;font-size:14px"></div>
-        <div><label style="font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);display:block;margin-bottom:4px">Email</label><input id="editCustEmail" class="jf-input" value="" style="width:100%;padding:9px 11px;border:1.5px solid var(--line);border-radius:9px;font-size:14px"></div>
-        <div><label style="font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);display:block;margin-bottom:4px">Phone</label><input id="editCustPhone" class="jf-input" value="" style="width:100%;padding:9px 11px;border:1.5px solid var(--line);border-radius:9px;font-size:14px"></div>
-        <div><label style="font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);display:block;margin-bottom:4px">Delivery address</label><input id="editCustAddr" class="jf-input" value="" style="width:100%;padding:9px 11px;border:1.5px solid var(--line);border-radius:9px;font-size:14px"></div>
-      </div>
-      <div style="display:flex;gap:8px">
-        <button onclick="saveCustEdit()" style="background:var(--lilac);color:#fff;border:none;border-radius:9px;padding:9px 18px;font-family:'Inter Tight',sans-serif;font-weight:700;font-size:13px;cursor:pointer">Save</button>
-        <button onclick="toggleCustEdit()" style="background:#fff;border:1.5px solid var(--line);border-radius:9px;padding:9px 14px;font-family:'Inter Tight',sans-serif;font-weight:600;font-size:13px;cursor:pointer;color:var(--ink-2)">Cancel</button>
-      </div>
-    </div>
-
-    <!-- Cancellation / refund banner -->
-    <div class="cancel-banner" id="cancelBanner">
-      <div class="cancel-banner-title" id="cancelBannerTitle">🚫 Order cancelled</div>
-      <div class="cancel-banner-detail" id="cancelBannerDetail"></div>
-    </div>
-
-    <!-- Sibling jobs panel — shows for split orders -->
-    <div class="sibling-panel" id="siblingPanel" style="display:none">
-      <div class="sibling-title">🔗 Split order — sibling jobs</div>
-      <div id="siblingCards"></div>
-    </div>
-
-    <div class="note purple" id="jdPartNote" style="display:none;margin-top:6px"></div>
-
-    <div class="jd-status-wrap">
-      <span class="jd-status-label">Status</span>
-      <select class="stat-pill-select jd-stat-select prepress" id="jdStatusBadge"
-        onchange="changeJobStatus(this.value)">
-        <option value="new">New</option>
-        <option value="prepress">Prepress</option>
-        <option value="awaiting">Awaiting Approval</option>
-        <option value="revision">Artwork Revision</option>
-        <option value="print">Print</option>
-        <option value="lam">Laminate</option>
-        <option value="cut">Cut</option>
-        <option value="qa">QA &amp; Packing</option>
-        <option value="outsource">Outsource</option>
-        <option value="pickup">Awaiting Pickup</option>
-        <option value="pickedup">Picked Up</option>
-        <option value="dispatched">Dispatched</option>
-        <option value="hold">On Hold</option>
-        <option value="cancelled">🚫 Cancelled</option>
-        <option value="refunded">💰 Refunded</option>
-      </select>
-    </div>
-
-    <!-- JOB DETAIL TABS -->
-    <div class="jd-tabs">
-      <button class="jd-tab active" onclick="setJobTab('details',this)">Details</button>
-      <button class="jd-tab" onclick="setJobTab('proofs',this)">Proofs</button>
-      <button class="jd-tab" onclick="setJobTab('custview',this)">Customer view</button>
-      <button class="jd-tab" onclick="setJobTab('history',this)">History</button>
-    </div>
-
-    <!-- DETAILS TAB -->
-    <div class="jd-panel show" id="tab-details">
-
-      <div class="jd-two-col">
-
-        <!-- ── LEFT COLUMN: Artwork + Imposition ── -->
-        <div class="jd-left-col">
-
-          <!-- Artwork -->
-          <div class="artbox-tall" id="artboxSection">
-            <div class="artbox-thumb-big" id="artThumbBig">🖼️</div>
-            <div>
-              <b style="font-size:13px;color:var(--navy)" id="jdArtFile">No artwork attached</b>
-              <span style="font-size:11px;color:var(--ink-2);display:block;margin-top:2px" id="jdArtSize"></span>
-            </div>
-            <a id="jdArtDownload" href="#" target="_blank" rel="noopener"
-              style="display:none;background:var(--navy);color:#fff;border:none;border-radius:9px;padding:10px;font-family:'Inter Tight',sans-serif;font-weight:700;font-size:13px;cursor:pointer;text-decoration:none;text-align:center">
-              ⬇ Download artwork
-            </a>
-          </div>
-
-          <!-- Imposition — sticker sheets only -->
-          <div id="impositionSection" style="display:none;background:#fff;border:1.5px solid var(--lilac-line);border-radius:13px;padding:14px">
-            <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
-              <span style="font-family:'Inter Tight',sans-serif;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)">Imposition</span>
-              <span style="background:var(--lilac);color:#fff;font-family:'Inter Tight',sans-serif;font-size:9px;font-weight:800;padding:2px 8px;border-radius:999px;letter-spacing:.06em">STICKER SHEETS</span>
-            </div>
-            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-              <span style="font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink-2)">Stickers per sheet</span>
-              <input type="number" id="impoPerSheet" min="1" max="200" placeholder="e.g. 24"
-                oninput="calcImpo()"
-                style="width:80px;padding:8px 10px;border:1.5px solid var(--line);border-radius:8px;font-family:'Inter Tight',sans-serif;font-size:15px;font-weight:700;text-align:center">
-              <span style="font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink-3)">for <b style="color:var(--ink)" id="impoOrderedCount">—</b> ordered</span>
-            </div>
-            <div id="impoResult" style="display:none;background:var(--navy);border-radius:10px;padding:13px 16px;margin-top:10px">
-              <div style="font-family:'Inter Tight',sans-serif;font-weight:800;font-size:28px;color:#FFE234;line-height:1" id="impoCopies">5</div>
-              <div style="font-family:'Inter Tight',sans-serif;font-size:11px;font-weight:600;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.1em;margin-top:2px">COPIES TO PRINT</div>
-              <div style="display:flex;gap:16px;margin-top:8px;flex-wrap:wrap">
-                <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:rgba(255,255,255,.75)" id="impoPerSheetStat"><b style="color:#fff">24</b> stickers/sheet</span>
-                <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:#FFE234;font-weight:700" id="impoExtraStat">+20 extra</span>
-              </div>
-              <div style="font-family:'Inter Tight',sans-serif;font-size:10.5px;color:rgba(255,255,255,.4);margin-top:4px" id="impoExact"></div>
-              <button onclick="saveImposition()" id="impoSaveBtn"
-                style="margin-top:12px;width:100%;background:#FFE234;color:var(--navy);border:none;border-radius:9px;padding:10px;font-family:'Inter Tight',sans-serif;font-weight:800;font-size:13px;cursor:pointer">
-                ✓ Confirm &amp; save imposition
-              </button>
-            </div>
-            <div id="impoSaved" style="display:none;background:var(--green-soft);border:1.5px solid var(--green);border-radius:10px;padding:10px 13px;margin-top:8px;font-family:'Inter Tight',sans-serif;font-size:13px;font-weight:700;color:#007A4A">
-              ✓ Imposition saved — <span id="impoSavedSummary"></span>
-              <button onclick="resetImposition()" style="background:none;border:none;color:#007A4A;font-size:12px;cursor:pointer;text-decoration:underline;margin-left:6px">Edit</button>
-            </div>
-          </div>
-
-        </div><!-- end left col -->
-
-        <!-- ── RIGHT COLUMN: Specs ── -->
-        <div class="jd-right-col">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-            <span class="seclabel" style="margin:0">Job details</span>
-            <button id="specEditBtn" onclick="toggleSpecEdit()" class="admin-only" style="font-family:'Inter Tight',sans-serif;font-size:11px;font-weight:700;background:none;border:1.5px solid var(--line);border-radius:7px;padding:4px 11px;cursor:pointer;color:var(--ink-2)">✏ Edit</button>
-          </div>
-          <div class="spec-list" id="specViewMode">
-            <div class="spec-row"><span class="k">Product</span><span class="v" id="sv-product"></span></div>
-            <div class="spec-row"><span class="k">Quantity</span><span class="v" id="sv-qty"></span></div>
-            <div class="spec-row"><span class="k">Shape</span><span class="v" id="sv-shape"></span></div>
-            <div class="spec-row"><span class="k">Size</span><span class="v" id="sv-size"></span></div>
-            <div class="spec-row"><span class="k">Material</span><span class="v" id="sv-material"></span></div>
-            <div class="spec-row"><span class="k">Laminate</span><span class="v" id="sv-lam"></span></div>
-            <div class="spec-row"><span class="k">Dispatch</span><span class="v" id="sv-dispatch"></span></div>
-            <div class="spec-row"><span class="k">Delivery to</span><span class="v" id="sv-delivery"></span></div>
-            <div class="spec-row"><span class="k">Order placed</span><span class="v" id="sv-placed"></span></div>
-            <div class="spec-row" style="background:var(--lilac-soft)"><span class="k" style="color:var(--lilac)">Due date</span><span class="v" id="sv-due" style="color:var(--lilac);font-weight:700"></span></div>
-          </div>
-          <p style="font-family:'DM Sans',sans-serif;font-size:11px;color:var(--ink-3);margin:6px 2px 0">Due date auto-set: rolls = 3 days, all others = 2 days. Editable for rush jobs.</p>
-
-          <!-- Spec edit mode -->
-          <div id="specEditMode" style="display:none;margin-top:10px"></div>
-
-          <!-- Outsource info (rolls only) -->
-          <div id="outsourceSection" style="display:none;background:var(--paper);border:1.5px solid var(--line);border-radius:12px;padding:13px;margin-top:10px">
-            <div style="font-family:'Inter Tight',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);margin-bottom:8px">Outsource details</div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
-              <div><div style="font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-bottom:4px">Supplier</div><div style="font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink)" id="outSupplierDisplay">—</div></div>
-              <div><div style="font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-bottom:4px">Delivery to</div><div style="font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink)" id="outDestDisplay">—</div></div>
-            </div>
-            <div style="font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-bottom:5px">Tracking number</div>
-            <div style="display:flex;gap:8px">
-              <input id="outTrackingInput" type="text" placeholder="Enter tracking number when received…" style="flex:1;padding:10px 12px;border:1.5px solid var(--line);border-radius:9px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);background:var(--paper)">
-            </div>
-            <div style="display:flex;gap:8px;margin-top:8px">
-              <button onclick="saveOutsourceTracking()" style="flex:1;background:var(--navy);color:#fff;border:none;border-radius:9px;padding:10px;font-family:'Inter Tight',sans-serif;font-weight:700;font-size:13px;cursor:pointer">Save tracking</button>
-              <button onclick="sendOutsourceTrackingToCustomer()" style="flex:1;background:var(--lilac);color:#fff;border:none;border-radius:9px;padding:10px;font-family:'Inter Tight',sans-serif;font-weight:700;font-size:13px;cursor:pointer">📧 Send to customer</button>
-            </div>
+        <div style="font-family:'DM Sans',sans-serif;font-size:12px;color:var(--ink-3);margin-top:8px;padding:8px;background:var(--paper);border-radius:8px">When you receive tracking from your supplier, enter it in the dispatch panel below — it will email the customer automatically.</div>
           </div>
 
           <!-- Pickup / road dispatch — shown based on dispatch method -->
@@ -2115,14 +1636,26 @@ async function loadBoard(){
   db = getDB(); if(!db) return;
   var {data:jobs, error} = await db
     .from('active_jobs')
-    .select('*, job_items(*)')
+    .select('*')
     .order('due_date', {ascending:true});
 
   if(error){console.error('loadBoard error:', error); return;}
 
+  // Fetch job_items separately — can't join through a view in Supabase PostgREST
+  var itemsByJob = {};
+  if(jobs && jobs.length > 0){
+    var jobIds = jobs.map(function(j){return j.id;});
+    var {data:allItems} = await db.from('job_items').select('*').in('job_id', jobIds);
+    (allItems||[]).forEach(function(it){
+      if(!itemsByJob[it.job_id]) itemsByJob[it.job_id]=[];
+      itemsByJob[it.job_id].push(it);
+    });
+  }
+
   // ── Populate JOB_DATA for job detail lookups ─────────────────────
   jobs.forEach(function(job){
-    var item = (job.job_items||[])[0]||{};
+    var jobItemList = itemsByJob[job.id]||[];
+  var item = jobItemList[0]||{};
     JOB_DATA[job.id] = {
       id: job.id, shopify: job.shopify_order_number||null, paid: job.paid,
       src: job.source, srcLabel: (job.source||'').charAt(0).toUpperCase()+(job.source||'').slice(1),
@@ -2143,7 +1676,7 @@ async function loadBoard(){
       parent_job_id: job.parent_job_id||null,
       productKey: item.product_type||'individual',
       outsourceSupplier: job.outsource_supplier||'TBC',
-      outsourceDest: job.outsource_dest||'Our factory',
+      outsourceDest: job.outsource_dest||job.address_full||'Direct to customer',
       invoice_url:   job.invoice_url||null,
       invoice_filename: job.invoice_filename||null,
       thread_url:    job.thread_url||null,
