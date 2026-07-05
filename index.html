@@ -2051,9 +2051,24 @@ function buildJobRow(job){
     +'<td>'+size+'</td>'
     +'<td>'+qty+'</td>'
     +'<td>'+placed+'</td>'
-    +'<td><span class="chip '+chipClass(status)+'" data-statkey="'+status+'">'+chipLabel(status)+'</span>'
-    +'<button class="nav-stat" onclick="event.stopPropagation();navStat(this,-1)">‹</button>'
-    +'<button class="nav-stat" onclick="event.stopPropagation();navStat(this,1)">›</button></td>'
+    +'<td>'
+    +'<select class="stat-pill-select '+chipClass(status)+'" data-statkey="'+status+'"'
+    +' onclick="event.stopPropagation()" onchange="event.stopPropagation();navStatSelect(this)">'
+    +'<option value="new"'+(status==="new"?' selected':'')+'>New</option>'
+    +'<option value="prepress"'+(status==="prepress"?' selected':'')+'>Prepress</option>'
+    +'<option value="awaiting"'+(status==="awaiting"?' selected':'')+'>Awaiting Approval</option>'
+    +'<option value="revision"'+(status==="revision"?' selected':'')+'>Artwork Revision</option>'
+    +'<option value="print"'+(status==="print"?' selected':'')+'>Print</option>'
+    +'<option value="lam"'+(status==="lam"?' selected':'')+'>Laminate</option>'
+    +'<option value="cut"'+(status==="cut"?' selected':'')+'>Cut</option>'
+    +'<option value="qa"'+(status==="qa"?' selected':'')+'>QA &amp; Packing</option>'
+    +'<option value="outsource"'+(status==="outsource"?' selected':'')+'>Outsource</option>'
+    +'<option value="pickup"'+(status==="pickup"?' selected':'')+'>Awaiting Pickup</option>'
+    +'<option value="pickedup"'+(status==="pickedup"?' selected':'')+'>Picked Up</option>'
+    +'<option value="dispatched"'+(status==="dispatched"?' selected':'')+'>Dispatched</option>'
+    +'<option value="hold"'+(status==="hold"?' selected':'')+'>On Hold</option>'
+    +'<option value="cancelled"'+(status==="cancelled"?' selected':'')+'>Cancelled</option>'
+    +'</select></td>'
     +'<td>'+(dueAlert?'<span style="color:var(--red)">⚡ '+due+'</span>':due)+'</td>'
     +'<td>'+fmtDispatch(job.dispatch_method, job.courier)+'</td>'
     +'</tr>';
@@ -3238,9 +3253,13 @@ var STATUS_LABELS={
   'pickedup':'Picked Up','awaiting_pickup':'Awaiting Pickup','outsource':'Outsource'
 };
 function openJobFromRow(row){
-  // Get job ID from the row
-  var idEl=row?row.querySelector('.tbl-id,.jid'):null;
-  var jobId=idEl?idEl.textContent.replace(/[↳\s]/g,'').trim():'';
+  // Read job ID from data attribute (avoids concatenated text like "SS-0001#1234")
+  var jobId = (row && row.dataset && row.dataset.jobId)
+    ? row.dataset.jobId
+    : (function(){
+        var idEl = row ? row.querySelector('.tbl-id,.jid') : null;
+        return idEl ? (idEl.firstChild ? idEl.firstChild.textContent.trim() : idEl.textContent.trim()) : '';
+      })();
   window._currentJobId=jobId;
   window._currentJobProduct=row?row.dataset.product:'';
   var prodActive=document.getElementById('production')&&document.getElementById('production').classList.contains('show');
