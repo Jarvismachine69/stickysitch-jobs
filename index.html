@@ -1460,11 +1460,18 @@ select.stat-pill-select.refunded{background-color:#FEF3C7!important;color:#78350
         <table id="fTable">
           <thead>
             <tr>
-              <th style="width:32px"><input type="checkbox" id="sa-fTable" onchange="selectAll(this,'fTable')"></th>
-              <th style="width:36px" title="Priority">⚡</th>
-              <th>Order #</th><th>Customer</th><th>Source</th>
-              <th>Product</th><th>Size</th><th>Qty</th>
-              <th>Placed</th><th>Due date</th><th>Dispatch</th><th>Status</th>
+              <th style="width:32px"><input type="checkbox" id="sa-pTable" onchange="selectAll(this,'pTable')"></th>
+              <th style="width:32px" title="Priority">⚡</th>
+              <th style="width:42px"></th>
+              <th>Order #</th>
+              <th>Customer</th>
+              <th>Source</th>
+              <th>Product</th>
+              <th>Size</th>
+              <th>Qty</th>
+              <th>Placed</th>
+              <th>Status</th>
+              <th>Dispatch</th>
             </tr>
           </thead>
           <tbody>
@@ -1829,9 +1836,16 @@ select.stat-pill-select.refunded{background-color:#FEF3C7!important;color:#78350
             <tr>
               <th style="width:32px"><input type="checkbox" id="sa-pTable" onchange="selectAll(this,'pTable')"></th>
               <th style="width:32px" title="Priority">⚡</th>
-              <th>Order #</th><th>Customer</th><th>Product</th><th>Shape</th>
-              <th>Size</th><th>Qty</th><th>Material</th><th>Lam</th>
-              <th>Due</th><th>Dispatch</th><th>Station</th>
+              <th style="width:42px"></th>
+              <th>Order #</th>
+              <th>Customer</th>
+              <th>Source</th>
+              <th>Product</th>
+              <th>Size</th>
+              <th>Qty</th>
+              <th>Placed</th>
+              <th>Status</th>
+              <th>Dispatch</th>
             </tr>
           </thead>
           <tbody>
@@ -5722,6 +5736,7 @@ async function doLogin(){
       if(errEl)errEl.style.display='none';
       if(member.role==='admin')go('frontend');else go('production');
       applyRoleUI();
+      loadBoard();
     } else {
       showErr('Incorrect username or password.');
     }
