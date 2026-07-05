@@ -4345,78 +4345,43 @@ function updateStatusPillHighlight(currentStatus){
 }
 
 // ── Change status from job detail — updates both tables ───────────────
-function changeJobStatus(newStatus){
-  if(!newStatus||!window._currentJobId)return;
-  var meta=STATUS_META[newStatus];
-  if(!meta)return;
-  var label=meta[0], cls=meta[1];
+async function changeJobStatus(newStatus){
+  if(!newStatus || !window._currentJobId) return;
+  var jobId = window._currentJobId;
 
-  // 1. Update the badge in the job detail
-  var badge=document.getElementById('jdStatusBadge');
-  if(badge){badge.textContent=label;badge.className='jd-status-badge '+cls;}
+  // Update job detail badge (select element)
+  var badge = document.getElementById('jdStatusBadge');
+  if(badge){
+    badge.value = newStatus;
+    badge.className = 'stat-pill-select jd-stat-select ' + chipClass(newStatus);
+  }
 
-  // 2. Reset the selector back to placeholder
-  var sel=document.getElementById('jdStatusChange');
-  if(sel)sel.value='';
-
-  // 3. Update the matching row(s) in fTable and pTable
-  var jobId=window._currentJobId;
+  // Update matching row in both tables
   ['fTable','pTable'].forEach(function(tid){
-    var tbl=document.getElementById(tid);
-    if(!tbl)return;
-    tbl.querySelectorAll('tbody tr').forEach(function(row){
-      var idEl=row.querySelector('.tbl-id');
-      if(!idEl)return;
-      var rid=idEl.textContent.replace(/[↳\s▶#]/g,'').trim();
-      if(rid!==jobId)return;
-      // Update data attributes
-      row.dataset.status=newStatus;
-      row.dataset.station=newStatus;
-      // Update status chip text + class
-      var chip=row.querySelector('.chip');
-      if(chip){
-        chip.textContent=label;
-        // Remove old status classes and add new
-        Object.keys(STATUS_META).forEach(function(s){chip.classList.remove(s);});
-        chip.classList.add(cls);
-        if(chip.dataset)chip.dataset.statkey=newStatus;
-      }
-      // Update left stripe colour
-      var stripe=row.querySelector('td:first-child+td+td .statbar, .statbar');
-      var stripeColors={'new':'#7C3AED','prepress':'#2563EB','awaiting':'#D97706','revision':'#DC2626','print':'#16A34A','lam':'#0D9488','cut':'#EA580C','qa':'#7E22CE','outsource':'#475569','pickup':'#0891B2','pickedup':'#0369A1','hold':'#B45309','dispatched':'#0F766E'};
-      if(stripe)stripe.style.background=stripeColors[newStatus]||'var(--line)';
+    var tbl = document.getElementById(tid);
+    if(!tbl) return;
+    tbl.querySelectorAll('tbody tr[data-job-id]').forEach(function(row){
+      if(row.dataset.jobId !== jobId) return;
+      row.dataset.status  = newStatus;
+      row.dataset.station = newStatus;
+      var sel = row.querySelector('.stat-pill-select');
+      if(sel){ sel.value = newStatus; sel.className = 'stat-pill-select ' + chipClass(newStatus); }
     });
   });
 
-  // 4. Re-run filters so job moves to correct position / hidden if needed
-  var visibleScreen=document.querySelector('.screen.show');
-  if(visibleScreen){
-    if(visibleScreen.id==='job'){
-      // We came from frontend or production — re-filter both
-      applyFrontFilters();
-      applyProdFilters();
-    }
+  // Update JOB_DATA cache
+  if(JOB_DATA[jobId]) JOB_DATA[jobId].status = newStatus;
+
+  // Save to Supabase
+  var db2 = getDB();
+  if(db2){
+    var {error} = await db2.from('jobs').update({status: newStatus}).eq('id', jobId);
+    if(error){ console.error('changeJobStatus error:', error); showToast('Save failed — check connection'); return; }
   }
 
-  // 5. Log the status change in internal notes
-  var now=new Date();
-  var months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  var timeStr=now.getDate()+' '+months[now.getMonth()]+' · '+now.toLocaleTimeString('en-AU',{hour:'numeric',minute:'2-digit',hour12:true});
-  var entry=document.createElement('div');
-  entry.className='note-entry';
-  entry.innerHTML='<div class="note-meta"><b>'+(CURRENT_ROLE==='admin'?'David (Admin)':'Emmanuel (Staff)')+'</b><span>'+timeStr+'</span></div>'
-    +'<div class="note-body">Status changed to <b>'+label+'</b></div>';
-  var list=document.getElementById('notesList');
-  if(list)list.insertBefore(entry,list.firstChild);
-
-  // Close picker + highlight current pill
-  var picker=document.getElementById('jdStatusPicker');
-  if(picker)picker.classList.remove('open');
-  updateStatusPillHighlight(newStatus);
-
-  // Show a brief confirmation toast
-  showToast('Status updated to '+label+' ✓');
+  showToast('Status updated to ' + chipLabel(newStatus) + ' ✓');
 }
+
 
 
 function showToast(msg){
