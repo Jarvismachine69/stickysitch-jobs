@@ -1071,7 +1071,7 @@ tr.prio-on td,tr[data-prio="1"] td{background:#FFF3CD!important}
   <div class="app-header">
     <div class="brand">Sticky<span>Sitch</span></div>
     <div class="header-right">
-      <span class="bell" onclick="alert('2 alerts:\n· North St Coffee approved proof → Print\n· Hartley Hot Sauce sent revision notes')">🔔<span class="bdg">2</span></span>
+      <span class="bell" onclick="alert('No new alerts')">🔔<span class="bdg">2</span></span>
       <span class="role">Admin</span>
       <div class="avatar-wrap">
       <div class="avatar" id="avatarBtn" onclick="toggleAvatarMenu(this)" title="Account">D</div>
@@ -1230,350 +1230,7 @@ tr.prio-on td,tr[data-prio="1"] td{background:#FFF3CD!important}
     <!-- FRONTEND CARDS (mobile) -->
     <div id="fCardView" class="fcard-grid" style="display:none"></div>
 
-      <div class="fcard prio-auto" data-status="revision" data-product="rolls" onclick="openJobFromRow(this)">
-        <div class="fc-head">
-          <div class="fc-thumb" style="background:linear-gradient(135deg,#C84B2A,#7A2010)">🌶️</div>
-          <div class="fc-headtext">
-            <div style="display:flex;gap:6px;align-items:center;margin-bottom:3px;flex-wrap:wrap">
-              <span style="font-family:'Inter Tight';font-size:11px;font-weight:700;color:var(--lilac)">SS-1039</span>
-              <span class="chip revision" style="font-size:10px">Artwork Revision</span>
-              <span class="src ig">Instagram</span>
-            </div>
-            <div class="fc-make">1,500 · Roll labels</div>
-            <div class="fc-cust">Hartley Hot Sauce</div>
-          </div>
-        </div>
-        <div class="fc-sg">
-          <div><div class="k">Size</div><div class="v">80 × 80 mm</div></div>
-          <div><div class="k">Material</div><div class="v">Gloss paper</div></div>
-          <div><div class="k">Shape</div><div class="v">Rectangle</div></div>
-          <div><div class="k">Laminate</div><div class="v">Matte</div></div>
-        </div>
-        <div class="fc-foot"><span class="fc-due late">⚡ Overdue · 11 Jun</span><span style="font-family:'Inter Tight';font-size:11px;color:var(--ink-2)">Road · StarTrack</span></div>
-      </div>
-
-      <div class="fcard prio-manual" data-status="print" data-product="rolls" onclick="openJobFromRow(this)">
-        <div class="fc-head">
-          <div class="fc-thumb" style="background:linear-gradient(135deg,#5C3A22,#2D1A0E)">☕</div>
-          <div class="fc-headtext">
-            <div style="display:flex;gap:6px;align-items:center;margin-bottom:3px;flex-wrap:wrap">
-              <span style="font-family:'Inter Tight';font-size:11px;font-weight:700;color:var(--lilac)">SS-1028</span>
-              <span class="chip print" style="font-size:10px">Print</span>
-              <span class="src shopify">Shopify</span>
-            </div>
-            <div class="fc-make">4,000 · Roll labels</div>
-            <div class="fc-cust">Sunday Roasters</div>
-          </div>
-        </div>
-        <div class="fc-sg">
-          <div><div class="k">Size</div><div class="v">90 × 60 mm</div></div>
-          <div><div class="k">Material</div><div class="v">Gloss paper</div></div>
-          <div><div class="k">Shape</div><div class="v">Rounded rect</div></div>
-          <div><div class="k">Laminate</div><div class="v">Matte</div></div>
-        </div>
-        <div class="fc-foot"><span class="fc-due">📅 Due 13 Jun</span><span style="font-family:'Inter Tight';font-size:11px;color:var(--ink-2)">Road · StarTrack</span></div>
-      </div>
-
-      <div class="grouplabel">Needs attention</div>
-
-      <div class="fcard prio-auto" data-status="new" data-product="rolls" onclick="openJobFromRow(this)">
-        <div class="fc-head">
-          <div class="fc-thumb" style="background:linear-gradient(135deg,#9A6B45,#5C3A22)">🍺</div>
-          <div class="fc-headtext">
-            <div style="display:flex;gap:6px;align-items:center;margin-bottom:3px;flex-wrap:wrap">
-              <span style="font-family:'Inter Tight';font-size:11px;font-weight:700;color:var(--lilac)">SS-1042</span>
-              <span class="chip new" style="font-size:10px">New</span>
-              <span class="src shopify">Shopify</span>
-            </div>
-            <div class="fc-make">2,000 · Roll labels</div>
-            <div class="fc-cust"></div>
-          </div>
-        </div>
-        <div class="fc-sg">
-          <div><div class="k">Size</div><div class="v">90 × 60 mm</div></div>
-          <div><div class="k">Material</div><div class="v">Gloss paper</div></div>
-          <div><div class="k">Shape</div><div class="v">Rounded rect</div></div>
-          <div><div class="k">Laminate</div><div class="v">Matte</div></div>
-        </div>
-        <div class="fc-foot"><span class="fc-due late">⚡ Due 13 Jun</span><span style="font-family:'Inter Tight';font-size:11px;color:var(--ink-2)">Road · StarTrack</span></div>
-      </div>
-
-      <div class="fcard" data-status="prepress" data-product="individual" onclick="openJobFromRow(this)">
-        <div class="fc-head">
-          <div class="fc-thumb" style="background:linear-gradient(135deg,#E8B4D0,#9E4A72)">🕯️</div>
-          <div class="fc-headtext">
-            <div style="display:flex;gap:6px;align-items:center;margin-bottom:3px;flex-wrap:wrap">
-              <span style="font-family:'Inter Tight';font-size:11px;font-weight:700;color:var(--lilac)">SS-1041</span>
-              <span class="chip prepress" style="font-size:10px">Prepress</span>
-              <span class="src email">Email</span>
-            </div>
-            <div class="fc-make">500 · Individual stickers</div>
-            <div class="fc-cust">Tilly's Candles</div>
-          </div>
-        </div>
-        <div class="fc-sg">
-          <div><div class="k">Size</div><div class="v">70 mm</div></div>
-          <div><div class="k">Material</div><div class="v">White vinyl</div></div>
-          <div><div class="k">Shape</div><div class="v">Circle</div></div>
-          <div><div class="k">Laminate</div><div class="v">Gloss</div></div>
-        </div>
-        <div class="fc-foot"><span class="fc-due">📅 Due 12 Jun</span><span style="font-family:'Inter Tight';font-size:11px;color:var(--ink-2)">Courier · Titan</span></div>
-      </div>
-
-      <div class="grouplabel">In progress</div>
-
-      <div class="fcard" data-status="awaiting" data-product="sheets" onclick="openJobFromRow(this)">
-        <div class="fc-head">
-          <div class="fc-thumb" style="background:linear-gradient(135deg,#3A2C1A,#7A5A28)">☕</div>
-          <div class="fc-headtext">
-            <div style="display:flex;gap:6px;align-items:center;margin-bottom:3px;flex-wrap:wrap">
-              <span style="font-family:'Inter Tight';font-size:11px;font-weight:700;color:var(--lilac)">SS-1040</span>
-              <span class="chip awaiting" style="font-size:10px">Awaiting Approval</span>
-              <span class="src shopify">Shopify</span>
-            </div>
-            <div class="fc-make">1,000 · Sticker sheets</div>
-            <div class="fc-cust">North St Coffee</div>
-          </div>
-        </div>
-        <div class="fc-sg">
-          <div><div class="k">Size</div><div class="v">A5</div></div>
-          <div><div class="k">Material</div><div class="v">Paper</div></div>
-          <div><div class="k">Shape</div><div class="v">Rectangle</div></div>
-          <div><div class="k">Laminate</div><div class="v">None</div></div>
-        </div>
-        <div class="fc-foot"><span class="fc-due">📅 Due 12 Jun</span><span style="font-family:'Inter Tight';font-size:11px;color:var(--ink-2)">Road · StarTrack</span></div>
-      </div>
-
-      <div class="fcard" data-status="cut" data-product="sheets" onclick="openJobFromRow(this)">
-        <div class="fc-head">
-          <div class="fc-thumb" style="background:linear-gradient(135deg,#2C3E50,#8E44AD)">🎨</div>
-          <div class="fc-headtext">
-            <div style="display:flex;gap:6px;align-items:center;margin-bottom:3px;flex-wrap:wrap">
-              <span style="font-family:'Inter Tight';font-size:11px;font-weight:700;color:var(--lilac)">SS-1027</span>
-              <span class="chip cut" style="font-size:10px">Cut</span>
-              <span class="src fb">Facebook</span>
-            </div>
-            <div class="fc-make">600 · Sticker sheets</div>
-            <div class="fc-cust">Vela Studio</div>
-          </div>
-        </div>
-        <div class="fc-sg">
-          <div><div class="k">Size</div><div class="v">A4</div></div>
-          <div><div class="k">Material</div><div class="v">Paper</div></div>
-          <div><div class="k">Shape</div><div class="v">Rectangle</div></div>
-          <div><div class="k">Laminate</div><div class="v">Matte</div></div>
-        </div>
-        <div class="fc-foot"><span class="fc-due">📅 Due 12 Jun</span><span style="font-family:'Inter Tight';font-size:11px;color:var(--ink-2)">Road · StarTrack</span></div>
-      </div>
-
-      <div class="fcard" data-status="qa" data-product="individual" onclick="openJobFromRow(this)">
-        <div class="fc-head">
-          <div class="fc-thumb" style="background:linear-gradient(135deg,#1A3A2A,#2E7D52)">🏔️</div>
-          <div class="fc-headtext">
-            <div style="display:flex;gap:6px;align-items:center;margin-bottom:3px;flex-wrap:wrap">
-              <span style="font-family:'Inter Tight';font-size:11px;font-weight:700;color:var(--lilac)">SS-1022</span>
-              <span class="chip qa" style="font-size:10px">QA & Packing</span>
-              <span class="src email">Email</span>
-            </div>
-            <div class="fc-make">2,500 · Individual stickers</div>
-            <div class="fc-cust">Ridgeline Apparel</div>
-          </div>
-        </div>
-        <div class="fc-sg">
-          <div><div class="k">Size</div><div class="v">60 mm</div></div>
-          <div><div class="k">Material</div><div class="v">White vinyl</div></div>
-          <div><div class="k">Shape</div><div class="v">Custom</div></div>
-          <div><div class="k">Laminate</div><div class="v">Gloss</div></div>
-        </div>
-        <div class="fc-foot"><span class="fc-due">📅 Due 14 Jun</span><span style="font-family:'Inter Tight';font-size:11px;color:#007A4A;font-weight:700">📦 Pickup</span></div>
-      </div>
-
-    </div>
-</section>
-
-<!-- ====== PRODUCTION ====== -->
-<section class="screen" id="production">
-<div class="app">
-  <div class="app-header">
-    <div class="brand">Sticky<span>Sitch</span></div>
-    <div class="header-right">
-      <span class="role staff">Staff</span>
-      <div class="avatar-wrap">
-      <div class="avatar" id="avatarBtn" onclick="toggleAvatarMenu(this)" title="Account">D</div>
-      <div class="avatar-menu" id="avatarMenu">
-        <div class="avatar-menu-head">
-          <div class="avatar-menu-name" id="menuName">David Pham</div>
-          <div class="avatar-menu-role" id="menuRole">Admin · Full access</div>
-          <div class="avatar-menu-email" id="menuEmail">david@stickysitch.com.au</div>
-        </div>
-        <button class="avatar-menu-item" onclick="toggleAvatarMenu();alert('Settings coming in Phase 2.')">⚙ Settings</button>
-        <div class="avatar-menu-divider"></div>
-        <button class="avatar-menu-item admin-only" onclick="openTeamModal();document.querySelectorAll('.avatar-menu').forEach(function(m){m.classList.remove('show')})" style="color:var(--lilac);border-color:var(--lilac-line)">👥 Manage team</button>
-        <button class="avatar-menu-item danger" onclick="doLogout()">→ Sign out</button>
-      </div>
-    </div>
-    </div>
-  </div>
-  <div class="app-body">
-    <div class="mainnav">
-      <button class="admin-nav-btn" onclick="go('frontend')">Frontend</button>
-      <button class="active">Production</button>
-      <button class="admin-nav-btn" onclick="go('customers')">Customers</button>
-    </div>
-
-    <!-- Production scorecard -->
-    <div class="scorecard-grid" id="scorecardGrid">
-      <div class="sc-card" data-sc="all" onclick="filterByCard('',this)">
-        <div class="sc-card-count" id="sc-all">—</div>
-        <div class="sc-card-label">All active</div>
-      </div>
-      <div class="sc-card" data-sc="new" onclick="filterByCard('new',this)">
-        <div class="sc-card-count" id="sc-new">0</div>
-        <div class="sc-card-label"><span class="sc-card-dot" style="background:#7C3AED"></span>New</div>
-      </div>
-      <div class="sc-card" data-sc="prepress" onclick="filterByCard('prepress',this)">
-        <div class="sc-card-count" id="sc-prepress">0</div>
-        <div class="sc-card-label"><span class="sc-card-dot" style="background:#2563EB"></span>Prepress</div>
-      </div>
-      <div class="sc-card" data-sc="awaiting" onclick="filterByCard('awaiting',this)">
-        <div class="sc-card-count" id="sc-awaiting">0</div>
-        <div class="sc-card-label"><span class="sc-card-dot" style="background:#D97706"></span>Awaiting</div>
-      </div>
-      <div class="sc-card" data-sc="revision" onclick="filterByCard('revision',this)">
-        <div class="sc-card-count" id="sc-revision">0</div>
-        <div class="sc-card-label"><span class="sc-card-dot" style="background:#DC2626"></span>Revision</div>
-      </div>
-      <div class="sc-card" data-sc="print" onclick="filterByCard('print',this)">
-        <div class="sc-card-count" id="sc-print">0</div>
-        <div class="sc-card-label"><span class="sc-card-dot" style="background:#16A34A"></span>Print</div>
-      </div>
-      <div class="sc-card" data-sc="lam" onclick="filterByCard('lam',this)">
-        <div class="sc-card-count" id="sc-lam">0</div>
-        <div class="sc-card-label"><span class="sc-card-dot" style="background:#0D9488"></span>Laminate</div>
-      </div>
-      <div class="sc-card" data-sc="cut" onclick="filterByCard('cut',this)">
-        <div class="sc-card-count" id="sc-cut">0</div>
-        <div class="sc-card-label"><span class="sc-card-dot" style="background:#EA580C"></span>Cut</div>
-      </div>
-      <div class="sc-card" data-sc="qa" onclick="filterByCard('qa',this)">
-        <div class="sc-card-count" id="sc-qa">0</div>
-        <div class="sc-card-label"><span class="sc-card-dot" style="background:#7E22CE"></span>QA &amp; Pack</div>
-      </div>
-      <div class="sc-card" data-sc="outsource" onclick="filterByCard('outsource',this)">
-        <div class="sc-card-count" id="sc-outsource">0</div>
-        <div class="sc-card-label"><span class="sc-card-dot" style="background:#475569"></span>Outsource</div>
-      </div>
-      <div class="sc-card" data-sc="pickup" onclick="filterByCard('pickup',this)">
-        <div class="sc-card-count" id="sc-pickup">0</div>
-        <div class="sc-card-label"><span class="sc-card-dot" style="background:#0891B2"></span>Awaiting Pickup</div>
-      </div>
-      <div class="sc-card" data-sc="pickedup" onclick="filterByCard('pickedup',this)">
-        <div class="sc-card-count" id="sc-pickedup">0</div>
-        <div class="sc-card-label"><span class="sc-card-dot" style="background:#0369A1"></span>Picked Up</div>
-      </div>
-    </div>
-    <div class="controls">
-      <input class="search" id="pSearch" placeholder="Search order #, customer…" oninput="applyProdFilters()">
-      <select class="fsel grow" id="pProduct" onchange="applyProdFilters()">
-        <option value="">All products</option>
-        <option value="rolls">Labels on rolls</option>
-        <option value="sheets">Sticker sheets</option>
-        <option value="individual">Individual stickers</option>
-        <option value="bumper">Bumper stickers</option>
-        <option value="large">Large format</option>
-      </select>
-      <select class="fsel grow" id="pStation" onchange="applyProdFilters()">
-        <option value="active" selected>Active jobs</option>
-        <option value="">All statuses</option>
-        <option value="new">New</option>
-        <option value="prepress">Prepress</option>
-        <option value="awaiting">Awaiting Approval</option>
-        <option value="revision">Artwork Revision</option>
-        <option value="print">Print</option>
-        <option value="lam">Laminate</option>
-        <option value="cut">Cut</option>
-        <option value="qa">QA & Packing</option>
-        <option value="outsource">Outsource</option>
-        <option value="pickup">Awaiting Pickup</option>
-        <option value="pickedup">Picked Up</option>
-        <option value="hold">On Hold</option>
-        <option value="dispatched">Dispatched</option>
-      </select>
-      <select class="fsel" id="pSort" onchange="applyProdFilters()">
-        <option value="due" selected>Due: soonest</option>
-        <option value="newest">Newest first</option>
-        <option value="oldest">Oldest first</option>
-        <option value="priority">Priority first</option>
-        <option value="grouped">Group by due date</option>
-      </select>
-      <div class="layoutog">
-        <button class="active" id="pTblBtn" onclick="setProdLayout('table',this)">📋 Table</button>
-        <button id="pCardBtn" onclick="setProdLayout('cards',this)">📱 Cards</button>
-      </div>
-    </div>
-    <div id="pBatchBanner" style="display:none;background:var(--lilac-soft);border:1px solid var(--lilac-line);border-radius:10px;padding:10px 13px;font-size:12.5px;color:var(--navy-soft);margin-bottom:11px">⊞ Gang these into one print run to save material and setup.</div>
-
-    <!-- PRODUCTION TABLE -->
-    <div id="pTableView" class="auto-table">
-      <div class="bulk-bar" id="bulk-pTable">
-        <span class="bulk-count" id="bc-pTable">0 selected</span>
-        <select class="bulk-sel" id="bs-pTable">
-          <option value="">Change status to…</option>
-          <option value="new">New</option>
-          <option value="prepress">Prepress</option>
-          <option value="awaiting">Awaiting Approval</option>
-          <option value="revision">Artwork Revision</option>
-          <option value="print">Print</option>
-          <option value="lam">Laminate</option>
-          <option value="cut">Cut</option>
-          <option value="qa">QA & Packing</option>
-          <option value="outsource">Outsource</option>
-          <option value="pickup">Awaiting Pickup</option>
-          <option value="pickedup">Picked Up</option>
-          <option value="hold">On Hold</option>
-          <option value="dispatched">Dispatched</option>
-        </select>
-        <button class="bulk-apply" onclick="applyBulk('pTable')">Apply to selected</button>
-        <button onclick="exportSelectedMachship('pTable')" style="background:var(--green-soft);border:1.5px solid #00C27A;color:#007A4A;border-radius:8px;padding:8px 13px;font-family:'Inter Tight',sans-serif;font-size:12.5px;font-weight:700;cursor:pointer;white-space:nowrap">⬇ Machship</button>
-        <button onclick="bulkDownloadArtwork('pTable')" style="background:#EDE9FE;border:1.5px solid #7C3AED;color:#5B21B6;border-radius:8px;padding:8px 13px;font-family:'Inter Tight',sans-serif;font-size:12.5px;font-weight:700;cursor:pointer;white-space:nowrap">⬇ Artwork</button>
-        <button class="bulk-cancel" onclick="clearBulk('pTable')">Clear selection</button>
-      </div>
-      <div class="tbl-wrap">
-        <table id="pTable">
-          <thead>
-            <tr>
-              <th style="width:32px"><input type="checkbox" id="sa-pTable" onchange="selectAll(this,'pTable')"></th>
-              <th style="width:32px" title="Priority">⚡</th>
-              <th style="width:42px"></th>
-              <th>Order #</th><th>Customer</th><th>Source</th>
-              <th>Product</th><th>Size</th><th>Qty</th>
-              <th>Placed</th><th>Status</th><th>Dispatch</th>
-              <th>Order #</th><th>Customer</th><th>Product</th><th>Shape</th>
-              <th>Size</th><th>Qty</th><th>Material</th><th>Lam</th>
-              <th>Due</th><th>Dispatch</th><th>Station</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td colspan="14" style="text-align:center;padding:48px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink-3)"><div style="font-size:24px;margin-bottom:8px">⏳</div>Connecting to board…</td></tr>
-          </tbody>
-        </table>
-      </div>
-      </div>
-
-    <!-- PRODUCTION CARDS (mobile) -->
     <div id="pCardView" class="fcard-grid" style="display:none"></div>
-      <div class="fcard prio-auto" data-status="prepress" data-station="prepress" data-product="rolls" onclick="openJobFromRow(this,'production')">
-        <div class="fc-head">
-          <div class="fc-thumb" style="background:linear-gradient(135deg,#9A6B45,#5C3A22)">☕</div>
-          <div class="fc-headtext">
-            <div style="display:flex;gap:6px;align-items:center;margin-bottom:3px;flex-wrap:wrap">
-              <span style="font-family:'Inter Tight';font-size:11px;font-weight:700;color:var(--lilac)">SS-1042</span>
-              <span class="chip prepress" style="font-size:10px">Prepress</span>
-            </div>
-            <div class="fc-make">2,000 · Roll labels</div>
-            <div class="fc-cust"></div>
-          </div>
-        </div>
         <div class="fc-sg">
           <div><div class="k">Size</div><div class="v">90 × 60 mm</div></div>
           <div><div class="k">Material</div><div class="v">Gloss paper</div></div>
@@ -1589,18 +1246,6 @@ tr.prio-on td,tr[data-prio="1"] td{background:#FFF3CD!important}
       </div>
 
       <div class="grouplabel">QA & Packing</div>
-      <div class="fcard" data-status="qa" data-station="qa" data-product="individual" onclick="openJobFromRow(this,'production')">
-        <div class="fc-head">
-          <div class="fc-thumb" style="background:linear-gradient(135deg,#3FA76A,#1B3A2E)">🏔️</div>
-          <div class="fc-headtext">
-            <div style="display:flex;gap:6px;align-items:center;margin-bottom:3px;flex-wrap:wrap">
-              <span style="font-family:'Inter Tight';font-size:11px;font-weight:700;color:var(--lilac)">SS-1022</span>
-              <span class="chip qa" style="font-size:10px">QA & Pack</span>
-            </div>
-            <div class="fc-make">2,500 · Individual stickers</div>
-            <div class="fc-cust">Ridgeline Apparel</div>
-          </div>
-        </div>
         <div class="fc-sg">
           <div><div class="k">Size</div><div class="v">60 mm</div></div>
           <div><div class="k">Material</div><div class="v">White vinyl</div></div>
@@ -3968,7 +3613,7 @@ function updateCustSheetLayout(){
 
 // ── Proof thumbnails — live in rows ──────────────────────────────────
 var PROOF_THUMBNAILS = {};
-// Seed with example approved proof for SS-1028 (Sunday Roasters - Print stage)
+// Proof thumbnails populated dynamically from Supabase
 // In real build these load from Supabase storage URLs
 
 
@@ -4733,12 +4378,9 @@ function applyThumbToCell(cell, thumb){
 
 // ── Customer database for autofill ────────────────────────────────────
 var CUSTOMER_DB = [
-    {name:'Hartley Hot Sauce',   contact:'Sarah Hartley',   email:'hartley@hotsauce.com.au',     phone:'0411 234 567', address:'22 Church St, Richmond VIC 3121',   orders:2, tags:['Repeat']},
-  {name:"Tilly's Candles",     contact:'Tilly Marsh',     email:'tilly@tillyscandles.com',      phone:'0415 678 901', address:'',                                  orders:1, tags:['New']},
-  {name:'North St Coffee',     contact:'',                email:'orders@northstcoffee.com.au',  phone:'0413 456 789', address:'4 North St, Newtown VIC 3220',      orders:3, tags:['Repeat']},
-  {name:'Vela Studio',         contact:'Pia Nguyen',      email:'hello@velastudio.com.au',      phone:'0416 789 012', address:'40 Rokeby St, Collingwood VIC 3066',orders:2, tags:['Repeat']},
-  {name:'Sunday Roasters',     contact:'Maya Chen',       email:'hello@sundayroasters.com.au',  phone:'0414 567 890', address:'88 Smith St, Fitzroy VIC 3065',     orders:5, tags:['VIP','Repeat']},
-  {name:'Ridgeline Apparel',   contact:'Tom Ridgeway',    email:'studio@ridgeline.com.au',      phone:'0417 890 123', address:'14 Industrial Dr, Braybrook VIC 3019',orders:1,tags:['New']},
+      {name:"Tilly's Candles",     contact:'Tilly Marsh',     email:'tilly@tillyscandles.com',      phone:'0415 678 901', address:'',                                  orders:1, tags:['New']},
+    {name:'Vela Studio',         contact:'Pia Nguyen',      email:'hello@velastudio.com.au',      phone:'0416 789 012', address:'40 Rokeby St, Collingwood VIC 3066',orders:2, tags:['Repeat']},
+    {name:'Ridgeline Apparel',   contact:'Tom Ridgeway',    email:'studio@ridgeline.com.au',      phone:'0417 890 123', address:'14 Industrial Dr, Braybrook VIC 3019',orders:1,tags:['New']},
   {name:'Coastal Print Co.',   contact:'',                email:'orders@coastalprint.com.au',   phone:'0418 901 234', address:'Unit 7, 2 Coastal Rd, Williamstown VIC 3016',orders:2,tags:['Repeat']},
   {name:'Blue Mountain Oils',  contact:'',                email:'orders@bluemountainoils.com.au',phone:'0419 012 345',address:'',                                  orders:1, tags:['New']},
 ];
@@ -5964,3 +5606,4 @@ async function manualRefundJob(){ if(confirm('Mark this job as Refunded?')) awai
 
 </body>
 </html>
+
