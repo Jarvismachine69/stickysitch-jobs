@@ -1389,6 +1389,254 @@ select.stat-pill-select.refunded{background-color:#FEF3C7!important;color:#78350
     </div>
 
     <!-- HISTORY TAB (archive for this customer) -->
+<div class="controls">
+      <input class="search" id="fSearch" placeholder="Search order #, customer, email…" oninput="applyFrontFilters()">
+      <select class="fsel grow" id="fStatus" onchange="applyFrontFilters()">
+        <option value="active" selected>Active jobs</option>
+        <option value="">All statuses</option>
+        <option value="new">New</option>
+        <option value="prepress">Prepress</option>
+        <option value="awaiting">Awaiting Approval</option>
+        <option value="revision">Artwork Revision</option>
+        <option value="print">Print</option>
+        <option value="lam">Laminate</option>
+        <option value="cut">Cut</option>
+        <option value="qa">QA & Packing</option>
+        <option value="outsource">Outsource</option>
+        <option value="pickup">Awaiting Pickup</option>
+        <option value="pickedup">Picked Up</option>
+        <option value="hold">On Hold</option>
+        <option value="dispatched">Dispatched</option>
+      </select>
+      <select class="fsel grow" id="fProduct" onchange="applyFrontFilters()">
+        <option value="">All products</option>
+        <option value="rolls">Labels on rolls</option>
+        <option value="sheets">Sticker sheets</option>
+        <option value="individual">Individual stickers</option>
+        <option value="bumper">Bumper stickers</option>
+        <option value="large">Large format</option>
+      </select>
+      <select class="fsel" id="fSort" onchange="applyFrontFilters()">
+        <option value="grouped" selected>Group by due date</option>
+        <option value="due">Due: soonest</option>
+        <option value="newest">Newest first</option>
+        <option value="oldest">Oldest first</option>
+        <option value="priority">Priority first</option>
+      </select>
+      <div class="layoutog">
+        <button class="active" id="fTblBtn" onclick="setFrontLayout('table',this)">📋 Table</button>
+        <button id="fCardBtn" onclick="setFrontLayout('cards',this)">📱 Cards</button>
+      </div>
+      <button class="icon-btn" onclick="go('archive')">Archive →</button>
+      <button class="newjob-btn" onclick="openJobForm()">+ New job</button>
+    </div>
+
+    <!-- FRONTEND TABLE -->
+    <div id="fTableView" class="auto-table">
+      <div class="bulk-bar" id="bulk-fTable">
+        <span class="bulk-count" id="bc-fTable">0 selected</span>
+        <select class="bulk-sel" id="bs-fTable">
+          <option value="">Change status to…</option>
+          <option value="new">New</option>
+          <option value="prepress">Prepress</option>
+          <option value="awaiting">Awaiting Approval</option>
+          <option value="revision">Artwork Revision</option>
+          <option value="print">Print</option>
+          <option value="lam">Laminate</option>
+          <option value="cut">Cut</option>
+          <option value="qa">QA & Packing</option>
+          <option value="outsource">Outsource</option>
+          <option value="pickup">Awaiting Pickup</option>
+          <option value="pickedup">Picked Up</option>
+          <option value="hold">On Hold</option>
+          <option value="dispatched">Dispatched</option>
+        </select>
+        <button class="bulk-apply" onclick="applyBulk('fTable')">Apply to selected</button>
+        <button onclick="exportSelectedMachship('fTable')" style="background:var(--green-soft);border:1.5px solid #00C27A;color:#007A4A;border-radius:8px;padding:8px 13px;font-family:'Inter Tight',sans-serif;font-size:12.5px;font-weight:700;cursor:pointer;white-space:nowrap">⬇ Machship</button>
+        <button onclick="bulkDownloadArtwork('fTable')" style="background:#EDE9FE;border:1.5px solid #7C3AED;color:#5B21B6;border-radius:8px;padding:8px 13px;font-family:'Inter Tight',sans-serif;font-size:12.5px;font-weight:700;cursor:pointer;white-space:nowrap">⬇ Artwork</button>
+        <button class="bulk-cancel" onclick="clearBulk('fTable')">Clear selection</button>
+      </div>
+      <div class="tbl-wrap">
+        <table id="fTable">
+          <thead>
+            <tr>
+              <th style="width:32px"><input type="checkbox" id="sa-fTable" onchange="selectAll(this,'fTable')"></th>
+              <th style="width:36px" title="Priority">⚡</th>
+              <th>Order #</th><th>Customer</th><th>Source</th>
+              <th>Product</th><th>Size</th><th>Qty</th>
+              <th>Placed</th><th>Due date</th><th>Dispatch</th><th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td colspan="14" style="text-align:center;padding:48px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink-3)"><div style="font-size:24px;margin-bottom:8px">⏳</div>Connecting to board…</td></tr>
+          </tbody>
+        </table>
+      </div>
+      </div>
+
+    <!-- FRONTEND CARDS (mobile) -->
+    <div id="fCardView" class="fcard-grid" style="display:none"></div>
+
+      <div class="fcard prio-auto" data-status="revision" data-product="rolls" onclick="openJobFromRow(this)">
+        <div class="fc-head">
+          <div class="fc-thumb" style="background:linear-gradient(135deg,#C84B2A,#7A2010)">🌶️</div>
+          <div class="fc-headtext">
+            <div style="display:flex;gap:6px;align-items:center;margin-bottom:3px;flex-wrap:wrap">
+              <span style="font-family:'Inter Tight';font-size:11px;font-weight:700;color:var(--lilac)">SS-1039</span>
+              <span class="chip revision" style="font-size:10px">Artwork Revision</span>
+              <span class="src ig">Instagram</span>
+            </div>
+            <div class="fc-make">1,500 · Roll labels</div>
+            <div class="fc-cust">Hartley Hot Sauce</div>
+          </div>
+        </div>
+        <div class="fc-sg">
+          <div><div class="k">Size</div><div class="v">80 × 80 mm</div></div>
+          <div><div class="k">Material</div><div class="v">Gloss paper</div></div>
+          <div><div class="k">Shape</div><div class="v">Rectangle</div></div>
+          <div><div class="k">Laminate</div><div class="v">Matte</div></div>
+        </div>
+        <div class="fc-foot"><span class="fc-due late">⚡ Overdue · 11 Jun</span><span style="font-family:'Inter Tight';font-size:11px;color:var(--ink-2)">Road · StarTrack</span></div>
+      </div>
+
+      <div class="fcard prio-manual" data-status="print" data-product="rolls" onclick="openJobFromRow(this)">
+        <div class="fc-head">
+          <div class="fc-thumb" style="background:linear-gradient(135deg,#5C3A22,#2D1A0E)">☕</div>
+          <div class="fc-headtext">
+            <div style="display:flex;gap:6px;align-items:center;margin-bottom:3px;flex-wrap:wrap">
+              <span style="font-family:'Inter Tight';font-size:11px;font-weight:700;color:var(--lilac)">SS-1028</span>
+              <span class="chip print" style="font-size:10px">Print</span>
+              <span class="src shopify">Shopify</span>
+            </div>
+            <div class="fc-make">4,000 · Roll labels</div>
+            <div class="fc-cust">Sunday Roasters</div>
+          </div>
+        </div>
+        <div class="fc-sg">
+          <div><div class="k">Size</div><div class="v">90 × 60 mm</div></div>
+          <div><div class="k">Material</div><div class="v">Gloss paper</div></div>
+          <div><div class="k">Shape</div><div class="v">Rounded rect</div></div>
+          <div><div class="k">Laminate</div><div class="v">Matte</div></div>
+        </div>
+        <div class="fc-foot"><span class="fc-due">📅 Due 13 Jun</span><span style="font-family:'Inter Tight';font-size:11px;color:var(--ink-2)">Road · StarTrack</span></div>
+      </div>
+
+      <div class="grouplabel">Needs attention</div>
+
+      <div class="fcard prio-auto" data-status="new" data-product="rolls" onclick="openJobFromRow(this)">
+        <div class="fc-head">
+          <div class="fc-thumb" style="background:linear-gradient(135deg,#9A6B45,#5C3A22)">🍺</div>
+          <div class="fc-headtext">
+            <div style="display:flex;gap:6px;align-items:center;margin-bottom:3px;flex-wrap:wrap">
+              <span style="font-family:'Inter Tight';font-size:11px;font-weight:700;color:var(--lilac)">SS-1042</span>
+              <span class="chip new" style="font-size:10px">New</span>
+              <span class="src shopify">Shopify</span>
+            </div>
+            <div class="fc-make">2,000 · Roll labels</div>
+            <div class="fc-cust"></div>
+          </div>
+        </div>
+        <div class="fc-sg">
+          <div><div class="k">Size</div><div class="v">90 × 60 mm</div></div>
+          <div><div class="k">Material</div><div class="v">Gloss paper</div></div>
+          <div><div class="k">Shape</div><div class="v">Rounded rect</div></div>
+          <div><div class="k">Laminate</div><div class="v">Matte</div></div>
+        </div>
+        <div class="fc-foot"><span class="fc-due late">⚡ Due 13 Jun</span><span style="font-family:'Inter Tight';font-size:11px;color:var(--ink-2)">Road · StarTrack</span></div>
+      </div>
+
+      <div class="fcard" data-status="prepress" data-product="individual" onclick="openJobFromRow(this)">
+        <div class="fc-head">
+          <div class="fc-thumb" style="background:linear-gradient(135deg,#E8B4D0,#9E4A72)">🕯️</div>
+          <div class="fc-headtext">
+            <div style="display:flex;gap:6px;align-items:center;margin-bottom:3px;flex-wrap:wrap">
+              <span style="font-family:'Inter Tight';font-size:11px;font-weight:700;color:var(--lilac)">SS-1041</span>
+              <span class="chip prepress" style="font-size:10px">Prepress</span>
+              <span class="src email">Email</span>
+            </div>
+            <div class="fc-make">500 · Individual stickers</div>
+            <div class="fc-cust">Tilly's Candles</div>
+          </div>
+        </div>
+        <div class="fc-sg">
+          <div><div class="k">Size</div><div class="v">70 mm</div></div>
+          <div><div class="k">Material</div><div class="v">White vinyl</div></div>
+          <div><div class="k">Shape</div><div class="v">Circle</div></div>
+          <div><div class="k">Laminate</div><div class="v">Gloss</div></div>
+        </div>
+        <div class="fc-foot"><span class="fc-due">📅 Due 12 Jun</span><span style="font-family:'Inter Tight';font-size:11px;color:var(--ink-2)">Courier · Titan</span></div>
+      </div>
+
+      <div class="grouplabel">In progress</div>
+
+      <div class="fcard" data-status="awaiting" data-product="sheets" onclick="openJobFromRow(this)">
+        <div class="fc-head">
+          <div class="fc-thumb" style="background:linear-gradient(135deg,#3A2C1A,#7A5A28)">☕</div>
+          <div class="fc-headtext">
+            <div style="display:flex;gap:6px;align-items:center;margin-bottom:3px;flex-wrap:wrap">
+              <span style="font-family:'Inter Tight';font-size:11px;font-weight:700;color:var(--lilac)">SS-1040</span>
+              <span class="chip awaiting" style="font-size:10px">Awaiting Approval</span>
+              <span class="src shopify">Shopify</span>
+            </div>
+            <div class="fc-make">1,000 · Sticker sheets</div>
+            <div class="fc-cust">North St Coffee</div>
+          </div>
+        </div>
+        <div class="fc-sg">
+          <div><div class="k">Size</div><div class="v">A5</div></div>
+          <div><div class="k">Material</div><div class="v">Paper</div></div>
+          <div><div class="k">Shape</div><div class="v">Rectangle</div></div>
+          <div><div class="k">Laminate</div><div class="v">None</div></div>
+        </div>
+        <div class="fc-foot"><span class="fc-due">📅 Due 12 Jun</span><span style="font-family:'Inter Tight';font-size:11px;color:var(--ink-2)">Road · StarTrack</span></div>
+      </div>
+
+      <div class="fcard" data-status="cut" data-product="sheets" onclick="openJobFromRow(this)">
+        <div class="fc-head">
+          <div class="fc-thumb" style="background:linear-gradient(135deg,#2C3E50,#8E44AD)">🎨</div>
+          <div class="fc-headtext">
+            <div style="display:flex;gap:6px;align-items:center;margin-bottom:3px;flex-wrap:wrap">
+              <span style="font-family:'Inter Tight';font-size:11px;font-weight:700;color:var(--lilac)">SS-1027</span>
+              <span class="chip cut" style="font-size:10px">Cut</span>
+              <span class="src fb">Facebook</span>
+            </div>
+            <div class="fc-make">600 · Sticker sheets</div>
+            <div class="fc-cust">Vela Studio</div>
+          </div>
+        </div>
+        <div class="fc-sg">
+          <div><div class="k">Size</div><div class="v">A4</div></div>
+          <div><div class="k">Material</div><div class="v">Paper</div></div>
+          <div><div class="k">Shape</div><div class="v">Rectangle</div></div>
+          <div><div class="k">Laminate</div><div class="v">Matte</div></div>
+        </div>
+        <div class="fc-foot"><span class="fc-due">📅 Due 12 Jun</span><span style="font-family:'Inter Tight';font-size:11px;color:var(--ink-2)">Road · StarTrack</span></div>
+      </div>
+
+      <div class="fcard" data-status="qa" data-product="individual" onclick="openJobFromRow(this)">
+        <div class="fc-head">
+          <div class="fc-thumb" style="background:linear-gradient(135deg,#1A3A2A,#2E7D52)">🏔️</div>
+          <div class="fc-headtext">
+            <div style="display:flex;gap:6px;align-items:center;margin-bottom:3px;flex-wrap:wrap">
+              <span style="font-family:'Inter Tight';font-size:11px;font-weight:700;color:var(--lilac)">SS-1022</span>
+              <span class="chip qa" style="font-size:10px">QA & Packing</span>
+              <span class="src email">Email</span>
+            </div>
+            <div class="fc-make">2,500 · Individual stickers</div>
+            <div class="fc-cust">Ridgeline Apparel</div>
+          </div>
+        </div>
+        <div class="fc-sg">
+          <div><div class="k">Size</div><div class="v">60 mm</div></div>
+          <div><div class="k">Material</div><div class="v">White vinyl</div></div>
+          <div><div class="k">Shape</div><div class="v">Custom</div></div>
+          <div><div class="k">Laminate</div><div class="v">Gloss</div></div>
+        </div>
+        <div class="fc-foot"><span class="fc-due">📅 Due 14 Jun</span><span style="font-family:'Inter Tight';font-size:11px;color:#007A4A;font-weight:700">📦 Pickup</span></div>
+      </div>
+
+    </div>
+
     <div class="jd-panel" id="tab-history">
       <div class="note purple" id="custHistoryNote" style="margin-bottom:14px;display:none"></div>
       <div class="arch-row">
