@@ -1567,7 +1567,17 @@ tr.prio-on td,tr[data-prio="1"] td{background:#FFF3CD!important}
             <div class="spec-row"><span class="k">Shape</span><span class="v" id="sv-shape"></span></div>
             <div class="spec-row"><span class="k">Size</span><span class="v" id="sv-size"></span></div>
             <div class="spec-row"><span class="k">Material</span><span class="v" id="sv-material"></span></div>
-            <div class="spec-row"><span class="k">Laminate</span><span class="v" id="sv-lam"></span></div>
+            <div class="spec-row">
+              <span class="k">Laminate</span>
+              <select id="sv-lam-select" onchange="saveLaminate(this.value)"
+                style="font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);font-weight:500;border:none;background:transparent;text-align:right;cursor:pointer;outline:none;max-width:160px">
+                <option value="">— select —</option>
+                <option value="None">None</option>
+                <option value="Gloss">Gloss</option>
+                <option value="Matte">Matte</option>
+                <option value="Soft Touch">Soft Touch</option>
+              </select>
+            </div>
             <div class="spec-row"><span class="k">Dispatch</span><span class="v" id="sv-dispatch"></span></div>
             <div class="spec-row"><span class="k">Delivery to</span><span class="v" id="sv-delivery"></span></div>
             <div class="spec-row"><span class="k">Order placed</span><span class="v" id="sv-placed"></span></div>
@@ -2037,6 +2047,21 @@ function normaliseLaminate(raw) {
   if (/soft.?touch/i.test(s))            return 'Soft Touch';
   if (/no.?lam|none|uncoated/i.test(s))  return 'None';
   return s;
+}
+
+async function saveLaminate(val){
+  var jobId = window._currentJobId;
+  if(!jobId) return;
+  if(JOB_DATA[jobId]) JOB_DATA[jobId].lam = val;
+  var db2 = getDB();
+  if(db2){
+    // Update first job_item for this job
+    var {data:items} = await db2.from('job_items').select('id').eq('job_id', jobId).limit(1);
+    if(items && items.length){
+      await db2.from('job_items').update({laminate: val||null}).eq('id', items[0].id);
+      showToast('Laminate set to ' + (val||'None') + ' ✓');
+    }
+  }
 }
 
 async function loadBoard(){
