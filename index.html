@@ -1651,6 +1651,8 @@ async function loadBoard(){
       itemsByJob[it.job_id].push(it);
     });
   }
+  // Attach items back onto each job so buildJobRow/buildJobCard can read job.job_items
+  jobs.forEach(function(j){ j.job_items = itemsByJob[j.id]||[]; });
 
   // ── Populate JOB_DATA for job detail lookups ─────────────────────
   jobs.forEach(function(job){
