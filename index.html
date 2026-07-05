@@ -1444,20 +1444,28 @@ tr.prio-on td,tr[data-prio="1"] td{background:#FFF3CD!important}
     <button class="back-btn" onclick="go('frontend')">← Back to board</button>
 
     <div class="jd-id" id="jdId">SS-1042 · Shopify #4042 · <span style="color:var(--green)">Paid ✓</span> · <span class="src shopify">Shopify</span></div>
+    <div style="font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);margin-top:14px;margin-bottom:4px">Business name</div>
     <div class="jd-name" id="jdName"></div>
 
     <!-- Customer details block -->
-    <div id="jdCustView" style="margin-top:6px;margin-bottom:4px">
-      <div style="display:flex;flex-wrap:wrap;gap:6px 20px;align-items:baseline">
-        <span style="font-family:'DM Sans',sans-serif;font-size:13.5px;color:var(--ink-2)"><b style="color:var(--ink);font-weight:600"></b></span>
-        <span style="font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink-3)">hello@</span>
-        <span style="font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink-3)">0412 555 123</span>
-        <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:var(--lilac);font-weight:600">2nd order</span>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px 20px;margin-top:10px;padding:12px 0;border-top:1px solid var(--line)">
+      <div>
+        <div style="font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);margin-bottom:3px">Contact</div>
+        <div style="font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);font-weight:500" id="jdContact">—</div>
       </div>
-      <div style="display:flex;align-items:center;gap:10px;margin-top:4px">
-        <span style="font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink-2)">📍 </span>
-        <button onclick="toggleCustEdit()" id="jdCustEditBtn" style="font-family:'Inter Tight',sans-serif;font-size:11px;font-weight:700;background:none;border:1.5px solid var(--line);border-radius:7px;padding:3px 10px;cursor:pointer;color:var(--ink-2)" class="admin-only">Edit</button>
+      <div>
+        <div style="font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);margin-bottom:3px">Email</div>
+        <div style="font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink)" id="jdEmail">—</div>
       </div>
+      <div>
+        <div style="font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);margin-bottom:3px">Phone</div>
+        <div style="font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink)" id="jdPhone">—</div>
+      </div>
+    </div>
+    <div style="padding:8px 0 10px;display:flex;align-items:center;gap:8px">
+      <span style="font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink-3)">📍</span>
+      <span style="font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink-2)" id="jdAddr"></span>
+      <button onclick="toggleCustEdit()" id="jdCustEditBtn" style="font-family:'Inter Tight',sans-serif;font-size:11px;font-weight:700;background:none;border:1.5px solid var(--line);border-radius:7px;padding:3px 10px;cursor:pointer;color:var(--ink-2)" class="admin-only">Edit</button>
     </div>
     <!-- Customer edit panel (admin only) -->
     <div id="jdCustEdit" style="display:none;background:#fff;border:1.5px solid var(--lilac-line);border-radius:12px;padding:14px;margin-bottom:8px">
@@ -3523,18 +3531,13 @@ function populateJobDetail(jobId){
   var nameEl=document.getElementById('jdName');
   if(nameEl)nameEl.textContent=d.name;
 
-  // Customer details
-  var custView=document.getElementById('jdCustView');
-  if(custView){
-    var cv='';
-    if(d.contact&&d.contact!=='—') cv+='<span class="jd-cust-contact-name">'+d.contact+'</span>';
-    if(d.email)  cv+='<span class="jd-cust-contact-detail">'+d.email+'</span>';
-    if(d.phone)  cv+='<span class="jd-cust-contact-detail">'+d.phone+'</span>';
-    custView.innerHTML=cv;
-    applyRoleUI();
-  }
-  var addrEl=document.getElementById('jdAddr');
-  if(addrEl) addrEl.textContent=d.addr||d.address||'';
+  // Customer details — individual labelled fields
+  var setEl=function(id,val){var el=document.getElementById(id);if(el)el.textContent=val||'';};
+  setEl('jdContact', d.contact&&d.contact!=='—'?d.contact:'');
+  setEl('jdEmail',   d.email||'');
+  setEl('jdPhone',   d.phone||'');
+  setEl('jdAddr',    d.addr||d.address||'');
+  applyRoleUI();
 
   // Sibling / split order note
   var partNote=document.getElementById('jdPartNote');
