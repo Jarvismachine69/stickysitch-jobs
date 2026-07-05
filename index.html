@@ -2064,7 +2064,18 @@ async function loadBoard(){
       product: PRODUCT_LABELS[item.product_type]||item.product_type||'',
       qty: item.quantity ? item.quantity.toLocaleString() : '—',
       shape: item.shape||'', size: fmtSize(item.width_mm, item.height_mm),
-      material: item.material||'', lam: item.laminate||'',
+      material: (function(){
+        var mat = item.material||'';
+        // If laminate is embedded in material string (e.g. "White Vinyl Matte"), strip it
+        if(!item.laminate) mat = mat.replace(/\s*\b(matte lam|gloss lam|soft touch|no lam|matte|gloss)\b/gi,'').trim();
+        return mat;
+      })(),
+      lam: item.laminate || (function(){
+        // Fallback: extract laminate keyword from material string
+        var mat = item.material||'';
+        var m = mat.match(/\b(matte lam(?:inate)?|gloss lam(?:inate)?|soft touch|no lam(?:inate)?|matte|gloss)\b/i);
+        return m ? m[1] : '';
+      })(),
       dispatch: fmtDispatch(job.dispatch_method, job.courier), courier: job.courier||'',
       placed: fmtDate(job.placed_at), due: fmtDate(job.due_date),
       dueAlert: job.due_date && new Date(job.due_date)<new Date(),
