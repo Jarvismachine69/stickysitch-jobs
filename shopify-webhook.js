@@ -389,6 +389,48 @@ export default async function handler(req, res) {
           artwork_filename: jobArtworkUrl.split('/').pop().split('?')[0] || 'artwork',
         }).eq('id', job.id);
       }
+
+      // ── Match pending_orders by customer email ─────────────────────
+      // If no artwork from Shopify, look up pending submission from configurator
+      if (!jobArtworkUrl) {
+        const customerEmail = (order.email || '').toLowerCase().trim();
+        if (customerEmail) {
+          const { data: pending } = await supabase
+            .from('pending_orders')
+            .select('*')
+            .eq('email', customerEmail)
+            .is('matched_job_id', null)
+            .order('created_at', { ascending: false })
+            .limit(1)
+            .single();
+
+          if (pending) {
+            // Attach artwork and any missing specs from the pending record
+            const updates = { matched_job_id: job.id };
+            if (pending.artwork_url) {
+              await supabase.from('jobs').update({
+                artwork_url:      pending.artwork_url,
+                artwork_filename: pending.artwork_filename || 'artwork',
+              }).eq('id', job.id);
+            }
+            // Fill any null job_item fields from pending record
+            await supabase.from('job_items').update({
+              ...(pending.shape    && { shape:    pending.shape }),
+              ...(pending.material && { material: pending.material }),
+              ...(pending.laminate && { laminate: pending.laminate }),
+              ...(pending.width_mm && { width_mm:  pending.width_mm }),
+              ...(pending.height_mm&& { height_mm: pending.height_mm }),
+            }).eq('job_id', job.id).is('shape', null);
+
+            // Mark pending record as matched
+            await supabase.from('pending_orders')
+              .update(updates)
+              .eq('id', pending.id);
+
+            console.log(\`✓ Matched pending order \${pending.id} to job \${job.id} (email: \${customerEmail})\`);
+          }
+        }
+      }
     }
 
     // ── Handle split orders: mark parent/children ─────────────────────
