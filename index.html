@@ -458,6 +458,15 @@ tbody tr.prio-on td{background:#FFFBEB}
   </div>
   <div class="panel-body">
 
+    <!-- Artwork quick view (always visible) -->
+    <div id="artQuickStrip" style="display:none;margin-bottom:16px;background:#F5F3FF;border:1.5px solid #DDD6FE;border-radius:12px;padding:12px;gap:12px;align-items:flex-start">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#7C3AED">Artwork versions</span>
+        <button onclick="switchTab('artwork',document.querySelectorAll('.tab-btn')[1])" style="font-size:11px;font-weight:600;color:#7C3AED;background:none;border:none;cursor:pointer;text-decoration:underline">Manage →</button>
+      </div>
+      <div id="artVersionStrip" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+    </div>
+
     <!-- Customer -->
     <div class="cust-block">
       <div class="cust-biz-label">Business name</div>
@@ -537,19 +546,16 @@ tbody tr.prio-on td{background:#FFFBEB}
 
     <!-- ARTWORK & PROOF TAB -->
     <div class="tab-pane" id="tab-artwork">
-      <!-- Artwork -->
-      <div class="section-label">Customer artwork</div>
-      <div class="art-box" id="artBox">
-        <div class="art-placeholder" id="artPlaceholder">🖼️</div>
-        <div class="art-filename" id="artFilename">No artwork attached</div>
-        <div class="art-sub" id="artSub">Artwork will appear here when linked from Shopify</div>
-        <a id="artDownload" href="#" target="_blank" rel="noopener" style="display:none;margin-top:10px;background:var(--navy);color:#fff;padding:8px 18px;border-radius:8px;font-size:13px;font-weight:700;display:inline-block">⬇ Download</a>
+      <!-- Artwork versions list -->
+      <div class="section-label">Artwork &amp; proof versions</div>
+      <div id="artVersionList" style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px">
+        <div style="padding:20px;text-align:center;color:var(--ink3);font-size:13px">No files uploaded yet</div>
       </div>
 
       <div class="divider"></div>
 
-      <!-- Proof -->
-      <div class="section-label">Proof / prepress</div>
+      <!-- Upload new version -->
+      <div class="section-label">Upload new version</div>
       <!-- Proof thumbnails (shows uploaded proofs) -->
       <div id="proofThumbArea" style="display:none;margin-bottom:10px">
         <div class="section-label">Uploaded proofs</div>
@@ -561,7 +567,7 @@ tbody tr.prio-on td{background:#FFFBEB}
         <div id="proofStatusMsg" style="font-size:13px;color:var(--ink2);margin-bottom:10px">No proof sent yet</div>
         <div class="proof-upload-zone" id="proofDropZone" onclick="document.getElementById('proofFileIn').click()">
           <div style="font-size:24px;margin-bottom:6px">📎</div>
-          <div style="font-size:13px;font-weight:600;color:var(--ink2)">Click to upload proof or artwork</div>
+          <div style="font-size:13px;font-weight:600;color:var(--ink2)">Click to upload — PDF, PNG, JPG</div>
           <div style="font-size:11px;color:var(--ink3);margin-top:4px">PDF, PNG, JPG up to 20MB</div>
         </div>
         <input type="file" id="proofFileIn" style="display:none" accept=".pdf,.png,.jpg,.jpeg" onchange="handleProofFile(this.files[0])">
@@ -1002,7 +1008,7 @@ function openJob(jobId){
   document.getElementById('jobPanel').classList.add('open');
   populateJobDetail(jobId);
   loadNotes(jobId);
-  loadProofThumbs(jobId);
+  loadArtworkVersions(jobId);
 }
 
 function closePanel(){
@@ -1097,7 +1103,7 @@ async function sendProof(){
   try{
     const r=await fetch('/api/send-proof',{method:'POST',body:form});
     const d=await r.json();
-    if(d.ok){ showToast('Proof sent ✓'); document.getElementById('proofStatusMsg').textContent='Proof sent — awaiting customer response'; }
+    if(d.ok){ showToast('Proof sent ✓'); document.getElementById('proofStatusMsg').textContent='Proof sent — awaiting customer response'; loadArtworkVersions(CURRENT_JOB_ID); }
     else{ showToast('Send failed: '+d.error); }
   }catch(e){ showToast('Error sending proof'); }
   btn.textContent='📧 Send proof to customer'; btn.disabled=false; proofFile=null;
@@ -1314,31 +1320,39 @@ let stripVisible = true;
 let activeCardFilter = null;
 
 function renderStatusCards(jobs) {
-  const counts = {};
-  (jobs||[]).forEach(j => {
-    const s = JOB_DATA[j.id]?.status || 'new';
+  var counts = {};
+  (jobs||[]).forEach(function(j) {
+    var s = (JOB_DATA[j.id] && JOB_DATA[j.id].status) || 'new';
     counts[s] = (counts[s]||0) + 1;
   });
-  const container = document.getElementById('statusCards');
+  var container = document.getElementById('statusCards');
   if(!container) return;
-  // Only show statuses that have jobs
-  const order = ['new','prepress','awaiting','revision','print','lam','cut','qa','outsource','ready','hold'];
-  let html = '';
-  order.forEach(s => {
-    const count = counts[s]||0;
-    if(count === 0) return;
-    const isActive = activeCardFilter === s;
-    const cardBg = isActive ? '#F5F3FF' : '#fff';
-    const cardBorder = isActive ? '#7C3AED' : '#E5E7EB';
-    const countColor = isActive ? '#7C3AED' : '#1E1B4B';
-    const labelColor = isActive ? '#7C3AED' : '#9CA3AF';
-    html += `<div onclick="filterByCard('${s}')" style="background:${cardBg};border:1.5px solid ${cardBorder};border-radius:10px;padding:8px 14px;cursor:pointer;transition:.12s;display:inline-flex;flex-direction:column;gap:2px;min-width:80px;user-select:none" title="${STATUS_LABELS[s]}">
-      <div style="width:8px;height:8px;border-radius:50%;background:${STATUS_COLORS[s]||'#888'};margin-bottom:2px"></div>
-      <div style="font-family:'Inter Tight',sans-serif;font-size:20px;font-weight:800;color:${countColor};line-height:1">${count}</div>
-      <div style="font-size:10px;font-weight:600;color:${labelColor};text-transform:uppercase;letter-spacing:.05em">${STATUS_LABELS[s]}</div>
-    </div>`;
+  var order = ['new','prepress','awaiting','revision','print','lam','cut','qa','outsource','ready','hold'];
+  var dots = {new:'#4C1D95',prepress:'#1E40AF',awaiting:'#92400E',revision:'#991B1B',print:'#065F46',lam:'#047857',cut:'#047857',qa:'#047857',outsource:'#6B21A8',ready:'#059669',hold:'#713F12'};
+  container.innerHTML = '';
+  order.forEach(function(s) {
+    var count = counts[s] || 0;
+    var active = (activeCardFilter === s);
+    var bg = active ? '#F5F3FF' : (count > 0 ? '#fff' : '#F9FAFB');
+    var bd = active ? '#7C3AED' : (count > 0 ? '#E5E7EB' : '#F3F4F6');
+    var nc = active ? '#7C3AED' : (count > 0 ? '#1E1B4B' : '#D1D5DB');
+    var lc = active ? '#7C3AED' : (count > 0 ? '#6B7280' : '#D1D5DB');
+    var dc = dots[s] || '#9CA3AF';
+    var lbl = STATUS_LABELS[s] || s;
+    var op = count > 0 ? '1' : '0.45';
+    var div = document.createElement('div');
+    div.setAttribute('onclick', "filterByCard('" + s + "')");
+    div.setAttribute('style',
+      'background:' + bg + ';border:1.5px solid ' + bd + ';border-radius:10px;' +
+      'padding:8px 14px;cursor:pointer;transition:.12s;display:inline-flex;flex-direction:column;' +
+      'gap:3px;min-width:84px;user-select:none;opacity:' + op
+    );
+    div.innerHTML =
+      '<div style="width:8px;height:8px;border-radius:50%;background:' + dc + ';margin-bottom:1px"></div>' +
+      '<div style="font-family:Inter Tight,sans-serif;font-size:22px;font-weight:800;color:' + nc + ';line-height:1">' + count + '</div>' +
+      '<div style="font-size:10px;font-weight:700;color:' + lc + ';text-transform:uppercase;letter-spacing:.05em;white-space:nowrap">' + lbl + '</div>';
+    container.appendChild(div);
   });
-  container.innerHTML = html || '<span style="font-size:12px;color:var(--ink3)">No active jobs</span>';
 }
 
 function filterByCard(status) {
@@ -1496,7 +1510,7 @@ async function uploadArtworkOnly() {
     if(JOB_DATA[CURRENT_JOB_ID]) { JOB_DATA[CURRENT_JOB_ID].artUrl=publicUrl; JOB_DATA[CURRENT_JOB_ID].artFilename=proofFile.name; }
     showToast('Artwork saved ✓');
     populateJobDetail(CURRENT_JOB_ID);
-    addProofThumb(publicUrl, proofFile.name);
+    loadArtworkVersions(CURRENT_JOB_ID);
   } catch(e) { showToast('Upload failed: '+(e.message||'error')); }
   btn.textContent = '💾 Save artwork only'; btn.disabled = false;
   proofFile = null;
@@ -1518,7 +1532,7 @@ function addProofThumb(url, filename) {
   }
 }
 
-async function loadProofThumbs(jobId) {
+async function loadProofThumbs_OLD(jobId) {
   const db2 = getDB(); if(!db2) return;
   const {data:proofs} = await db2.from('proofs').select('*').eq('job_id',jobId).order('created_at',{ascending:false});
   const area = document.getElementById('proofThumbArea');
@@ -1534,6 +1548,199 @@ async function loadProofThumbs(jobId) {
     }).join('');
   } else {
     area.style.display = 'none';
+  }
+}
+
+// ══ ARTWORK VERSIONING ════════════════════════════════════════════
+async function loadArtworkVersions(jobId) {
+  const db2 = getDB(); if(!db2) return;
+
+  // Get proofs from proofs table
+  const {data:proofs} = await db2.from('proofs').select('*').eq('job_id', jobId).order('created_at', {ascending:false});
+  // Also include original artwork from job
+  const job = JOB_DATA[jobId];
+  var allVersions = [];
+
+  if(proofs && proofs.length) {
+    proofs.forEach(function(p, i) {
+      allVersions.push({
+        id: p.id, url: p.file_url, name: p.filename || ('Proof v'+(proofs.length - i)),
+        type: 'proof', sentAt: p.created_at, status: p.status || 'sent', table: 'proofs'
+      });
+    });
+  }
+  // Add original artwork if exists and not already in proofs
+  if(job && job.artUrl) {
+    allVersions.push({
+      id: 'job-art', url: job.artUrl, name: job.artFilename || 'Original artwork',
+      type: 'artwork', sentAt: null, status: 'original', table: 'jobs'
+    });
+  }
+
+  renderArtVersions(allVersions, jobId);
+}
+
+function renderArtVersions(versions, jobId) {
+  // Full list in artwork tab
+  var list = document.getElementById('artVersionList');
+  // Quick strip above customer
+  var strip = document.getElementById('artVersionStrip');
+  var stripWrap = document.getElementById('artQuickStrip');
+
+  if(!versions || !versions.length) {
+    if(list) list.innerHTML = '<div style="padding:24px;text-align:center;color:var(--ink3);font-size:13px">No files uploaded yet</div>';
+    if(stripWrap) stripWrap.style.display = 'none';
+    return;
+  }
+
+  if(stripWrap) stripWrap.style.display = 'block';
+
+  // Quick strip — small thumbnails
+  if(strip) {
+    strip.innerHTML = '';
+    versions.forEach(function(v) {
+      var isImg = /\.(png|jpg|jpeg|gif|webp)$/i.test(v.name || '');
+      var thumb = document.createElement('div');
+      thumb.setAttribute('onclick', "window.open('" + v.url + "')");
+      thumb.setAttribute('title', v.name);
+      thumb.setAttribute('style',
+        'width:60px;height:60px;border-radius:8px;border:1.5px solid #DDD6FE;cursor:pointer;' +
+        'overflow:hidden;background:#fff;display:flex;align-items:center;justify-content:center;' +
+        'position:relative;flex-shrink:0'
+      );
+      if(isImg) {
+        thumb.innerHTML = '<img src="' + v.url + '" style="width:100%;height:100%;object-fit:cover">'
+          + '<div style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.5);font-size:8px;color:#fff;padding:2px;text-align:center;font-weight:600">'
+          + (v.type === 'proof' ? 'PROOF' : 'ART') + '</div>';
+      } else {
+        thumb.innerHTML = '<div style="font-size:22px">📄</div>'
+          + '<div style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.5);font-size:8px;color:#fff;padding:2px;text-align:center;font-weight:600">'
+          + (v.type === 'proof' ? 'PROOF' : 'ART') + '</div>';
+      }
+      strip.appendChild(thumb);
+    });
+  }
+
+  // Full list in artwork tab
+  if(list) {
+    list.innerHTML = '';
+    versions.forEach(function(v, i) {
+      var isImg = /\.(png|jpg|jpeg|gif|webp)$/i.test(v.name || '');
+      var statusBadge = v.status === 'approved'
+        ? '<span style="background:#D1FAE5;color:#065F46;font-size:10px;font-weight:700;padding:2px 7px;border-radius:999px">✓ Approved</span>'
+        : v.status === 'revision_requested'
+        ? '<span style="background:#FEE2E2;color:#991B1B;font-size:10px;font-weight:700;padding:2px 7px;border-radius:999px">↩ Revision</span>'
+        : v.status === 'sent'
+        ? '<span style="background:#DBEAFE;color:#1E40AF;font-size:10px;font-weight:700;padding:2px 7px;border-radius:999px">📧 Sent</span>'
+        : '<span style="background:#EDE9FD;color:#4C1D95;font-size:10px;font-weight:700;padding:2px 7px;border-radius:999px">Original</span>';
+
+      var row = document.createElement('div');
+      row.setAttribute('style',
+        'display:flex;align-items:center;gap:10px;padding:10px 12px;background:#F9FAFB;' +
+        'border:1.5px solid var(--line);border-radius:10px'
+      );
+
+      // Thumbnail
+      var thumbDiv = document.createElement('div');
+      thumbDiv.setAttribute('style',
+        'width:52px;height:52px;border-radius:8px;border:1px solid var(--line);overflow:hidden;' +
+        'flex-shrink:0;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer'
+      );
+      thumbDiv.setAttribute('onclick', "window.open('" + v.url + "')");
+      thumbDiv.innerHTML = isImg
+        ? '<img src="' + v.url + '" style="width:100%;height:100%;object-fit:cover">'
+        : '<div style="font-size:24px">📄</div>';
+
+      // Info
+      var info = document.createElement('div');
+      info.setAttribute('style', 'flex:1;min-width:0');
+      var versionNum = versions.length - i;
+      info.innerHTML =
+        '<div style="font-size:12px;font-weight:700;color:var(--ink);margin-bottom:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'
+        + 'v' + versionNum + ' — ' + v.name + '</div>'
+        + '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">'
+        + statusBadge
+        + (v.sentAt ? '<span style="font-size:11px;color:var(--ink3)">' + fmtDate(v.sentAt) + '</span>' : '')
+        + '</div>';
+
+      // Actions
+      var actions = document.createElement('div');
+      actions.setAttribute('style', 'display:flex;gap:6px;flex-shrink:0');
+
+      var dlBtn = document.createElement('a');
+      dlBtn.href = v.url;
+      dlBtn.target = '_blank';
+      dlBtn.rel = 'noopener';
+      dlBtn.setAttribute('style',
+        'background:var(--navy);color:#fff;border:none;border-radius:7px;padding:6px 10px;' +
+        'font-size:11px;font-weight:700;text-decoration:none;cursor:pointer'
+      );
+      dlBtn.textContent = '⬇';
+
+      var delBtn = document.createElement('button');
+      delBtn.setAttribute('style',
+        'background:#FEE2E2;color:#991B1B;border:none;border-radius:7px;padding:6px 10px;' +
+        'font-size:11px;font-weight:700;cursor:pointer'
+      );
+      delBtn.textContent = '✕';
+      if(v.table === 'proofs') {
+        delBtn.setAttribute('onclick', "deleteVersion('" + v.id + "','" + jobId + "')");
+      } else {
+        delBtn.setAttribute('onclick', "removeJobArtwork('" + jobId + "')");
+      }
+
+      actions.appendChild(dlBtn);
+      actions.appendChild(delBtn);
+      row.appendChild(thumbDiv);
+      row.appendChild(info);
+      row.appendChild(actions);
+      list.appendChild(row);
+    });
+  }
+}
+
+async function deleteVersion(proofId, jobId) {
+  if(!confirm('Remove this version?')) return;
+  const db2 = getDB(); if(!db2) return;
+  await db2.from('proofs').delete().eq('id', proofId);
+  showToast('Version removed ✓');
+  loadArtworkVersions(jobId);
+}
+
+async function removeJobArtwork(jobId) {
+  if(!confirm('Remove the original artwork?')) return;
+  const db2 = getDB(); if(!db2) return;
+  await db2.from('jobs').update({artwork_url: null, artwork_filename: null}).eq('id', jobId);
+  if(JOB_DATA[jobId]) { JOB_DATA[jobId].artUrl = ''; JOB_DATA[jobId].artFilename = ''; }
+  showToast('Artwork removed ✓');
+  loadArtworkVersions(jobId);
+}
+
+// Show preview immediately after file is selected
+function handleProofFile(file) {
+  if(!file) return;
+  proofFile = file;
+  var nameDiv = document.getElementById('proofFileName');
+  if(nameDiv) { nameDiv.textContent = '📎 ' + file.name; nameDiv.style.display = 'block'; }
+  document.getElementById('uploadArtBtn').style.display = 'block';
+  document.getElementById('sendProofBtn').style.display = 'block';
+
+  // Show inline preview if image
+  var isImg = /\.(png|jpg|jpeg|gif|webp)$/i.test(file.name);
+  if(isImg) {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var preview = document.getElementById('uploadPreview');
+      if(!preview) {
+        preview = document.createElement('img');
+        preview.id = 'uploadPreview';
+        preview.setAttribute('style','max-width:100%;max-height:160px;border-radius:8px;margin-top:8px;object-fit:contain;border:1px solid var(--line)');
+        nameDiv.parentNode.insertBefore(preview, nameDiv.nextSibling);
+      }
+      preview.src = e.target.result;
+      preview.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
   }
 }
 
