@@ -344,6 +344,15 @@ tbody tr.prio-on td{background:#FFFBEB}
   <!-- Board -->
   <div class="board-wrap">
 
+    <!-- Status cards strip -->
+    <div class="status-strip" id="statusStrip">
+      <button class="status-strip-toggle" onclick="toggleStatusStrip()" id="stripToggleBtn">📊 Hide overview</button>
+      <div class="status-strip-cards" id="statusCards">
+        <!-- Populated by JS -->
+      </div>
+      <button class="status-strip-toggle" onclick="clearStatusFilter()" id="clearCardFilter" style="display:none;border-color:var(--purple);color:var(--purple)">✕ Clear filter</button>
+    </div>
+
     <!-- Filter bar -->
     <div class="filter-bar">
       <input class="search-input" id="boardSearch" placeholder="Search order #, customer, email…" oninput="applyFilters()">
@@ -400,6 +409,40 @@ tbody tr.prio-on td{background:#FFFBEB}
     <!-- Mobile card grid -->
     <div class="card-grid" id="cardGrid"></div>
 
+    <!-- Completed / dispatched jobs -->
+    <div class="completed-section" id="completedSection" style="display:none">
+      <div class="completed-toggle" onclick="toggleCompleted()">
+        <span style="font-size:16px">✅</span>
+        <span class="completed-toggle-label">Completed jobs (dispatched &amp; picked up)</span>
+        <span class="completed-chevron" id="completedChevron">▼</span>
+      </div>
+      <div id="completedBody" style="display:none">
+        <div class="job-table-wrap">
+          <table>
+            <thead><tr>
+              <th class="col-thumb"></th>
+              <th class="col-order">Order #</th>
+              <th class="col-customer">Customer</th>
+              <th class="col-product">Product</th>
+              <th class="col-size">Size</th>
+              <th class="col-qty">Qty</th>
+              <th class="col-status">Status</th>
+              <th>Tracking</th>
+            </tr></thead>
+            <tbody id="completedTbody">
+              <tr><td colspan="8" style="padding:30px;text-align:center;color:var(--ink3)">Loading…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:14px;text-align:center">
+      <button class="btn-ghost" onclick="toggleCompletedSection()" id="completedToggleBtn" style="font-size:12px">
+        ✅ Show completed jobs
+      </button>
+    </div>
+
   </div><!-- /board-wrap -->
 </div><!-- /app -->
 
@@ -411,6 +454,7 @@ tbody tr.prio-on td{background:#FFFBEB}
     <span class="panel-job-id" id="panelJobId">SS-0001</span>
     <span style="font-size:12px;color:var(--ink3);margin-left:4px" id="panelShopifyRef"></span>
     <span style="margin-left:auto;font-size:12px;color:var(--green);font-weight:600" id="panelPaid"></span>
+    <button onclick="expandJob()" title="Full detail view" style="margin-left:auto;background:none;border:1.5px solid var(--line);border-radius:8px;padding:5px 10px;font-size:12px;font-weight:600;color:var(--ink2)">⤢ Expand</button>
   </div>
   <div class="panel-body">
 
@@ -506,17 +550,26 @@ tbody tr.prio-on td{background:#FFFBEB}
 
       <!-- Proof -->
       <div class="section-label">Proof / prepress</div>
+      <!-- Proof thumbnails (shows uploaded proofs) -->
+      <div id="proofThumbArea" style="display:none;margin-bottom:10px">
+        <div class="section-label">Uploaded proofs</div>
+        <div class="proof-thumb-row" id="proofThumbs"></div>
+      </div>
+
       <div class="proof-section">
-        <div class="proof-title">📋 Send proof to customer</div>
+        <div class="proof-title">📋 Proof / prepress</div>
         <div id="proofStatusMsg" style="font-size:13px;color:var(--ink2);margin-bottom:10px">No proof sent yet</div>
         <div class="proof-upload-zone" id="proofDropZone" onclick="document.getElementById('proofFileIn').click()">
           <div style="font-size:24px;margin-bottom:6px">📎</div>
-          <div style="font-size:13px;font-weight:600;color:var(--ink2)">Click to upload proof PDF / image</div>
+          <div style="font-size:13px;font-weight:600;color:var(--ink2)">Click to upload proof or artwork</div>
           <div style="font-size:11px;color:var(--ink3);margin-top:4px">PDF, PNG, JPG up to 20MB</div>
         </div>
         <input type="file" id="proofFileIn" style="display:none" accept=".pdf,.png,.jpg,.jpeg" onchange="handleProofFile(this.files[0])">
-        <div id="proofFileName" style="font-size:13px;color:var(--ink2);margin-top:8px;display:none"></div>
-        <button onclick="sendProof()" id="sendProofBtn" style="display:none;margin-top:10px;width:100%;background:var(--green);color:#fff;border:none;border-radius:9px;padding:10px;font-size:13px;font-weight:700">📧 Send proof to customer</button>
+        <div id="proofFileName" style="font-size:13px;font-weight:600;color:var(--ink);margin-top:8px;display:none;padding:8px;background:#F9FAFB;border-radius:8px"></div>
+        <div style="display:flex;gap:8px;margin-top:10px" id="proofActionBtns" style="display:none">
+          <button onclick="uploadArtworkOnly()" id="uploadArtBtn" style="flex:1;background:var(--card);color:var(--navy);border:1.5px solid var(--navy);border-radius:9px;padding:10px;font-size:13px;font-weight:700;display:none">💾 Save artwork only</button>
+          <button onclick="sendProof()" id="sendProofBtn" style="flex:1;background:var(--green);color:#fff;border:none;border-radius:9px;padding:10px;font-size:13px;font-weight:700;display:none">📧 Send proof to customer</button>
+        </div>
       </div>
     </div>
 
@@ -795,6 +848,7 @@ async function loadBoard(){
 function renderBoard(jobs){
   renderTable(jobs);
   renderCards(jobs);
+  renderStatusCards(jobs);
 }
 
 function renderTable(jobs){
@@ -948,6 +1002,7 @@ function openJob(jobId){
   document.getElementById('jobPanel').classList.add('open');
   populateJobDetail(jobId);
   loadNotes(jobId);
+  loadProofThumbs(jobId);
 }
 
 function closePanel(){
@@ -1243,6 +1298,241 @@ function showToast(msg){
 
 // ══ LOGIN ON ENTER ══════════════════════════════════════════
 document.getElementById('loginUser').addEventListener('keydown',e=>{ if(e.key==='Enter') document.getElementById('loginPass').focus(); });
+// ══ STATUS CARDS STRIP ════════════════════════════════════
+const STATUS_COLORS = {
+  new:'#4C1D95',prepress:'#1E40AF',awaiting:'#92400E',revision:'#991B1B',
+  print:'#065F46',lam:'#065F46',cut:'#065F46',qa:'#065F46',
+  outsource:'#6B21A8',ready:'#047857',dispatched:'#155E75',pickedup:'#155E75',hold:'#713F12'
+};
+const STATUS_BG = {
+  new:'#EDE9FD',prepress:'#DBEAFE',awaiting:'#FEF3C7',revision:'#FEE2E2',
+  print:'#D1FAE5',lam:'#D1FAE5',cut:'#D1FAE5',qa:'#D1FAE5',
+  outsource:'#F3E8FF',ready:'#ECFDF5',dispatched:'#CFFAFE',pickedup:'#CFFAFE',hold:'#FEF9C3'
+};
+
+let stripVisible = true;
+let activeCardFilter = null;
+
+function renderStatusCards(jobs) {
+  const counts = {};
+  (jobs||[]).forEach(j => {
+    const s = JOB_DATA[j.id]?.status || 'new';
+    counts[s] = (counts[s]||0) + 1;
+  });
+  const container = document.getElementById('statusCards');
+  if(!container) return;
+  // Only show statuses that have jobs
+  const order = ['new','prepress','awaiting','revision','print','lam','cut','qa','outsource','ready','hold'];
+  let html = '';
+  order.forEach(s => {
+    const count = counts[s]||0;
+    if(count === 0) return;
+    const isActive = activeCardFilter === s;
+    html += `<div class="scard${isActive?' active':''}" onclick="filterByCard('${s}')" title="Filter: ${STATUS_LABELS[s]}">
+      <div class="scard-dot" style="background:${STATUS_COLORS[s]||'#888'}"></div>
+      <div class="scard-count">${count}</div>
+      <div class="scard-label">${STATUS_LABELS[s]}</div>
+    </div>`;
+  });
+  container.innerHTML = html || '<span style="font-size:12px;color:var(--ink3)">No active jobs</span>';
+}
+
+function filterByCard(status) {
+  if(activeCardFilter === status) {
+    activeCardFilter = null;
+  } else {
+    activeCardFilter = status;
+  }
+  // Update card highlights
+  document.querySelectorAll('.scard').forEach(c => {
+    const isActive = c.getAttribute('onclick')===`filterByCard('${activeCardFilter}')`;
+    c.classList.toggle('active', isActive);
+  });
+  // Show/hide clear button
+  const clearBtn = document.getElementById('clearCardFilter');
+  if(clearBtn) clearBtn.style.display = activeCardFilter ? 'block' : 'none';
+  // Apply filter — override status dropdown filter
+  const statusSel = document.getElementById('filterStatus');
+  if(statusSel) statusSel.value = activeCardFilter || '';
+  applyFilters();
+}
+
+function clearStatusFilter() {
+  activeCardFilter = null;
+  document.querySelectorAll('.scard').forEach(c => c.classList.remove('active'));
+  const clearBtn = document.getElementById('clearCardFilter');
+  if(clearBtn) clearBtn.style.display = 'none';
+  const statusSel = document.getElementById('filterStatus');
+  if(statusSel) statusSel.value = '';
+  applyFilters();
+}
+
+function toggleStatusStrip() {
+  stripVisible = !stripVisible;
+  const cards = document.getElementById('statusCards');
+  const btn = document.getElementById('stripToggleBtn');
+  if(cards) cards.style.display = stripVisible ? 'flex' : 'none';
+  if(btn) btn.textContent = stripVisible ? '📊 Hide overview' : '📊 Show overview';
+}
+
+// ══ COMPLETED JOBS ════════════════════════════════════════
+let completedVisible = false;
+let completedLoaded = false;
+
+function toggleCompletedSection() {
+  completedVisible = !completedVisible;
+  const section = document.getElementById('completedSection');
+  const btn = document.getElementById('completedToggleBtn');
+  if(section) section.style.display = completedVisible ? 'block' : 'none';
+  if(btn) btn.textContent = completedVisible ? '✕ Hide completed jobs' : '✅ Show completed jobs';
+  if(completedVisible && !completedLoaded) {
+    loadCompletedJobs();
+    completedLoaded = true;
+  }
+}
+
+function toggleCompleted() {
+  const body = document.getElementById('completedBody');
+  const chevron = document.getElementById('completedChevron');
+  const isOpen = body.style.display !== 'none';
+  body.style.display = isOpen ? 'none' : 'block';
+  if(chevron) chevron.classList.toggle('open', !isOpen);
+}
+
+async function loadCompletedJobs() {
+  const db2 = getDB(); if(!db2) return;
+  const tbody = document.getElementById('completedTbody');
+  if(tbody) tbody.innerHTML = '<tr><td colspan="8" style="padding:20px;text-align:center;color:var(--ink3)">Loading…</td></tr>';
+
+  const {data:jobs} = await db2.from('jobs')
+    .select('*, customers(business_name,contact_name,email)')
+    .in('status',['dispatched','pickedup','cancelled'])
+    .order('updated_at',{ascending:false})
+    .limit(50);
+
+  if(!jobs||!jobs.length) {
+    if(tbody) tbody.innerHTML = '<tr><td colspan="8" style="padding:20px;text-align:center;color:var(--ink3)">No completed jobs yet</td></tr>';
+    return;
+  }
+
+  const jobIds = jobs.map(j=>j.id);
+  const {data:items} = await db2.from('job_items').select('*').in('job_id',jobIds);
+  const itemMap = {};
+  (items||[]).forEach(it=>{ itemMap[it.job_id]=it; });
+
+  let html = '';
+  jobs.forEach(job => {
+    const it = itemMap[job.id]||{};
+    const w=it.width_mm,h=it.height_mm;
+    const size=w&&h?w+'×'+h+' mm':'—';
+    const product = PRODUCT_LABELS[it.product_type]||it.product_type||'—';
+    const name = job.customers?.business_name||'Unknown';
+    const statusClass = chipClass(job.status);
+    const needsPickup = job.status==='dispatched'&&job.dispatch_method==='pickup';
+    html += `<tr style="cursor:pointer" onclick="openJob('${job.id}')">
+      <td><div style="font-size:20px">${it.product_type==='rolls'?'🏷️':it.product_type==='sheets'?'📋':'✂️'}</div></td>
+      <td><div class="job-id">${job.id}</div>${job.shopify_order_number?`<div class="shopify-ref">#${job.shopify_order_number}</div>`:''}</td>
+      <td><div class="cust-name">${name}</div></td>
+      <td>${product}</td>
+      <td>${size}</td>
+      <td style="text-align:right">${it.quantity?.toLocaleString()||'—'}</td>
+      <td><span class="stat-pill ${statusClass}" style="font-size:12px;padding:4px 12px;border-radius:999px;font-weight:700">${STATUS_LABELS[job.status]||job.status}</span></td>
+      <td>${job.outsource_tracking||'—'}${needsPickup?` <button onclick="event.stopPropagation();markJobPickedUp('${job.id}')" style="margin-left:8px;background:var(--green);color:#fff;border:none;border-radius:6px;padding:3px 8px;font-size:11px;font-weight:700;cursor:pointer">Mark picked up</button>`:''}</td>
+    </tr>`;
+  });
+  if(tbody) tbody.innerHTML = html;
+}
+
+async function markJobPickedUp(jobId) {
+  const db2 = getDB(); if(!db2) return;
+  await db2.from('jobs').update({status:'pickedup'}).eq('id',jobId);
+  showToast('Marked as picked up ✓');
+  loadCompletedJobs();
+}
+
+// ══ EXPAND TO FULL VIEW ═══════════════════════════════════
+function expandJob() {
+  const jobId = CURRENT_JOB_ID; if(!jobId) return;
+  const d = JOB_DATA[jobId]; if(!d) return;
+  // Open in a new tab showing all details full screen
+  const url = `/customer?token=internal&job=${jobId}`;
+  // Instead: make panel full screen
+  const panel = document.getElementById('jobPanel');
+  if(panel.style.width === '100vw') {
+    panel.style.width = '';
+    panel.style.maxWidth = '';
+  } else {
+    panel.style.width = '100vw';
+    panel.style.maxWidth = '100vw';
+  }
+}
+
+// ══ PROOF UPLOAD (SPLIT) ══════════════════════════════════
+function handleProofFile(file) {
+  if(!file) return;
+  proofFile = file;
+  const nameDiv = document.getElementById('proofFileName');
+  if(nameDiv) { nameDiv.textContent = '📎 ' + file.name; nameDiv.style.display = 'block'; }
+  document.getElementById('uploadArtBtn').style.display = 'block';
+  document.getElementById('sendProofBtn').style.display = 'block';
+}
+
+async function uploadArtworkOnly() {
+  if(!proofFile||!CURRENT_JOB_ID) { showToast('Select a file first'); return; }
+  const btn = document.getElementById('uploadArtBtn');
+  btn.textContent = 'Saving…'; btn.disabled = true;
+  const db2 = getDB();
+  try {
+    const ext = proofFile.name.split('.').pop();
+    const path = `artwork/${CURRENT_JOB_ID}_${Date.now()}.${ext}`;
+    const {error:upErr} = await db2.storage.from('artwork').upload(path, proofFile, {contentType:proofFile.type,upsert:false});
+    if(upErr) throw upErr;
+    const {data:{publicUrl}} = db2.storage.from('artwork').getPublicUrl(path);
+    await db2.from('jobs').update({artwork_url:publicUrl, artwork_filename:proofFile.name}).eq('id', CURRENT_JOB_ID);
+    if(JOB_DATA[CURRENT_JOB_ID]) { JOB_DATA[CURRENT_JOB_ID].artUrl=publicUrl; JOB_DATA[CURRENT_JOB_ID].artFilename=proofFile.name; }
+    showToast('Artwork saved ✓');
+    populateJobDetail(CURRENT_JOB_ID);
+    addProofThumb(publicUrl, proofFile.name);
+  } catch(e) { showToast('Upload failed: '+(e.message||'error')); }
+  btn.textContent = '💾 Save artwork only'; btn.disabled = false;
+  proofFile = null;
+  document.getElementById('proofFileName').style.display = 'none';
+  document.getElementById('uploadArtBtn').style.display = 'none';
+  document.getElementById('sendProofBtn').style.display = 'none';
+}
+
+function addProofThumb(url, filename) {
+  const area = document.getElementById('proofThumbArea');
+  const thumbs = document.getElementById('proofThumbs');
+  if(!area||!thumbs) return;
+  area.style.display = 'block';
+  const isImg = /\.(png|jpg|jpeg|gif|webp)$/i.test(filename||'');
+  if(isImg) {
+    thumbs.innerHTML += `<img class="proof-thumb" src="${url}" title="${filename}" onclick="window.open('${url}')">`;
+  } else {
+    thumbs.innerHTML += `<div class="proof-thumb-placeholder" onclick="window.open('${url}')" title="${filename}">📄</div>`;
+  }
+}
+
+async function loadProofThumbs(jobId) {
+  const db2 = getDB(); if(!db2) return;
+  const {data:proofs} = await db2.from('proofs').select('*').eq('job_id',jobId).order('created_at',{ascending:false});
+  const area = document.getElementById('proofThumbArea');
+  const thumbs = document.getElementById('proofThumbs');
+  if(!area||!thumbs) return;
+  if(proofs&&proofs.length) {
+    area.style.display = 'block';
+    thumbs.innerHTML = proofs.map(p => {
+      const isImg = /\.(png|jpg|jpeg|gif|webp)$/i.test(p.filename||p.file_url||'');
+      return isImg
+        ? `<img class="proof-thumb" src="${p.file_url}" title="${p.filename||'Proof'}" onclick="window.open('${p.file_url}')">`
+        : `<div class="proof-thumb-placeholder" onclick="window.open('${p.file_url}')" title="${p.filename||'Proof'}">📄</div>`;
+    }).join('');
+  } else {
+    area.style.display = 'none';
+  }
+}
+
 </script>
 </body>
 </html>
