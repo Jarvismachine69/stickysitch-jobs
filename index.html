@@ -345,12 +345,12 @@ tbody tr.prio-on td{background:#FFFBEB}
   <div class="board-wrap">
 
     <!-- Status cards strip -->
-    <div class="status-strip" id="statusStrip">
-      <button class="status-strip-toggle" onclick="toggleStatusStrip()" id="stripToggleBtn">📊 Hide overview</button>
-      <div class="status-strip-cards" id="statusCards">
+    <div id="statusStrip" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px;padding:12px 14px;background:#fff;border:1.5px solid #E5E7EB;border-radius:12px">
+      <button onclick="toggleStatusStrip()" id="stripToggleBtn" style="font-size:12px;font-weight:600;color:#6B7280;background:none;border:1.5px solid #E5E7EB;border-radius:8px;padding:5px 10px;cursor:pointer;white-space:nowrap">📊 Hide overview</button>
+      <div id="statusCards" style="display:flex;gap:8px;flex-wrap:wrap;flex:1;align-items:flex-start">
         <!-- Populated by JS -->
       </div>
-      <button class="status-strip-toggle" onclick="clearStatusFilter()" id="clearCardFilter" style="display:none;border-color:var(--purple);color:var(--purple)">✕ Clear filter</button>
+      <button onclick="clearStatusFilter()" id="clearCardFilter" style="display:none;font-size:12px;font-weight:600;color:#7C3AED;background:none;border:1.5px solid #7C3AED;border-radius:8px;padding:5px 10px;cursor:pointer">✕ Clear filter</button>
     </div>
 
     <!-- Filter bar -->
@@ -823,7 +823,7 @@ async function loadBoard(){
     let lam = normaliseLaminate(item.laminate);
     if(!lam){ const m=mat.match(/\b(matte lam(?:inate)?|gloss lam(?:inate)?|soft touch|matte|gloss)\b/i); if(m) lam=normaliseLaminate(m[1]); }
     JOB_DATA[job.id] = {
-      id: job.id, shopify: job.shopify_order_number, paid: true,
+      id: job.id, shopify: job.shopify_order_number ? String(job.shopify_order_number).replace(/^#/,'') : null, paid: true,
       src: job.source||'manual',
       name: job.business_name||'Unknown', contact: job.contact_name||'',
       email: job.customer_email||'', phone: job.customer_phone||'',
@@ -1328,10 +1328,14 @@ function renderStatusCards(jobs) {
     const count = counts[s]||0;
     if(count === 0) return;
     const isActive = activeCardFilter === s;
-    html += `<div class="scard${isActive?' active':''}" onclick="filterByCard('${s}')" title="Filter: ${STATUS_LABELS[s]}">
-      <div class="scard-dot" style="background:${STATUS_COLORS[s]||'#888'}"></div>
-      <div class="scard-count">${count}</div>
-      <div class="scard-label">${STATUS_LABELS[s]}</div>
+    const cardBg = isActive ? '#F5F3FF' : '#fff';
+    const cardBorder = isActive ? '#7C3AED' : '#E5E7EB';
+    const countColor = isActive ? '#7C3AED' : '#1E1B4B';
+    const labelColor = isActive ? '#7C3AED' : '#9CA3AF';
+    html += `<div onclick="filterByCard('${s}')" style="background:${cardBg};border:1.5px solid ${cardBorder};border-radius:10px;padding:8px 14px;cursor:pointer;transition:.12s;display:inline-flex;flex-direction:column;gap:2px;min-width:80px;user-select:none" title="${STATUS_LABELS[s]}">
+      <div style="width:8px;height:8px;border-radius:50%;background:${STATUS_COLORS[s]||'#888'};margin-bottom:2px"></div>
+      <div style="font-family:'Inter Tight',sans-serif;font-size:20px;font-weight:800;color:${countColor};line-height:1">${count}</div>
+      <div style="font-size:10px;font-weight:600;color:${labelColor};text-transform:uppercase;letter-spacing:.05em">${STATUS_LABELS[s]}</div>
     </div>`;
   });
   container.innerHTML = html || '<span style="font-size:12px;color:var(--ink3)">No active jobs</span>';
