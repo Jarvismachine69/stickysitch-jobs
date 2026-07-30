@@ -1048,14 +1048,7 @@ function populateJobDetail(jobId){
   // Laminate dropdown
   const lamSel=document.getElementById('pd-lam');
   if(lamSel){ lamSel.value=d.lam||''; if(!lamSel.value) lamSel.value=''; }
-  // Artwork
-  const hasArt=!!(d.artUrl);
-  const artBox=document.getElementById('artBox');
-  artBox.className='art-box'+(hasArt?' has-art':'');
-  document.getElementById('artPlaceholder').style.display=hasArt?'none':'block';
-  document.getElementById('artFilename').textContent=hasArt?(d.artFilename||'Artwork attached'):'No artwork attached';
-  document.getElementById('artSub').textContent=hasArt?'':'Artwork will link automatically when Shopify order syncs';
-  const dl=document.getElementById('artDownload'); dl.href=d.artUrl||'#'; dl.style.display=hasArt?'inline-block':'none';
+  // Artwork display is handled by loadArtworkVersions() — nothing to set here
   // Dispatch section
   const isPickup=d.dispatchMethod==='pickup';
   document.getElementById('roadSection').style.display=isPickup?'none':'block';
