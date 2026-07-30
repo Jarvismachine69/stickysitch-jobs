@@ -672,7 +672,7 @@ tbody tr.prio-on td{background:#FFFBEB}
 <script>
 // ══ CONFIG ═════════════════════════════════════════════════
 const SUPABASE_URL      = 'https://irwgxtnlsssmkjiofhgq.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlyd2d4dG5sc3NzbWtqaW9maGdxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTcwMjkzNzUsImV4cCI6MjAzMjYwNTM3NX0.3w0iBs7s8wrMQXZGIZjxIJi9Ni41PQ5BLFhX7-3h5Ts';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlyd2d4dG5sc3NzbWtqaW9maGdxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyOTI3MzQsImV4cCI6MjA5Nzg2ODczNH0.38oYSKXw3TiP4VP9g9A3Ghn43f8z8Mt8NYF_zKdwkm0';
 const STATUS_LABELS = {new:'New',prepress:'Prepress',awaiting:'Awaiting Approval',revision:'Artwork Revision',print:'Print',lam:'Laminate',cut:'Cut',qa:'QA & Packing',outsource:'Outsource',ready:'Ready',dispatched:'Dispatched',pickedup:'Picked Up',hold:'On Hold',cancelled:'Cancelled'};
 const PRODUCT_LABELS = {rolls:'Roll labels',sheets:'Sticker sheets',individual:'Individual stickers',bumper:'Bumper stickers'};
 
@@ -698,11 +698,18 @@ async function doLogin(){
 
   const db2 = getDB();
   // Get email from username
+  // Try RPC username lookup
+  let email = null;
   const {data: emailData, error: rpcErr} = await db2.rpc('get_email_by_username', {p_username: username});
-  if(rpcErr || !emailData){ err.textContent='User not found'; err.style.display='block'; return; }
+  if(!rpcErr && emailData) {
+    email = typeof emailData === 'string' ? emailData : (emailData[0]?.email || emailData.email || null);
+  }
+  // Fallback: if username contains @, try as email directly
+  if(!email && username.includes('@')) email = username;
+  if(!email){ err.textContent='Username not found. Try again.'; err.style.display='block'; return; }
 
-  const {data: authData, error: authErr} = await db2.auth.signInWithPassword({email: emailData, password});
-  if(authErr){ err.textContent='Incorrect password'; err.style.display='block'; return; }
+  const {data: authData, error: authErr} = await db2.auth.signInWithPassword({email, password});
+  if(authErr){ err.textContent='Incorrect password. Try again.'; err.style.display='block'; return; }
 
   const {data: profile} = await db2.from('profiles').select('*').eq('id', authData.user.id).single();
   CURRENT_USER = profile || {name: username, role:'staff'};
