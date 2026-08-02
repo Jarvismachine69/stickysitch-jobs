@@ -465,7 +465,7 @@ tbody tr.prio-on td{background:#FFFBEB}
         <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#7C3AED">Artwork versions</span>
         <button onclick="switchTab('artwork',document.querySelectorAll('.tab-btn')[1])" style="font-size:11px;font-weight:600;color:#7C3AED;background:none;border:none;cursor:pointer;text-decoration:underline">Manage →</button>
       </div>
-      <div id="artVersionStrip" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+      <div id="artVersionStrip" style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-start"></div>
     </div>
 
     <!-- Customer -->
@@ -856,6 +856,7 @@ function renderBoard(jobs){
   renderTable(jobs);
   renderCards(jobs);
   renderStatusCards(jobs);
+  setTimeout(applyPdfThumbs, 100);
 }
 
 function renderTable(jobs){
@@ -882,11 +883,23 @@ function renderTable(jobs){
       html+=`<tr class="date-row"><td colspan="11" style="padding:0;border:none"><div class="${cls}" style="border-radius:12px;margin:12px 0 3px"><div class="date-label">${label}${pill}</div><div class="date-sub">${sub}</div></div></td></tr>`;
     }
     const st = d.status;
-    const thumb = d.productKey==='rolls'?'🏷️':d.productKey==='sheets'?'📋':d.productKey==='bumper'?'🚗':'✂️';
+    var thumbEmoji = d.productKey==='rolls'?'🏷️':d.productKey==='sheets'?'📋':d.productKey==='bumper'?'🚗':'✂️';
+    var thumbHtml;
+    if(d.artUrl) {
+      var isImg = /\.(png|jpg|jpeg|gif|webp)$/i.test(d.artFilename||d.artUrl||'');
+      if(isImg) {
+        thumbHtml = '<img src="' + d.artUrl + '" style="width:100%;height:100%;object-fit:cover;border-radius:7px" onerror="this.parentNode.innerHTML=\''+thumbEmoji+'\'">';
+      } else {
+        // PDF — use canvas placeholder, rendered after row insertion
+        thumbHtml = '<canvas data-pdf="' + d.artUrl + '" style="width:100%;height:100%;object-fit:contain;border-radius:7px"></canvas>';
+      }
+    } else {
+      thumbHtml = thumbEmoji;
+    }
     html+=`<tr data-job-id="${job.id}" data-status="${st}" onclick="openJob('${job.id}')">
       <td class="col-check" onclick="event.stopPropagation()"><input type="checkbox" class="row-check" value="${job.id}" onchange="handleRowCheck(this)"></td>
       <td class="col-prio"><button class="prio-btn" onclick="event.stopPropagation();togglePrio(this)" style="background:none;border:none;font-size:16px;opacity:.3;cursor:pointer">⚡</button></td>
-      <td class="col-thumb"><div class="row-thumb">${thumb}</div></td>
+      <td class="col-thumb"><div class="row-thumb" style="${d.artUrl?'background:#eee;padding:0;overflow:hidden':''}">${thumbHtml}</div></td>
       <td class="col-order"><div class="job-id">${d.id}</div>${d.shopify?`<div class="shopify-ref">#${d.shopify}</div>`:''}</td>
       <td class="col-customer"><div class="cust-name">${d.name}</div><div class="cust-sub">${d.contact||d.email}</div></td>
       <td class="col-product">${d.product||'—'}</td>
@@ -1596,7 +1609,7 @@ function renderArtVersions(versions, jobId) {
       var label = v.type === 'proof' ? 'PROOF' : 'ART';
       var wrap = document.createElement('div');
       wrap.setAttribute('style', 'position:relative;flex-shrink:0');
-      var thumb = makeThumbEl(v.url, v.name, 60, 'border:1.5px solid #DDD6FE;');
+      var thumb = makeThumbEl(v.url, v.name, 90, 'border:1.5px solid #DDD6FE;');
       thumb.setAttribute('title', v.name);
       var badge = document.createElement('div');
       badge.setAttribute('style',
@@ -1785,6 +1798,28 @@ function makeThumbEl(url, name, size, extraStyle) {
     wrap.innerHTML = '<div style="font-size:24px">📎</div>';
   }
   return wrap;
+}
+
+// Render PDF thumbnails in table rows after they're inserted into DOM
+async function applyPdfThumbs() {
+  var canvases = document.querySelectorAll('canvas[data-pdf]');
+  canvases.forEach(function(canvas) {
+    var url = canvas.getAttribute('data-pdf');
+    if(url && typeof pdfjsLib !== 'undefined') {
+      canvas.removeAttribute('data-pdf');
+      var size = 40;
+      pdfjsLib.getDocument({url: url, withCredentials: false}).promise.then(function(pdf) {
+        return pdf.getPage(1);
+      }).then(function(page) {
+        var vp = page.getViewport({scale: 1});
+        var scale = size / Math.max(vp.width, vp.height);
+        var svp = page.getViewport({scale: scale});
+        canvas.width  = svp.width;
+        canvas.height = svp.height;
+        page.render({canvasContext: canvas.getContext('2d'), viewport: svp});
+      }).catch(function(){ canvas.parentNode.innerHTML = '📄'; });
+    }
+  });
 }
 
 </script>
