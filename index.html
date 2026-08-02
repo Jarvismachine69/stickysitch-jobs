@@ -288,6 +288,7 @@ tbody tr.prio-on td{background:#FFFBEB}
 .divider{height:1px;background:var(--line);margin:16px 0}
 .section-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);margin-bottom:8px}
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
 <body>
 
@@ -1592,25 +1593,21 @@ function renderArtVersions(versions, jobId) {
   if(strip) {
     strip.innerHTML = '';
     versions.forEach(function(v) {
-      var isImg = /\.(png|jpg|jpeg|gif|webp)$/i.test(v.name || '');
-      var thumb = document.createElement('div');
-      thumb.setAttribute('onclick', "window.open('" + v.url + "')");
+      var label = v.type === 'proof' ? 'PROOF' : 'ART';
+      var wrap = document.createElement('div');
+      wrap.setAttribute('style', 'position:relative;flex-shrink:0');
+      var thumb = makeThumbEl(v.url, v.name, 60, 'border:1.5px solid #DDD6FE;');
       thumb.setAttribute('title', v.name);
-      thumb.setAttribute('style',
-        'width:60px;height:60px;border-radius:8px;border:1.5px solid #DDD6FE;cursor:pointer;' +
-        'overflow:hidden;background:#fff;display:flex;align-items:center;justify-content:center;' +
-        'position:relative;flex-shrink:0'
+      var badge = document.createElement('div');
+      badge.setAttribute('style',
+        'position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.55);' +
+        'font-size:8px;color:#fff;padding:2px;text-align:center;font-weight:700;' +
+        'border-radius:0 0 6px 6px;pointer-events:none'
       );
-      if(isImg) {
-        thumb.innerHTML = '<img src="' + v.url + '" style="width:100%;height:100%;object-fit:cover">'
-          + '<div style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.5);font-size:8px;color:#fff;padding:2px;text-align:center;font-weight:600">'
-          + (v.type === 'proof' ? 'PROOF' : 'ART') + '</div>';
-      } else {
-        thumb.innerHTML = '<div style="font-size:22px">📄</div>'
-          + '<div style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.5);font-size:8px;color:#fff;padding:2px;text-align:center;font-weight:600">'
-          + (v.type === 'proof' ? 'PROOF' : 'ART') + '</div>';
-      }
-      strip.appendChild(thumb);
+      badge.textContent = label;
+      wrap.appendChild(thumb);
+      wrap.appendChild(badge);
+      strip.appendChild(wrap);
     });
   }
 
@@ -1634,15 +1631,7 @@ function renderArtVersions(versions, jobId) {
       );
 
       // Thumbnail
-      var thumbDiv = document.createElement('div');
-      thumbDiv.setAttribute('style',
-        'width:52px;height:52px;border-radius:8px;border:1px solid var(--line);overflow:hidden;' +
-        'flex-shrink:0;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer'
-      );
-      thumbDiv.setAttribute('onclick', "window.open('" + v.url + "')");
-      thumbDiv.innerHTML = isImg
-        ? '<img src="' + v.url + '" style="width:100%;height:100%;object-fit:cover">'
-        : '<div style="font-size:24px">📄</div>';
+      var thumbDiv = makeThumbEl(v.url, v.name, 52);
 
       // Info
       var info = document.createElement('div');
@@ -1735,6 +1724,67 @@ function handleProofFile(file) {
     };
     reader.readAsDataURL(file);
   }
+}
+
+// ══ PDF PREVIEW RENDERING ═════════════════════════════════════════
+// Set PDF.js worker
+if(typeof pdfjsLib !== 'undefined') {
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+}
+
+// Render first page of PDF into a container div as a canvas
+async function renderPdfThumb(url, container, size) {
+  size = size || 52;
+  try {
+    if(typeof pdfjsLib === 'undefined') { container.innerHTML = '<div style="font-size:24px;color:#9CA3AF">📄</div>'; return; }
+    var loadingTask = pdfjsLib.getDocument({url: url, withCredentials: false});
+    var pdf = await loadingTask.promise;
+    var page = await pdf.getPage(1);
+    var viewport = page.getViewport({scale: 1});
+    // Scale to fit the container
+    var scale = size / Math.max(viewport.width, viewport.height);
+    var scaledViewport = page.getViewport({scale: scale});
+    var canvas = document.createElement('canvas');
+    canvas.width  = scaledViewport.width;
+    canvas.height = scaledViewport.height;
+    canvas.style.width  = '100%';
+    canvas.style.height = '100%';
+    canvas.style.objectFit = 'contain';
+    var ctx = canvas.getContext('2d');
+    await page.render({canvasContext: ctx, viewport: scaledViewport}).promise;
+    container.innerHTML = '';
+    container.appendChild(canvas);
+  } catch(e) {
+    console.warn('PDF thumb failed:', e.message);
+    container.innerHTML = '<div style="font-size:24px;color:#9CA3AF">📄</div>';
+  }
+}
+
+// Create a thumb container that auto-renders based on file type
+function makeThumbEl(url, name, size, extraStyle) {
+  size = size || 52;
+  var isImg  = /\.(png|jpg|jpeg|gif|webp)$/i.test(name || '');
+  var isPdf  = /\.pdf$/i.test(name || '') || (!isImg && url);
+  var wrap = document.createElement('div');
+  wrap.setAttribute('style',
+    'width:' + size + 'px;height:' + size + 'px;border-radius:8px;border:1.5px solid #E5E7EB;' +
+    'overflow:hidden;background:#F9FAFB;display:flex;align-items:center;justify-content:center;' +
+    'cursor:pointer;flex-shrink:0;position:relative;' + (extraStyle||'')
+  );
+  wrap.setAttribute('onclick', "window.open('" + url + "')");
+  if(isImg) {
+    var img = document.createElement('img');
+    img.src = url;
+    img.setAttribute('style', 'width:100%;height:100%;object-fit:cover');
+    img.onerror = function(){ wrap.innerHTML = '<div style="font-size:24px">🖼️</div>'; };
+    wrap.appendChild(img);
+  } else if(isPdf) {
+    wrap.innerHTML = '<div style="font-size:20px;color:#9CA3AF">⏳</div>';
+    renderPdfThumb(url, wrap, size);
+  } else {
+    wrap.innerHTML = '<div style="font-size:24px">📎</div>';
+  }
+  return wrap;
 }
 
 </script>
