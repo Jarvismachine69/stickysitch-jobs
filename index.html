@@ -1270,7 +1270,7 @@ async function createJob(){
     // Upload artwork if provided
     if(newJobArtFile){
       const ext=newJobArtFile.name.split('.').pop();
-      const path=`manual/${job.id}_${Date.now()}.${ext}`;
+      const path=`${job.id}_${Date.now()}.${ext}`;
       const {error:upErr}=await db2.storage.from('artwork').upload(path,newJobArtFile,{contentType:newJobArtFile.type,upsert:false});
       if(!upErr){
         const {data:{publicUrl}}=db2.storage.from('artwork').getPublicUrl(path);
@@ -1495,7 +1495,7 @@ async function uploadArtworkOnly() {
   const db2 = getDB();
   try {
     const ext = proofFile.name.split('.').pop();
-    const path = `artwork/${CURRENT_JOB_ID}_${Date.now()}.${ext}`;
+    const path = `${CURRENT_JOB_ID}_${Date.now()}.${ext}`;
     const {error:upErr} = await db2.storage.from('artwork').upload(path, proofFile, {contentType:proofFile.type,upsert:false});
     if(upErr) throw upErr;
     const {data:{publicUrl}} = db2.storage.from('artwork').getPublicUrl(path);
