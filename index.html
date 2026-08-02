@@ -86,14 +86,14 @@ a{color:inherit;text-decoration:none}
 table{width:100%;border-collapse:collapse}
 thead{background:#F9FAFB}
 th{padding:10px 14px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);border-bottom:1px solid var(--line);white-space:nowrap}
-td{padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:middle}
+td{padding:8px 14px;border-bottom:1px solid var(--line);vertical-align:middle}
 tbody tr:last-child td{border-bottom:none}
 tbody tr{cursor:pointer;transition:.12s}
 tbody tr:hover td{background:#F9FAFB}
 tbody tr.prio-on td{background:#FFFBEB}
 .col-check{width:36px}
 .col-prio{width:32px}
-.col-thumb{width:44px}
+.col-thumb{width:68px}
 .col-order{min-width:120px}
 .col-customer{min-width:160px}
 .col-product{min-width:130px}
@@ -109,7 +109,7 @@ tbody tr.prio-on td{background:#FFFBEB}
 .cust-sub{font-size:12px;color:var(--ink3);margin-top:1px}
 .src-badge{font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px;background:#D1FAE5;color:#065F46}
 .src-badge.manual{background:#FEF3C7;color:#92400E}
-.row-thumb{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;background:#EDE9FD}
+.row-thumb{width:56px;height:56px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:22px;background:#EDE9FD;overflow:hidden}
 
 /* ── Status pill select ────────────────────────────────────── */
 .stat-pill{appearance:none;-webkit-appearance:none;border:none;outline:none;cursor:pointer;font-family:'Inter Tight',sans-serif;font-weight:700;font-size:11.5px;padding:5px 24px 5px 10px;border-radius:999px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='currentColor' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 7px center;background-size:10px;transition:.12s;max-width:155px}
@@ -888,7 +888,7 @@ function renderTable(jobs){
     if(d.artUrl) {
       var isImg = /\.(png|jpg|jpeg|gif|webp)$/i.test(d.artFilename||d.artUrl||'');
       if(isImg) {
-        thumbHtml = '<img src="' + d.artUrl + '" style="width:100%;height:100%;object-fit:cover;border-radius:7px" onerror="this.parentNode.innerHTML=\''+thumbEmoji+'\'">';
+        thumbHtml = '<img src="' + d.artUrl + '" style="width:100%;height:100%;object-fit:cover;border-radius:0" onerror="this.parentNode.innerHTML=\''+thumbEmoji+'\'">';
       } else {
         // PDF — use canvas placeholder, rendered after row insertion
         thumbHtml = '<canvas data-pdf="' + d.artUrl + '" style="width:100%;height:100%;object-fit:contain;border-radius:7px"></canvas>';
@@ -1609,7 +1609,7 @@ function renderArtVersions(versions, jobId) {
       var label = v.type === 'proof' ? 'PROOF' : 'ART';
       var wrap = document.createElement('div');
       wrap.setAttribute('style', 'position:relative;flex-shrink:0');
-      var thumb = makeThumbEl(v.url, v.name, 90, 'border:1.5px solid #DDD6FE;');
+      var thumb = makeThumbEl(v.url, v.name, 130, 'border:1.5px solid #DDD6FE;');
       thumb.setAttribute('title', v.name);
       var badge = document.createElement('div');
       badge.setAttribute('style',
@@ -1807,7 +1807,7 @@ async function applyPdfThumbs() {
     var url = canvas.getAttribute('data-pdf');
     if(url && typeof pdfjsLib !== 'undefined') {
       canvas.removeAttribute('data-pdf');
-      var size = 40;
+      var size = 56;
       pdfjsLib.getDocument({url: url, withCredentials: false}).promise.then(function(pdf) {
         return pdf.getPage(1);
       }).then(function(page) {
