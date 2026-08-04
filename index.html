@@ -1186,53 +1186,86 @@ async function handlePdfUpload(file){
   window._pdfFile = file;
 }
 
-async function extractFromText(){
-  const text=document.getElementById('aiPasteText').value.trim();
-  const pdfFile=window._pdfFile;
-  if(!text&&!pdfFile){ showToast('Paste some text or upload a file first'); return; }
-  const btn=document.getElementById('extractBtnText'); btn.textContent='✨ Extracting…';
-  document.getElementById('extractBtn').disabled=true;
+async function extractFromText() {
+  const text     = document.getElementById('aiPasteText').value.trim();
+  const pdfFile  = window._pdfFile;
+  const resultEl = document.getElementById('extractResult');
+  const btnText  = document.getElementById('extractBtnText');
+  const btn      = document.getElementById('extractBtn');
 
-  try{
-    let prompt='';
-    if(pdfFile){
-      // Read file as base64
-      const b64=await new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(r.result.split(',')[1]); r.onerror=rej; r.readAsDataURL(pdfFile); });
-      const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,messages:[{role:'user',content:[{type:'document',source:{type:'base64',media_type:pdfFile.type||'application/pdf',data:b64}},{type:'text',text:'Extract job details from this document. Return ONLY valid JSON with these fields: biz, contact, email, phone, addr, product (rolls/sheets/individual/bumper), qty, shape, width_mm, height_mm, material, laminate (None/Gloss/Matte/Soft Touch), dispatch (road/pickup), notes. Use null for unknown fields.'}]}]})});
-      const data=await resp.json();
-      prompt=data.content?.[0]?.text||'';
-    } else {
-      const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,messages:[{role:'user',content:'Extract job details from this text. Return ONLY valid JSON with these fields: biz, contact, email, phone, addr, product (rolls/sheets/individual/bumper), qty (number), shape, width_mm (number), height_mm (number), material, laminate (None/Gloss/Matte/Soft Touch), dispatch (road/pickup), notes. Use null for unknown.\n\nText:\n'+text}]})});
-      const data=await resp.json();
-      prompt=data.content?.[0]?.text||'';
+  // Validate — catch pasted URLs instead of email content
+  if (!pdfFile && !text) {
+    resultEl.style.display = 'block';
+    resultEl.innerHTML = '<span style="color:var(--red)">Paste the email text first, or upload a PDF/image file.</span>';
+    return;
+  }
+  if (!pdfFile && text.startsWith('http')) {
+    resultEl.style.display = 'block';
+    resultEl.innerHTML = '<span style="color:var(--red)">That looks like a URL — paste the actual email text instead, not the link.</span>';
+    return;
+  }
+
+  btnText.textContent = '✨ Extracting…';
+  btn.disabled = true;
+  resultEl.style.display = 'none';
+
+  try {
+    // Build request to server-side proxy
+    const payload = { text };
+
+    if (pdfFile) {
+      const b64 = await new Promise((res, rej) => {
+        const r = new FileReader();
+        r.onload  = () => res(r.result.split(',')[1]);
+        r.onerror = rej;
+        r.readAsDataURL(pdfFile);
+      });
+      payload.fileBase64 = b64;
+      payload.fileType   = pdfFile.type || 'application/pdf';
+      payload.fileName   = pdfFile.name || 'file';
     }
 
-    // Parse JSON from response
-    const jsonMatch=prompt.match(/\{[\s\S]*\}/);
-    if(!jsonMatch) throw new Error('No JSON in response');
-    const extracted=JSON.parse(jsonMatch[0]);
+    const resp = await fetch('/api/extract-job', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify(payload),
+    });
+
+    const data = await resp.json();
+    if (!resp.ok || !data.ok) throw new Error(data.error || 'Extraction failed');
+
+    const ex = data.extracted;
 
     // Fill form fields
-    const fillField=(id,val)=>{ const el=document.getElementById(id); if(el&&val!=null) el.value=val; };
-    fillField('fBiz',extracted.biz); fillField('fContact',extracted.contact);
-    fillField('fEmail',extracted.email); fillField('fPhone',extracted.phone);
-    fillField('fAddr',extracted.addr); fillField('fQty',extracted.qty);
-    fillField('fShape',extracted.shape); fillField('fW',extracted.width_mm);
-    fillField('fH',extracted.height_mm); fillField('fMaterial',extracted.material);
-    fillField('fNotes',extracted.notes);
-    if(extracted.product){ const sel=document.getElementById('fProduct'); if(sel) sel.value=extracted.product||'rolls'; }
-    if(extracted.laminate){ const sel=document.getElementById('fLam'); if(sel) sel.value=extracted.laminate||''; }
-    if(extracted.dispatch){ const sel=document.getElementById('fDispatch'); if(sel) sel.value=extracted.dispatch||'road'; }
+    const fill = (id, val) => { const el = document.getElementById(id); if (el && val != null) el.value = val; };
+    fill('fBiz',     ex.biz);
+    fill('fContact', ex.contact);
+    fill('fEmail',   ex.email);
+    fill('fPhone',   ex.phone);
+    fill('fAddr',    ex.addr);
+    fill('fQty',     ex.qty);
+    fill('fShape',   ex.shape);
+    fill('fW',       ex.width_mm);
+    fill('fH',       ex.height_mm);
+    fill('fMaterial',ex.material);
+    fill('fNotes',   ex.notes);
+    if (ex.product) { const s = document.getElementById('fProduct'); if (s) s.value = ex.product; }
+    if (ex.laminate){ const s = document.getElementById('fLam');     if (s) s.value = ex.laminate; }
+    if (ex.dispatch) { const s = document.getElementById('fDispatch'); if (s) s.value = ex.dispatch; }
 
-    document.getElementById('extractResult').style.display='block';
-    document.getElementById('extractResult').innerHTML='<b style="color:var(--purple)">✓ Details extracted</b> — review the form below and make any changes before creating the job.';
+    resultEl.style.display = 'block';
+    resultEl.innerHTML = '<b style="color:var(--purple)">✓ Details extracted</b> — review the form and make any changes before creating the job.';
     showToast('Details extracted ✓');
-  }catch(e){
-    console.error('Extract error:',e);
-    document.getElementById('extractResult').style.display='block';
-    document.getElementById('extractResult').innerHTML='<span style="color:var(--red)">Could not extract details. Please fill in manually.</span>';
+
+  } catch(e) {
+    console.error('extractFromText error:', e);
+    resultEl.style.display = 'block';
+    resultEl.innerHTML = '<span style="color:var(--red)">Could not extract details — ' + (e.message || 'unknown error') + '. Please fill in manually.</span>';
   }
-  btn.textContent='✨ Extract details'; document.getElementById('extractBtn').disabled=false;
+
+  btnText.textContent = '✨ Extract details';
+  btn.disabled = false;
+  window._pdfFile = null;
 }
 
 async function createJob(){
