@@ -1193,15 +1193,14 @@ async function extractFromText() {
   const btnText  = document.getElementById('extractBtnText');
   const btn      = document.getElementById('extractBtn');
 
-  // Validate — catch pasted URLs instead of email content
   if (!pdfFile && !text) {
     resultEl.style.display = 'block';
-    resultEl.innerHTML = '<span style="color:var(--red)">Paste the email text first, or upload a PDF/image file.</span>';
+    resultEl.innerHTML = '<span style="color:var(--red)">Paste email text or upload a PDF first.</span>';
     return;
   }
   if (!pdfFile && text.startsWith('http')) {
     resultEl.style.display = 'block';
-    resultEl.innerHTML = '<span style="color:var(--red)">That looks like a URL — paste the actual email text instead, not the link.</span>';
+    resultEl.innerHTML = '<span style="color:var(--red)">That looks like a URL. Open the HelpScout conversation, copy the email text and paste that here instead.</span>';
     return;
   }
 
@@ -1210,7 +1209,6 @@ async function extractFromText() {
   resultEl.style.display = 'none';
 
   try {
-    // Build request to server-side proxy
     const payload = { text };
 
     if (pdfFile) {
@@ -1225,42 +1223,55 @@ async function extractFromText() {
       payload.fileName   = pdfFile.name || 'file';
     }
 
-    const resp = await fetch('/api/extract-job', {
-      method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify(payload),
-    });
+    let resp;
+    try {
+      resp = await fetch('/api/extract-job', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify(payload),
+      });
+    } catch(netErr) {
+      throw new Error('Network error — check your connection and try again.');
+    }
 
-    const data = await resp.json();
-    if (!resp.ok || !data.ok) throw new Error(data.error || 'Extraction failed');
+    if (resp.status === 404) {
+      throw new Error('extract-job.js is not deployed yet. Add it to the api/ folder in GitHub.');
+    }
+
+    let data;
+    try { data = await resp.json(); } catch(e) { throw new Error('Server returned invalid response (status ' + resp.status + ')'); }
+
+    if (!resp.ok) {
+      throw new Error(data.error || ('Server error ' + resp.status));
+    }
 
     const ex = data.extracted;
+    if (!ex) throw new Error('No data extracted from the document.');
 
-    // Fill form fields
     const fill = (id, val) => { const el = document.getElementById(id); if (el && val != null) el.value = val; };
-    fill('fBiz',     ex.biz);
-    fill('fContact', ex.contact);
-    fill('fEmail',   ex.email);
-    fill('fPhone',   ex.phone);
-    fill('fAddr',    ex.addr);
-    fill('fQty',     ex.qty);
-    fill('fShape',   ex.shape);
-    fill('fW',       ex.width_mm);
-    fill('fH',       ex.height_mm);
-    fill('fMaterial',ex.material);
-    fill('fNotes',   ex.notes);
-    if (ex.product) { const s = document.getElementById('fProduct'); if (s) s.value = ex.product; }
-    if (ex.laminate){ const s = document.getElementById('fLam');     if (s) s.value = ex.laminate; }
+    fill('fBiz',      ex.biz);
+    fill('fContact',  ex.contact);
+    fill('fEmail',    ex.email);
+    fill('fPhone',    ex.phone);
+    fill('fAddr',     ex.addr);
+    fill('fQty',      ex.qty);
+    fill('fShape',    ex.shape);
+    fill('fW',        ex.width_mm);
+    fill('fH',        ex.height_mm);
+    fill('fMaterial', ex.material);
+    fill('fNotes',    ex.notes);
+    if (ex.product)  { const s = document.getElementById('fProduct');  if (s) s.value = ex.product; }
+    if (ex.laminate) { const s = document.getElementById('fLam');      if (s) s.value = ex.laminate; }
     if (ex.dispatch) { const s = document.getElementById('fDispatch'); if (s) s.value = ex.dispatch; }
 
     resultEl.style.display = 'block';
-    resultEl.innerHTML = '<b style="color:var(--purple)">✓ Details extracted</b> — review the form and make any changes before creating the job.';
+    resultEl.innerHTML = '<b style="color:var(--purple)">✓ Details extracted</b> — review below and make any changes before creating the job.';
     showToast('Details extracted ✓');
 
   } catch(e) {
-    console.error('extractFromText error:', e);
+    console.error('extractFromText:', e);
     resultEl.style.display = 'block';
-    resultEl.innerHTML = '<span style="color:var(--red)">Could not extract details — ' + (e.message || 'unknown error') + '. Please fill in manually.</span>';
+    resultEl.innerHTML = '<span style="color:var(--red)">' + (e.message || 'Unknown error') + '</span>';
   }
 
   btnText.textContent = '✨ Extract details';
