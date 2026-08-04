@@ -1,0 +1,2142 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Send Your Artwork | Sticky Sitch</title>
+  <meta name="description" content="Send us your artwork for your Sticky Sitch order. Free proof sent before anything prints.">
+  <meta name="robots" content="noindex">
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+  :root {
+    --bg: #FAFAF7; --bg-alt: #F5F4EE; --card: #FFFFFF;
+    --ink: #28213A; --ink-soft: #3A3A3A; --muted: #7A6B60; --muted-light: #A09285;
+    --line: #E5E2DA; --line-soft: #EFEDE5;
+    --accent: #7E6BC2; --accent-deep: #5B4BA8; --accent-soft: #ECEAF8; --accent-tint: #F3F1FC; --accent-light: #B8AEE0;
+    --green: #2d9b5e; --yellow: #F4D03F;
+    --shadow-sm: 0 2px 8px -2px rgba(0,0,0,0.06);
+    --shadow-md: 0 12px 28px -8px rgba(0,0,0,0.10);
+    --shadow-lg: 0 24px 48px -12px rgba(126,107,194,0.18);
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  body { overflow-x: hidden; margin: 0; background: var(--bg); color: var(--ink); font-family: 'Inter', -apple-system, sans-serif; font-size: 16px; line-height: 1.72; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; text-decoration: none; }
+  img { display: block; max-width: 100%; }
+  button { font-family: inherit; cursor: pointer; }
+  em { font-style: normal; color: var(--accent); font-weight: 600; }
+
+  /* ANNOUNCEMENT */
+  .ann { background: var(--ink); color: var(--bg); padding: 11px 0; overflow: hidden; }
+  .ann-track { display: flex; gap: 48px; white-space: nowrap; animation: ann-scroll 18s linear infinite; font-family: 'DM Sans', sans-serif; font-size: 12px; letter-spacing: 0.4px; }
+  .ann-track span { flex-shrink: 0; }
+  .ann-hl { color: var(--accent-light); }
+  .ann-cta { color: var(--accent-light); text-decoration: underline; text-underline-offset: 3px; }
+  @keyframes ann-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  /* NAV */
+  nav#nav { background: var(--bg); border-bottom: 1px solid var(--line); padding: 18px 32px; display: flex; align-items: center; gap: 32px; position: relative; z-index: 1; }
+  #ss-nav { position: sticky; top: 0; z-index: 300; background: var(--bg); }
+  .n-logo { display:flex; align-items:center; text-decoration:none; line-height:1; flex-shrink:0; }
+  .n-logo img { height:28px; width:auto; display:block; image-rendering:-webkit-optimize-contrast; }
+  .n-links { list-style: none; padding: 0; margin: 0; display: flex; gap: 28px; align-items: center; flex: 1; }
+  .n-links > li { position: relative; }
+  .n-links > li > a { font-size: 14px; font-weight: 500; color: var(--ink-soft); padding: 8px 0; display: inline-flex; align-items: center; gap: 4px; transition: color 0.15s; }
+  .n-links > li > a:hover, .n-links > li > a.active { color: var(--accent); }
+  .n-links .has-drop > a::after { content: '▾'; font-size: 10px; opacity: 0.6; }
+  .drop { position: absolute; top: 100%; left: -16px; background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 8px; min-width: 220px; box-shadow: var(--shadow-md); opacity: 0; visibility: hidden; transform: translateY(4px); transition: all 0.15s; }
+  .has-drop:hover .drop { opacity: 1; visibility: visible; transform: translateY(0); }
+  .drop a { display: block; padding: 9px 12px; border-radius: 6px; font-size: 13px; color: var(--ink); }
+  .drop a:hover { background: var(--accent-soft); color: var(--accent); }
+  .n-act { display: flex; gap: 12px; align-items: center; }
+  .n-q { background: var(--accent); color: var(--bg); padding: 10px 18px; border-radius: 8px; font-size: 13px; font-weight: 600; transition: background 0.15s; }
+  .n-q:hover { background: var(--accent-deep); }
+  .n-cart { display: inline-flex; align-items: center; gap: 7px; padding: 10px 14px; border: 1px solid var(--line); border-radius: 8px; font-size: 13px; font-weight: 500; color: var(--ink); transition: all 0.15s; }
+  .n-cart:hover { border-color: var(--accent); color: var(--accent); }
+  .burger { display: none; background: none; border: 1px solid var(--line); border-radius: 8px; width: 40px; height: 40px; flex-direction: column; gap: 4px; align-items: center; justify-content: center; padding: 0; }
+  .burger span { width: 18px; height: 2px; background: var(--ink); border-radius: 1px; }
+
+  /* HERO (homepage) */
+  .hero { background: var(--bg); border-bottom: 1px solid var(--line); }
+  .hero-inner { max-width: 1280px; margin: 0 auto; padding: 44px 32px 52px; display: grid; grid-template-columns: 1.1fr 1fr; gap: 64px; align-items: center; }
+  .h-eye { display: inline-flex; align-items: center; gap: 8px; background: var(--accent-soft); color: var(--accent-deep); font-size: 12px; font-weight: 600; padding: 7px 14px; border-radius: 100px; margin-bottom: 22px; }
+  .h-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); animation: blink 2s infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  .hero h1 { font-family: 'Inter Tight', sans-serif; font-size: clamp(40px, 5.2vw, 64px); font-weight: 600; line-height: 1.0; letter-spacing: -1.8px; margin: 0 0 22px; color: var(--ink); }
+  .h-sub { font-size: 17px; color: var(--ink-soft); line-height: 1.55; max-width: 480px; margin-bottom: 30px; }
+  .h-btns { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 28px; }
+  .bp { background: var(--accent); color: var(--bg); border: none; padding: 14px 24px; border-radius: 10px; font-size: 14px; font-weight: 600; transition: all 0.15s; display: inline-flex; align-items: center; gap: 6px; }
+  .bp:hover { background: var(--accent-deep); transform: translateY(-1px); box-shadow: 0 8px 20px -6px rgba(126,107,194,0.4); }
+  .bo { background: var(--card); color: var(--ink); border: 1px solid var(--line); padding: 14px 24px; border-radius: 10px; font-size: 14px; font-weight: 600; transition: all 0.15s; display: inline-flex; align-items: center; gap: 6px; }
+  .bo:hover { border-color: var(--accent); color: var(--accent); }
+  .blg { padding: 16px 28px; font-size: 15px; }
+  .bsm { padding: 10px 16px; font-size: 13px; }
+  .h-checks { display: flex; flex-wrap: wrap; gap: 10px 24px; }
+  .h-checks span { font-size: 13px; font-weight: 500; color: var(--ink-soft); display: flex; align-items: center; gap: 7px; }
+  .h-checks span::before { content: ''; width: 16px; height: 16px; border-radius: 50%; background: var(--accent); flex-shrink: 0; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='3'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E"); background-size: 60%; background-repeat: no-repeat; background-position: center; }
+  .h-vis { position: relative; }
+  .h-img { border-radius: 16px; overflow: hidden; aspect-ratio: 1.3/1; box-shadow: 0 32px 80px -20px rgba(126,107,194,0.25); }
+  .h-img img { width: 100%; height: 100%; object-fit: cover; }
+  .h-card { position: absolute; bottom: -18px; left: -18px; background: var(--ink); color: var(--bg); border-radius: 12px; padding: 14px 18px; display: flex; align-items: center; gap: 12px; box-shadow: var(--shadow-md); max-width: 260px; }
+  .h-cdot { width: 9px; height: 9px; border-radius: 50%; background: var(--accent-light); flex-shrink: 0; animation: blink 2s infinite; }
+  .h-ct { font-size: 13px; font-weight: 600; }
+  .h-cs { font-family: 'DM Sans', sans-serif; font-size: 10px; color: var(--accent-light); margin-top: 3px; letter-spacing: 0.3px; }
+  .h-badge { position: absolute; top: 18px; right: -12px; background: var(--accent); color: var(--bg); border-radius: 10px; padding: 11px 16px; font-family: 'Inter Tight', sans-serif; font-size: 12px; font-weight: 600; line-height: 1.3; text-align: center; box-shadow: 0 8px 20px -6px rgba(126,107,194,0.35); }
+
+  /* PAGE HERO (subpages) */
+  .ph { background: var(--bg); border-bottom: 1px solid var(--line); padding: 12px 32px 16px; }
+  .ph-inner { max-width: 1280px; margin: 0 auto; }
+  .ph-crumb { font-family: 'DM Sans', sans-serif; font-size: 11px; letter-spacing: 0.6px; color: var(--muted); margin-bottom: 18px; }
+  .ph-crumb a { color: var(--muted); }
+  .ph-crumb a:hover { color: var(--accent); }
+  .ph h1 { font-family: 'Inter Tight', sans-serif; font-size: clamp(36px, 4.5vw, 56px); font-weight: 600; line-height: 1.05; letter-spacing: -1.6px; margin: 0 0 18px; color: var(--ink); }
+  .ph-lede { font-size: 17px; color: var(--ink-soft); line-height: 1.6; max-width: 640px; margin: 0 0 24px; }
+  .ph-meta { display: flex; flex-wrap: wrap; gap: 10px 22px; margin-top: 8px; }
+  .ph-meta span { font-size: 13px; font-weight: 500; color: var(--ink-soft); display: flex; align-items: center; gap: 7px; }
+  .ph-meta span::before { content: ''; width: 16px; height: 16px; border-radius: 50%; background: var(--accent); flex-shrink: 0; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='3'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E"); background-size: 60%; background-repeat: no-repeat; background-position: center; }
+  .ph-2col { display: grid; grid-template-columns: 1.2fr 1fr; gap: 56px; align-items: center; }
+  .ph-2col .ph-img { border-radius: 16px; overflow: hidden; aspect-ratio: 1.8/1; box-shadow: 0 24px 60px -16px rgba(126,107,194,0.22); }
+  .ph-2col .ph-img img { width: 100%; height: 100%; object-fit: cover; }
+
+  /* TRUST STRIP */
+  .ts-strip { background: var(--card); border-bottom: 1px solid var(--line); padding: 22px 32px; display: flex; align-items: center; justify-content: center; gap: 36px; flex-wrap: wrap; }
+  .ts { display: flex; align-items: center; gap: 9px; font-size: 13px; font-weight: 500; color: var(--ink-soft); }
+  .ts svg { color: #D4A520; flex-shrink: 0; }
+  .ts-sep { width: 1px; height: 18px; background: var(--line); }
+
+  /* TRUSTED BY */
+  .trusted { padding: 44px 32px; background: var(--bg); border-bottom: 1px solid var(--line); }
+  .trusted-inner { max-width: 1280px; margin: 0 auto; }
+  .trusted-label { font-family: 'DM Sans', sans-serif; font-size: 11px; letter-spacing: 1.5px; color: var(--muted); text-transform: uppercase; font-weight: 500; text-align: center; margin-bottom: 26px; }
+  .trusted-logos { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 12px 56px; }
+  .logo-item { font-family: 'Inter Tight', sans-serif; font-weight: 600; font-size: 22px; color: var(--muted); letter-spacing: -0.4px; opacity: 0.55; transition: opacity 0.2s; }
+  .logo-item:hover { opacity: 1; }
+  .logo-lulu { font-style: italic; }
+  .logo-adidas { text-transform: lowercase; letter-spacing: -0.8px; }
+  .logo-fl { letter-spacing: 0.5px; }
+  .logo-tm { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 20px; }
+  .logo-ch { font-style: italic; font-size: 24px; }
+  .logo-dm { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 19px; }
+
+  /* SECTIONS */
+  .sec { padding: 36px 32px; }
+  .sec-alt { background: var(--bg-alt); }
+  .w { max-width: 1280px; margin: 0 auto; }
+  .sh { text-align: center; max-width: 720px; margin: 0 auto 56px; }
+  .sl { display: inline-flex; align-items: center; gap: 7px; font-family: 'DM Sans', sans-serif; font-size: 11px; letter-spacing: 1.4px; color: var(--accent); text-transform: uppercase; font-weight: 500; margin-bottom: 18px; }
+  .sl::before { content: '●'; font-size: 9px; }
+  .sec h2 { font-family: 'Inter Tight', sans-serif; font-size: clamp(34px, 4vw, 48px); font-weight: 600; line-height: 1.05; letter-spacing: -1.4px; margin: 0 0 14px; color: var(--ink); }
+  .sec .sh p { font-size: 16px; color: var(--ink-soft); line-height: 1.6; margin: 0; }
+
+  /* PRODUCTS GRID (homepage) */
+  .pg { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 22px; }
+  .pc { display: flex; flex-direction: column; background: var(--card); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; transition: all 0.25s cubic-bezier(0.4,0,0.2,1); position: relative; }
+  .pc:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: var(--accent-light); }
+  .pc.pc-feat { border-color: var(--accent); box-shadow: 0 16px 36px -12px rgba(126,107,194,0.18); }
+  .pi { aspect-ratio: 1.4/1; overflow: hidden; position: relative; }
+  .pi img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s cubic-bezier(0.4,0,0.2,1); }
+  .pc:hover .pi img { transform: scale(1.05); }
+  .pb-badge { position: absolute; top: 14px; right: 14px; background: var(--accent); color: var(--bg); padding: 6px 11px; border-radius: 100px; font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 0.4px; text-transform: uppercase; }
+  .pb { padding: 26px 26px 28px; display: flex; flex-direction: column; gap: 12px; flex: 1; }
+  .p-cat { font-family: 'DM Sans', sans-serif; font-size: 11px; color: var(--accent); letter-spacing: 1.2px; text-transform: uppercase; font-weight: 500; }
+  .pb h3 { font-family: 'Inter Tight', sans-serif; font-size: 24px; font-weight: 600; line-height: 1.15; letter-spacing: -0.5px; margin: 0; }
+  .pb > p { font-size: 14px; color: var(--ink-soft); line-height: 1.55; margin: 0; }
+  .p-feats { list-style: none; padding: 0; margin: 6px 0 0; display: flex; flex-direction: column; gap: 7px; }
+  .p-feats li { font-size: 13px; color: var(--ink-soft); padding-left: 20px; position: relative; line-height: 1.45; }
+  .p-feats li::before { content: ''; position: absolute; left: 0; top: 6px; width: 12px; height: 12px; border-radius: 50%; background: var(--accent-soft); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237E6BC2' stroke-width='4'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E"); background-size: 65%; background-repeat: no-repeat; background-position: center; }
+  .p-price { font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; color: var(--muted); letter-spacing: 0; padding-top: 14px; margin-top: 4px; border-top: 1px solid var(--line-soft); }
+  .p-price strong { color: var(--ink); font-family: 'Inter Tight', sans-serif; font-size: 18px; font-weight: 600; letter-spacing: -0.3px; }
+  .p-cta { font-size: 13px; font-weight: 600; color: var(--accent); margin-top: 6px; display: inline-flex; align-items: center; gap: 5px; transition: gap 0.2s; }
+  .pc:hover .p-cta { gap: 9px; }
+
+  /* QUOTE BAR */
+  .qbar { margin-top: 44px; background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 28px 36px; display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap; }
+  .qbar h3 { font-family: 'Inter Tight', sans-serif; font-size: 22px; font-weight: 600; margin: 0 0 4px; letter-spacing: -0.4px; }
+  .qbar p { font-size: 14px; color: var(--ink-soft); margin: 0; }
+
+  /* WHY US */
+  .why-g { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 22px; }
+  .wc { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 28px; display: flex; gap: 16px; align-items: flex-start; transition: all 0.2s; }
+  .wc:hover { border-color: var(--accent-light); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+  .wi { width: 44px; height: 44px; flex-shrink: 0; background: var(--accent-soft); color: var(--accent); border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+  .wc h4 { font-family: 'Inter Tight', sans-serif; font-size: 17px; font-weight: 600; margin: 0 0 8px; letter-spacing: -0.3px; }
+  .wc > div:last-child p { font-size: 14px; color: var(--ink-soft); line-height: 1.55; margin: 0; }
+
+  /* USE CASES */
+  .ug { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 22px; }
+  .uc { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 28px; transition: all 0.2s; }
+  .uc:hover { border-color: var(--accent-light); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+  .uci { width: 44px; height: 44px; background: var(--accent-soft); color: var(--accent); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; }
+  .uc h4 { font-family: 'Inter Tight', sans-serif; font-size: 18px; font-weight: 600; margin: 0 0 8px; letter-spacing: -0.3px; }
+  .uc p { font-size: 14px; color: var(--ink-soft); line-height: 1.55; margin: 0 0 14px; }
+  .utag { display: inline-block; font-family: 'DM Sans', sans-serif; font-size: 11px; color: var(--accent); letter-spacing: 0.5px; padding: 5px 10px; background: var(--accent-soft); border-radius: 6px; font-weight: 500; }
+
+  /* HOW IT WORKS */
+  .steps3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 22px; max-width: 1100px; margin: 0 auto; }
+  .step3 { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 32px 28px; }
+  .step3-num { font-family: 'DM Sans', sans-serif; font-size: 12px; color: var(--accent); letter-spacing: 1px; font-weight: 600; margin-bottom: 14px; }
+  .step3 h4 { font-family: 'Inter Tight', sans-serif; font-size: 22px; font-weight: 600; margin: 0 0 10px; letter-spacing: -0.4px; }
+  .step3 p { font-size: 14px; color: var(--ink-soft); line-height: 1.55; margin: 0; }
+
+  /* REVIEWS */
+  .reviews-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 32px; margin-bottom: 44px; flex-wrap: wrap; }
+  .reviews-head h2 { margin-bottom: 0; }
+  .reviews-rating { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px 22px; display: flex; align-items: center; gap: 14px; }
+  .google-g { width: 32px; height: 32px; border-radius: 50%; background: conic-gradient(from 0deg, #4285F4, #34A853, #FBBC05, #EA4335, #4285F4); display: flex; align-items: center; justify-content: center; color: white; font-family: 'Inter Tight'; font-weight: 700; font-size: 16px; flex-shrink: 0; }
+  .reviews-rating-stars { display: flex; flex-direction: column; gap: 3px; }
+  .reviews-rating-stars .stars { color: #FBBC05; font-size: 14px; letter-spacing: 1px; }
+  .reviews-rating-stars .stars b { color: var(--ink); font-weight: 600; margin-left: 6px; font-family: 'Inter Tight'; }
+  .reviews-rating-stars span { font-size: 11px; color: var(--muted); font-family: 'DM Sans', sans-serif; letter-spacing: 0.2px; }
+  .rg { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 18px; }
+  .rc { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 22px; display: flex; flex-direction: column; gap: 12px; }
+  .rc-head { display: flex; gap: 12px; align-items: center; }
+  .rc-av { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Inter Tight'; font-weight: 600; font-size: 14px; color: white; flex-shrink: 0; }
+  .rc-av.av-1 { background: linear-gradient(135deg, #4285F4, #1a73e8); }
+  .rc-av.av-2 { background: linear-gradient(135deg, #34A853, #137333); }
+  .rc-av.av-3 { background: linear-gradient(135deg, #FBBC05, #d39e00); }
+  .rc-av.av-4 { background: linear-gradient(135deg, #EA4335, #c5221f); }
+  .rc-meta { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+  .rc-name { font-size: 14px; font-weight: 600; color: var(--ink); }
+  .rc-name span { color: var(--accent); font-size: 11px; font-family: 'DM Sans', sans-serif; font-weight: 400; letter-spacing: 0.2px; margin-left: 4px; }
+  .rc-date { font-family: 'Inter', sans-serif; font-size: 12px; color: var(--muted); }
+  .rc-stars { color: #FBBC05; font-size: 14px; letter-spacing: 1px; }
+  .rc p { font-size: 13.5px; color: var(--ink-soft); line-height: 1.55; margin: 0; flex: 1; }
+  .rc-badge { display: inline-flex; align-items: center; gap: 5px; font-family: 'DM Sans', sans-serif; font-size: 10px; color: var(--accent); letter-spacing: 0.4px; padding-top: 10px; border-top: 1px solid var(--line-soft); text-transform: uppercase; font-weight: 500; }
+  .rc-badge::before { content: '✓'; }
+  .reviews-link { display: inline-flex; align-items: center; gap: 6px; margin-top: 32px; color: var(--accent); font-weight: 500; font-size: 14px; text-decoration: underline; text-underline-offset: 4px; }
+
+  /* PACKLABB */
+  .cs-w { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+  .cs-t h2 { font-family: 'Inter Tight', sans-serif; font-size: 44px; font-weight: 600; line-height: 1.05; letter-spacing: -1.4px; margin: 0 0 18px; }
+  .cs-t > p { font-size: 16px; color: var(--ink-soft); line-height: 1.6; margin: 0 0 22px; }
+  .csl { list-style: none; padding: 0; margin: 0 0 28px; display: flex; flex-direction: column; gap: 9px; }
+  .csl li { font-size: 14px; color: var(--ink-soft); padding-left: 22px; position: relative; line-height: 1.5; }
+  .csl li::before { content: ''; position: absolute; left: 0; top: 6px; width: 13px; height: 13px; border-radius: 50%; background: var(--accent-soft); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237E6BC2' stroke-width='4'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E"); background-size: 65%; background-repeat: no-repeat; background-position: center; }
+  .csb { background: var(--ink); color: var(--bg); border-radius: 18px; padding: 48px 36px; text-align: center; }
+  .csblo { display: flex; justify-content: center; align-items: center; margin-bottom: 12px; }
+  .csblo span { color: var(--accent-light); }
+  .csbta { font-family: 'DM Sans', sans-serif; font-size: 12px; color: var(--accent-light); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 36px; }
+  .csbs { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; padding-top: 32px; border-top: 1px solid rgba(184,159,224,0.25); }
+  .csbst strong { display: block; font-family: 'Inter Tight', sans-serif; font-size: 22px; font-weight: 600; margin-bottom: 4px; }
+  .csbst span { font-family: 'DM Sans', sans-serif; font-size: 10px; color: var(--accent-light); letter-spacing: 0.6px; text-transform: uppercase; }
+
+  /* FAQ */
+  .fwrap { display: grid; grid-template-columns: 1fr 1.4fr; gap: 64px; align-items: start; }
+  .fl h2 { font-family: 'Inter Tight', sans-serif; font-size: 38px; font-weight: 600; line-height: 1.1; letter-spacing: -1.2px; margin: 0 0 14px; }
+  .fl p { font-size: 15px; color: var(--ink-soft); line-height: 1.55; margin: 0 0 22px; }
+  .fi { border-bottom: 1px solid var(--line); }
+  .fi:first-child { border-top: 1px solid var(--line); }
+  .fq { width: 100%; background: none; border: none; padding: 22px 0; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-family: 'Inter Tight', sans-serif; font-size: 16px; font-weight: 500; color: var(--ink); text-align: left; }
+  .fq:hover { color: var(--accent); }
+  .fqi { width: 28px; height: 28px; flex-shrink: 0; border-radius: 50%; background: var(--accent-soft); color: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 16px; transition: transform 0.2s; }
+  .fi.open .fqi { transform: rotate(45deg); }
+  .fa { display: none; padding: 0 0 22px; font-size: 14px; color: var(--ink-soft); line-height: 1.65; }
+  .fi.open .fa { display: block; }
+
+  /* FAQ category page */
+  .faq-cat { padding: 48px 0; border-bottom: 1px solid var(--line); }
+  .faq-cat:first-child { padding-top: 0; }
+  .faq-cat:last-child { border-bottom: none; padding-bottom: 0; }
+  .faq-cat-head { font-family: 'Inter Tight', sans-serif; font-size: 12px; font-weight: 700; color: var(--accent); letter-spacing: 0.5px; text-transform: uppercase; font-weight: 600; margin-bottom: 16px; }
+  .faq-cat h2 { font-family: 'Inter Tight'; font-size: 28px; font-weight: 600; margin: 0 0 22px; letter-spacing: -0.7px; }
+
+  /* FINAL CTA */
+  .fcta { background: var(--ink); color: var(--bg); padding: 36px 32px; }
+  .fcta-i { max-width: 760px; margin: 0 auto; text-align: center; }
+  .fcta-tag { display: inline-flex; align-items: center; gap: 7px; font-family: 'DM Sans', sans-serif; font-size: 11px; letter-spacing: 1.4px; color: var(--accent-light); text-transform: uppercase; font-weight: 500; margin-bottom: 20px; }
+  .fcta-tag::before { content: '●'; font-size: 9px; }
+  .fcta h2 { font-family: 'Inter Tight', sans-serif; font-size: clamp(40px, 5vw, 56px); font-weight: 600; line-height: 1.05; letter-spacing: -1.6px; margin: 0 0 18px; color: var(--bg); }
+  .fcta h2 em { color: var(--accent-light); }
+  .fcta p { font-size: 16px; color: rgba(250,250,247,0.75); line-height: 1.6; margin: 0 0 32px; }
+  .fcta-bs { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 36px; }
+  .fcta-bs .bp { background: var(--accent-light); color: var(--ink); }
+  .fcta-bs .bp:hover { background: var(--bg); }
+  .fcta-bs .bo { background: transparent; color: var(--bg); border-color: rgba(250,250,247,0.3); }
+  .fcta-bs .bo:hover { border-color: var(--bg); color: var(--bg); }
+  .fcta-m { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; font-family: 'DM Sans', sans-serif; font-size: 11px; color: rgba(250,250,247,0.55); letter-spacing: 0.4px; }
+  .fcta-m a { color: var(--accent-light); text-decoration: underline; text-underline-offset: 3px; }
+
+  /* FOOTER */
+  footer { background: var(--bg-alt); border-top: 1px solid var(--line); padding: 64px 32px 32px; }
+  .ft { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 48px 32px; padding-bottom: 48px; border-bottom: 1px solid var(--line); }
+  .fbr .flo { display:flex; align-items:center; margin-bottom: 14px; }
+  .fbr .flo img { display:block; height:25px; width:auto; image-rendering:-webkit-optimize-contrast; }
+  .fbr p { font-size: 13.5px; color: var(--ink-soft); line-height: 1.55; margin: 0 0 18px; }
+  .fco { display: flex; flex-direction: column; gap: 8px; font-size: 13px; color: var(--ink-soft); }
+  .fco a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+  .fct { font-family: 'DM Sans', sans-serif; font-size: 11px; letter-spacing: 1.2px; color: var(--muted); text-transform: uppercase; font-weight: 500; margin-bottom: 16px; }
+  .fcol a { display: block; padding: 5px 0; font-size: 13px; color: var(--ink-soft); transition: color 0.15s; }
+  .fcol a:hover { color: var(--accent); }
+  .fb { max-width: 1280px; margin: 32px auto 0; display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap; font-size: 12px; color: var(--muted); font-family: 'DM Sans', sans-serif; letter-spacing: 0.3px; }
+  .fps { display: flex; gap: 8px; flex-wrap: wrap; }
+  .fps span { padding: 5px 10px; background: var(--card); border: 1px solid var(--line); border-radius: 5px; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; color: var(--ink-soft); letter-spacing: 0; }
+
+  /* HELP FAB */
+  .help-fab { position: fixed; bottom: 24px; right: 24px; z-index: 150; display: flex; flex-direction: column-reverse; align-items: flex-end; gap: 12px; pointer-events: none; }
+  .help-fab-toggle { pointer-events: auto; display: flex; align-items: center; gap: 8px; background: var(--accent); color: var(--bg); border: none; padding: 12px 18px 12px 14px; border-radius: 100px; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; box-shadow: 0 8px 20px -4px rgba(126,107,194,0.35); transition: all 0.2s; }
+  .help-fab-toggle:hover { background: var(--accent-deep); transform: translateY(-2px); }
+  .help-fab-panel { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px; box-shadow: 0 16px 40px -8px rgba(0,0,0,0.18); width: 280px; opacity: 0; pointer-events: none; transform: translateY(8px) scale(0.96); transform-origin: bottom right; transition: all 0.2s cubic-bezier(0.4,0,0.2,1); }
+  .help-fab.open .help-fab-panel { opacity: 1; pointer-events: auto; transform: translateY(0) scale(1); }
+  .help-fab.open .help-fab-toggle { background: var(--ink); }
+  .hfp-h { font-family: 'Inter Tight', sans-serif; font-weight: 600; font-size: 15px; margin-bottom: 4px; letter-spacing: -0.2px; }
+  .hfp-s { font-size: 12px; color: var(--muted); margin-bottom: 14px; line-height: 1.45; }
+  .hfa { display: flex; align-items: center; gap: 11px; padding: 10px 12px; border-radius: 8px; font-size: 13px; color: var(--ink); transition: background 0.15s; }
+  .hfa:hover { background: var(--accent-soft); color: var(--accent); }
+  .hfa svg { color: var(--accent); flex-shrink: 0; }
+  .hfa-name { font-weight: 600; font-size: 13px; display: block; }
+  .hfa-meta { font-size: 11px; color: var(--muted); font-family: 'DM Sans', sans-serif; letter-spacing: 0.2px; }
+
+  /* MATERIAL CARD GRID */
+  .mcards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+  .mcard { background: var(--card); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; transition: all 0.2s; }
+  .mcard:hover { border-color: var(--accent-light); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+  .mcard-img { aspect-ratio: 1.4/1; background: var(--bg-alt); overflow: hidden; }
+  .mcard-img img { width: 100%; height: 100%; object-fit: cover; }
+  .mcard-body { padding: 20px 22px 22px; }
+  .mcard-eye { font-family: 'DM Sans', sans-serif; font-size: 10px; color: var(--accent); letter-spacing: 1px; text-transform: uppercase; font-weight: 500; margin-bottom: 8px; }
+  .mcard h4 { font-family: 'Inter Tight', sans-serif; font-size: 18px; font-weight: 600; margin: 0 0 8px; letter-spacing: -0.3px; }
+  .mcard p { font-size: 13px; color: var(--ink-soft); line-height: 1.55; margin: 0 0 12px; }
+  .mcard-tag { display: inline-block; font-family: 'DM Sans', sans-serif; font-size: 10px; color: var(--accent); letter-spacing: 0.4px; padding: 4px 9px; background: var(--accent-soft); border-radius: 5px; font-weight: 500; }
+
+  /* PRODUCT TABS */
+  .ptabs { display: flex; gap: 6px; padding: 6px; background: var(--card); border: 1px solid var(--line); border-radius: 12px; max-width: max-content; margin: 0 auto 36px; }
+  .ptab { background: none; border: none; padding: 12px 22px; font-family: 'Inter Tight', sans-serif; font-size: 14px; font-weight: 500; color: var(--ink-soft); border-radius: 8px; cursor: pointer; transition: all 0.15s; }
+  .ptab.active { background: var(--accent); color: var(--bg); }
+  .ptab:not(.active):hover { color: var(--accent); }
+  .pane { display: none; }
+  .pane.active { display: block; }
+
+  /* CSEC content sections */
+  .csec { padding: 72px 32px; }
+  .csec-w { max-width: 1100px; margin: 0 auto; }
+  .csec-w h2 { font-family: 'Inter Tight', sans-serif; font-size: clamp(30px, 3.6vw, 42px); font-weight: 600; line-height: 1.1; letter-spacing: -1.2px; margin: 0 0 18px; }
+  .csec-w h2 em { color: var(--accent); }
+  .csec-w > p { font-size: 16px; color: var(--ink-soft); line-height: 1.65; margin: 0 0 20px; max-width: 760px; }
+  .csec-w h3 { font-family: 'Inter Tight', sans-serif; font-size: 22px; font-weight: 600; margin: 28px 0 10px; letter-spacing: -0.4px; }
+
+  /* TEAM (about page) */
+  .team-g { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; max-width: 900px; margin: 0 auto; }
+  .tcard { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 32px; text-align: center; }
+  .tcard-av { width: 80px; height: 80px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); display: inline-flex; align-items: center; justify-content: center; font-family: 'Inter Tight'; font-weight: 600; font-size: 28px; letter-spacing: -1px; margin-bottom: 16px; }
+  .tcard h3 { font-family: 'Inter Tight', sans-serif; font-size: 22px; font-weight: 600; margin: 0 0 6px; letter-spacing: -0.3px; }
+  .tcard .role { font-family: 'DM Sans', sans-serif; font-size: 11px; color: var(--accent); letter-spacing: 1px; text-transform: uppercase; font-weight: 500; margin-bottom: 14px; }
+  .tcard p { font-size: 14px; color: var(--ink-soft); line-height: 1.6; margin: 0; }
+
+  /* MATERIALS guide rows */
+  .mat-row { display: grid; grid-template-columns: 1fr 1.3fr; gap: 48px; padding: 48px 0; border-bottom: 1px solid var(--line); align-items: start; }
+  .mat-row:last-child { border-bottom: none; }
+  .mat-row .mat-img { border-radius: 14px; overflow: hidden; aspect-ratio: 1.2/1; }
+  .mat-row .mat-img img { width: 100%; height: 100%; object-fit: cover; }
+  .mat-row h3 { font-family: 'Inter Tight'; font-size: 28px; font-weight: 600; margin: 0 0 12px; letter-spacing: -0.6px; }
+  .mat-row .mat-eye { font-family: 'DM Sans', sans-serif; font-size: 11px; color: var(--accent); letter-spacing: 1.2px; text-transform: uppercase; font-weight: 500; margin-bottom: 10px; }
+  .mat-row p { font-size: 15px; color: var(--ink-soft); line-height: 1.65; margin: 0 0 14px; }
+  .mat-row .mat-pros { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 18px; margin: 14px 0 18px; padding: 0; }
+  .mat-row .mat-pros li { list-style: none; font-size: 13px; color: var(--ink-soft); padding-left: 18px; position: relative; }
+  .mat-row .mat-pros li::before { content: '✓'; position: absolute; left: 0; color: var(--accent); font-weight: 700; }
+
+  /* QUIZ */
+  .quiz-wrap { max-width: 720px; margin: 0 auto; }
+  .quiz-bar { background: var(--card); border: 1px solid var(--line); border-radius: 100px; height: 8px; margin-bottom: 32px; overflow: hidden; }
+  .quiz-bar-fill { height: 100%; background: var(--accent); transition: width 0.4s cubic-bezier(0.4,0,0.2,1); border-radius: 100px; }
+  .quiz-step { display: none; }
+  .quiz-step.active { display: block; }
+  .quiz-step h2 { font-family: 'Inter Tight', sans-serif; font-size: 32px; font-weight: 600; line-height: 1.15; letter-spacing: -0.8px; margin: 0 0 24px; text-align: center; }
+  .quiz-opts { display: flex; flex-direction: column; gap: 12px; }
+  .quiz-opt { background: var(--card); border: 2px solid var(--line); border-radius: 14px; padding: 22px 24px; cursor: pointer; text-align: left; transition: all 0.15s; font-family: 'Inter', sans-serif; }
+  .quiz-opt:hover { border-color: var(--accent-light); transform: translateY(-1px); }
+  .quiz-opt.selected { border-color: var(--accent); background: var(--accent-tint); }
+  .quiz-opt strong { font-family: 'Inter Tight'; font-size: 16px; font-weight: 600; display: block; margin-bottom: 4px; color: var(--ink); }
+  .quiz-opt span { font-size: 13px; color: var(--ink-soft); line-height: 1.5; }
+  .quiz-nav { display: flex; justify-content: space-between; gap: 12px; margin-top: 32px; }
+  .quiz-result { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 40px 32px; text-align: center; }
+  .quiz-result .qr-tag { font-family: 'DM Sans', sans-serif; font-size: 11px; color: var(--accent); letter-spacing: 1.4px; text-transform: uppercase; font-weight: 500; margin-bottom: 16px; }
+  .quiz-result h2 { font-family: 'Inter Tight'; font-size: 30px; font-weight: 600; margin: 0 0 12px; letter-spacing: -0.7px; }
+  .quiz-result h2 em { color: var(--accent); }
+  .quiz-result p { font-size: 15px; color: var(--ink-soft); line-height: 1.6; margin: 0 0 24px; }
+  .quiz-result-cta { display: flex; flex-direction: column; gap: 10px; max-width: 380px; margin: 0 auto; }
+
+  /* CONTACT */
+  .contact-grid { display: grid; grid-template-columns: 1fr 1.3fr; gap: 48px; max-width: 1100px; margin: 0 auto; align-items: start; }
+  .contact-info h2 { font-family: 'Inter Tight'; font-size: 32px; font-weight: 600; margin: 0 0 14px; letter-spacing: -0.8px; }
+  .contact-info > p { font-size: 15px; color: var(--ink-soft); line-height: 1.6; margin: 0 0 24px; }
+  .contact-row { display: flex; gap: 12px; align-items: flex-start; padding: 14px 0; border-top: 1px solid var(--line); font-size: 14px; }
+  .contact-row:first-of-type { border-top: none; }
+  .contact-row svg { color: var(--accent); flex-shrink: 0; margin-top: 2px; }
+  .contact-row strong { font-family: 'Inter Tight'; font-weight: 600; color: var(--ink); display: block; margin-bottom: 2px; }
+  .contact-row a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+  .form-card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 32px; }
+  .form-row { margin-bottom: 18px; }
+  .form-row label { display: block; font-family: 'Inter Tight'; font-weight: 500; font-size: 13px; color: var(--ink); margin-bottom: 6px; }
+  .form-row input, .form-row textarea, .form-row select { width: 100%; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; font-family: inherit; font-size: 14px; color: var(--ink); transition: border-color 0.15s; }
+  .form-row input:focus, .form-row textarea:focus, .form-row select:focus { outline: none; border-color: var(--accent); }
+  .form-row textarea { min-height: 120px; resize: vertical; line-height: 1.5; }
+  .form-row-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+  /* SAMPLE PACK */
+  .sp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; max-width: 1100px; margin: 0 auto; align-items: center; }
+  .sp-img { border-radius: 16px; overflow: hidden; aspect-ratio: 1/1; box-shadow: var(--shadow-lg); }
+  .sp-img img { width: 100%; height: 100%; object-fit: cover; }
+  .sp-info h1 { font-family: 'Inter Tight'; font-size: clamp(34px, 4vw, 48px); font-weight: 600; line-height: 1.05; letter-spacing: -1.4px; margin: 0 0 16px; }
+  .sp-info h1 em { color: var(--accent); }
+  .sp-price-row { display: flex; align-items: baseline; gap: 14px; margin: 8px 0 24px; padding: 18px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .sp-price-row strong { font-family: 'Inter Tight'; font-size: 36px; font-weight: 600; letter-spacing: -1px; }
+  .sp-price-row span { font-family: 'DM Sans', sans-serif; font-size: 12px; color: var(--accent); letter-spacing: 0.5px; text-transform: uppercase; }
+  .sp-credit { background: var(--accent-soft); border: 1px solid var(--accent-light); border-radius: 10px; padding: 14px 18px; font-size: 13px; color: var(--accent-deep); margin-bottom: 24px; display: flex; gap: 10px; align-items: flex-start; }
+  .sp-credit svg { color: var(--accent); flex-shrink: 0; margin-top: 1px; }
+  .sp-credit strong { display: block; margin-bottom: 2px; font-weight: 600; }
+  .sp-feats { list-style: none; padding: 0; margin: 0 0 24px; display: flex; flex-direction: column; gap: 10px; }
+  .sp-feats li { font-size: 14px; color: var(--ink-soft); padding-left: 22px; position: relative; line-height: 1.5; }
+  .sp-feats li::before { content: ''; position: absolute; left: 0; top: 6px; width: 13px; height: 13px; border-radius: 50%; background: var(--accent-soft); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237E6BC2' stroke-width='4'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E"); background-size: 65%; background-repeat: no-repeat; background-position: center; }
+
+  /* RESPONSIVE */
+  @media (max-width: 1024px) {
+    .hero-inner { grid-template-columns: 1fr; gap: 32px; padding: 32px 24px; }
+    .ph-2col { grid-template-columns: 1fr; gap: 32px; }
+    .ph { padding: 10px 24px 14px; }
+    .pg, .why-g, .ug, .steps3 { grid-template-columns: 1fr 1fr; }
+    .rg { grid-template-columns: 1fr 1fr; }
+    .cs-w { grid-template-columns: 1fr; gap: 40px; }
+    .fwrap { grid-template-columns: 1fr; gap: 32px; }
+    .ft { grid-template-columns: 1fr 1fr; gap: 40px 32px; }
+    .opt-btn { min-height: 44px !important; font-size: 13px !important; }
+    .n-links { display: none; }
+    .n-act { display: none; }
+    .burger { display: flex; }
+    .ts-strip { gap: 18px 24px; padding: 16px 20px; }
+    .ts-sep { display: none; }
+    .mcards { grid-template-columns: 1fr 1fr; }
+    .mat-row { grid-template-columns: 1fr; gap: 24px; }
+    .contact-grid, .sp-grid { grid-template-columns: 1fr; gap: 32px; }
+    .form-row-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 640px) {
+    nav#nav { padding: 14px 20px; gap: 14px; }
+    .sec { padding: 24px 20px; }
+    .hero-inner { padding: 44px 20px; }
+    .hero h1 { font-size: 38px; letter-spacing: -1px; }
+    .h-img { aspect-ratio: 1.1/1; }
+    .h-card { left: -8px; bottom: -10px; }
+    .h-badge { right: -6px; }
+    .pg, .why-g, .ug, .steps3, .rg { grid-template-columns: 1fr; }
+    .qbar { padding: 22px 24px; flex-direction: column; align-items: flex-start; }
+    .ft { grid-template-columns: 1fr; gap: 36px; }
+    .fb { flex-direction: column; align-items: flex-start; gap: 14px; }
+    .fcta { padding: 24px 20px; }
+    .reviews-head { flex-direction: column; align-items: flex-start; }
+    .help-fab-panel { width: calc(100vw - 32px); max-width: 320px; }
+    .hfa-meta { display: none; }
+    .help-fab-toggle .hf-label { display: none; }
+    .help-fab-toggle { padding: 14px; border-radius: 50%; }
+    .mcards { grid-template-columns: 1fr; }
+    .team-g { grid-template-columns: 1fr; }
+  }
+
+  /* ─── HERO SOCIAL PROOF BADGE ─── */
+  .h-social-proof { display: flex; align-items: center; gap: 10px; margin-top: 16px; padding: 12px 16px; background: var(--card); border: 1px solid var(--line); border-radius: 10px; max-width: max-content; }
+  .hsp-stars { color: #D4A520; font-size: 16px; letter-spacing: 2px; }
+  .hsp-text { font-size: 13px; color: var(--ink-soft); }
+  .hsp-text strong { color: var(--ink); }
+
+  /* ─── COMPETITOR COMPARISON GRID ─── */
+  .comp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 1000px; margin: 0 auto; }
+  .comp-card { border-radius: 16px; padding: 32px; }
+  .comp-us { background: var(--accent); color: var(--bg); }
+  .comp-them { background: var(--card); border: 1px solid var(--line); }
+  .comp-head { margin-bottom: 22px; }
+  .comp-badge { display: inline-block; background: rgba(255,255,255,0.2); color: var(--bg); font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase; padding: 6px 12px; border-radius: 6px; }
+  .comp-badge-grey { background: var(--bg-alt); color: var(--muted); }
+  .comp-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px; }
+  .comp-list li { font-size: 14px; line-height: 1.5; display: flex; gap: 10px; align-items: flex-start; }
+  .comp-us .comp-list li { color: rgba(250,250,247,0.9); }
+  .comp-them .comp-list li { color: var(--ink-soft); }
+  .comp-tick { color: #7FD99A; font-weight: 700; flex-shrink: 0; font-size: 15px; }
+  .comp-cross { color: var(--muted-light); font-weight: 700; flex-shrink: 0; font-size: 15px; }
+  @media (max-width: 768px) {
+    .cf-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
+    .cf-preview { position: relative !important; top: 0 !important; aspect-ratio: 1.8/1 !important; } .comp-grid { grid-template-columns: 1fr; } }
+
+  /* ─── ORDER CONFIRMATION MODAL (for Add to Cart fix) ─── */
+  .order-modal-overlay { position: fixed; inset: 0; background: rgba(26,26,26,0.6); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+  .order-modal-overlay.open { opacity: 1; pointer-events: auto; }
+  .order-modal { background: var(--card); border-radius: 18px; padding: 36px; max-width: 500px; width: 100%; box-shadow: 0 32px 80px -16px rgba(0,0,0,0.3); transform: translateY(12px); transition: transform 0.25s cubic-bezier(0.4,0,0.2,1); }
+  .order-modal-overlay.open .order-modal { transform: translateY(0); }
+  .order-modal-tag { font-family: 'DM Sans', sans-serif; font-size: 11px; color: var(--accent); letter-spacing: 1.2px; text-transform: uppercase; font-weight: 600; margin-bottom: 14px; }
+  .order-modal h3 { font-family: 'Inter Tight', sans-serif; font-size: 24px; font-weight: 600; letter-spacing: -0.6px; margin: 0 0 10px; }
+  .order-modal p { font-size: 14px; color: var(--ink-soft); line-height: 1.6; margin: 0 0 22px; }
+  .order-modal-spec { background: var(--bg-alt); border-radius: 10px; padding: 16px; margin-bottom: 22px; font-family: 'DM Sans', sans-serif; font-size: 12px; color: var(--ink); line-height: 1.8; }
+  .order-modal-actions { display: flex; flex-direction: column; gap: 10px; }
+  .order-modal-close { background: none; border: none; position: absolute; top: 16px; right: 20px; font-size: 22px; color: var(--muted); cursor: pointer; line-height: 1; }
+
+  /* ─── PROOF GUARANTEE STRIP (under configurator price card) ─── */
+  .cf-guarantee { margin-top: 14px; padding: 12px; background: rgba(255,255,255,0.06); border-radius: 8px; display: flex; flex-direction: column; gap: 6px; }
+  .cf-guarantee-item { font-size: 11px; color: rgba(250,250,247,0.65); font-family: 'DM Sans', sans-serif; letter-spacing: 0.3px; display: flex; align-items: flex-start; gap: 6px; line-height: 1.4; }
+  .cf-guarantee-item::before { content: '✓'; color: #7FD99A; flex-shrink: 0; font-weight: 700; }
+
+  /* ─── URGENCY DELIVERY BADGE (in configurator) ─── */
+  .cf-urgency { margin-top: 10px; background: rgba(127,217,154,0.12); border: 1px solid rgba(127,217,154,0.25); border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #7FD99A; font-family: 'DM Sans', sans-serif; letter-spacing: 0.2px; }
+  .cf-urgency strong { color: #A8F0BE; }
+
+  /* ─── TURNAROUND URGENCY STRIP ─── */
+  .urgency-strip { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 22px 32px; display: grid; grid-template-columns: 1fr 1px 1fr 1px 1fr; gap: 0; align-items: center; margin-top: 28px; }
+  .us-divider { background: var(--line); height: 40px; width: 1px; }
+  .us-item { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 5px; padding: 0 24px; }
+  .us-icon { width: 36px; height: 36px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-bottom: 4px; }
+  .us-label { font-family: 'DM Sans', sans-serif; font-size: 10px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; font-weight: 600; }
+  .us-value { font-family: 'Inter Tight', sans-serif; font-size: 15px; font-weight: 600; color: var(--ink); letter-spacing: -0.3px; line-height: 1.25; }
+  .us-value em { color: var(--accent); }
+  .us-note { font-size: 12px; color: var(--muted); margin-top: 1px; }
+  @media (max-width: 640px) {
+    .urgency-strip { grid-template-columns: 1fr; gap: 16px; }
+    .us-divider { display: none; }
+    .us-item { flex-direction: row; text-align: left; gap: 12px; }
+    .us-icon { flex-shrink: 0; }
+  }
+
+/* ─── LEGAL PAGES ─── */
+.legal-intro { background:var(--bg-alt); border-radius:14px; padding:28px 32px; margin-bottom:40px; }
+.legal-intro p { font-size:15px; color:var(--ink-soft); line-height:1.7; margin:0 0 12px; }
+.legal-intro p:last-child { margin:0; }
+.legal-section { margin-bottom:48px; padding-bottom:48px; border-bottom:1px solid var(--line); }
+.legal-section:last-of-type { border-bottom:none; }
+.legal-section h2 { font-family:'Inter Tight',sans-serif; font-size:18px; font-weight:600; letter-spacing:-0.3px; color:var(--accent); margin:0 0 16px; }
+.legal-section p { font-size:14px; color:var(--ink-soft); line-height:1.75; margin:0 0 14px; }
+.legal-section p:last-child { margin:0; }
+.legal-section ul { margin:12px 0 14px 20px; padding:0; display:flex; flex-direction:column; gap:8px; }
+.legal-section ul li { font-size:14px; color:var(--ink-soft); line-height:1.65; }
+.legal-section a { color:var(--accent); text-underline-offset:3px; }
+.legal-highlight { display:flex; gap:14px; align-items:flex-start; background:var(--accent-soft); border-radius:10px; padding:18px 20px; margin:20px 0; }
+.legal-highlight-icon { width:36px; height:36px; background:var(--accent); border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; color:#fff; margin-top:1px; }
+.legal-highlight div:last-child { font-size:14px; color:var(--ink); line-height:1.65; padding-top:8px; }
+.legal-contact { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:22px 26px; display:flex; flex-direction:column; gap:6px; margin-top:16px; }
+.legal-contact div { font-size:14px; color:var(--ink-soft); }
+.legal-contact a { color:var(--accent); }
+.legal-note { background:var(--bg-alt); border-left:3px solid var(--line); padding:16px 20px; border-radius:0 8px 8px 0; font-size:12px; color:var(--muted); line-height:1.6; margin-top:48px; font-style:italic; }
+
+/* ─── ORDER MODAL ─── */
+#ss-order-modal {
+  display: none;
+  position: fixed; inset: 0; z-index: 9999;
+  align-items: flex-end; justify-content: center;
+  padding: 0;
+}
+@media (min-width: 640px) {
+  #ss-order-modal { align-items: center; padding: 20px; }
+}
+.som-backdrop {
+  position: absolute; inset: 0;
+  background: rgba(10,8,20,0.55);
+  backdrop-filter: blur(3px);
+  opacity: 0; transition: opacity 0.25s;
+}
+#ss-order-modal.som-open .som-backdrop { opacity: 1; }
+.som-panel {
+  position: relative; z-index: 1;
+  background: var(--card); border-radius: 20px 20px 0 0;
+  padding: 28px 24px 32px;
+  width: 100%; max-width: 520px;
+  max-height: 92vh; overflow-y: auto;
+  transform: translateY(40px); opacity: 0;
+  transition: transform 0.28s cubic-bezier(0.4,0,0.2,1), opacity 0.28s;
+  box-shadow: 0 -4px 40px rgba(0,0,0,0.18);
+}
+@media (min-width: 640px) {
+  .som-panel { border-radius: 20px; transform: translateY(20px); }
+}
+#ss-order-modal.som-open .som-panel { transform: translateY(0); opacity: 1; }
+.som-close {
+  position: absolute; top: 16px; right: 16px;
+  background: var(--bg-alt); border: none; border-radius: 50%;
+  width: 32px; height: 32px; font-size: 14px; cursor: pointer;
+  color: var(--muted); display: flex; align-items: center; justify-content: center;
+}
+.som-head {
+  font-family: 'Inter Tight', sans-serif;
+  font-size: 20px; font-weight: 700; letter-spacing: -0.4px;
+  color: var(--ink); margin-bottom: 16px;
+}
+.som-spec {
+  background: var(--bg-alt); border-radius: 10px;
+  padding: 12px 16px; margin-bottom: 16px;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.som-spec-row {
+  display: flex; justify-content: space-between;
+  font-size: 13px; color: var(--ink-soft);
+}
+.som-spec-row span:last-child { color: var(--ink); font-weight: 500; }
+.som-price span:last-child { color: var(--accent); font-weight: 700; font-size: 14px; }
+.som-sub { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 20px; }
+.som-fields { display: flex; flex-direction: column; gap: 14px; }
+.som-fields label { display: block; font-size: 12px; font-weight: 600; color: var(--ink-soft); margin-bottom: 5px; letter-spacing: 0.2px; }
+.som-fields input, .som-fields textarea {
+  width: 100%; padding: 10px 13px;
+  border: 1px solid var(--line); border-radius: 8px;
+  font-size: 14px; font-family: 'Inter', sans-serif;
+  color: var(--ink); background: var(--card);
+  outline: none; transition: border-color 0.15s;
+  box-sizing: border-box;
+}
+.som-fields input:focus, .som-fields textarea:focus { border-color: var(--accent); }
+.som-fields textarea { resize: vertical; min-height: 64px; }
+.som-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 480px) { .som-row { grid-template-columns: 1fr; } }
+
+/* ─── INSTAGRAM SECTION ─── */
+.ig-section { padding-top: 24px; padding-bottom: 24px; }
+.ig-head {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 28px; gap: 16px; flex-wrap: wrap;
+}
+.ig-meta { display: flex; align-items: center; gap: 14px; }
+.ig-meta svg { color: var(--accent); flex-shrink: 0; }
+.ig-handle { font-family: 'Inter Tight', sans-serif; font-size: 18px; font-weight: 700; color: var(--ink); letter-spacing: -0.3px; }
+.ig-sub { font-size: 13px; color: var(--muted); margin-top: 2px; }
+.ig-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 6px;
+  border-radius: 14px;
+  overflow: hidden;
+}
+.ig-tile {
+  position: relative; aspect-ratio: 1/1; overflow: hidden;
+  display: block; background: var(--bg-alt);
+}
+.ig-tile img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
+  display: block;
+}
+.ig-tile:hover img { transform: scale(1.06); }
+.ig-overlay {
+  position: absolute; inset: 0;
+  background: rgba(126,107,194,0.0);
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; opacity: 0;
+  transition: all 0.25s;
+}
+.ig-tile:hover .ig-overlay { opacity: 1; background: rgba(126,107,194,0.45); }
+@media (max-width: 768px) {
+  .ig-grid { grid-template-columns: repeat(2, 1fr); gap: 4px; }
+  .ig-tile:nth-child(n+5) { display: none; }
+  .ig-head { flex-direction: column; align-items: flex-start; }
+}
+@media (max-width: 480px) {
+  .ig-grid { grid-template-columns: repeat(2, 1fr); gap: 3px; }
+  .ig-tile:nth-child(n+5) { display: none; }
+}
+
+/* ─── FILE UPLOAD AREA ─── */
+.som-file-area {
+  border: 2px dashed var(--line); border-radius: 10px;
+  padding: 20px; text-align: center; cursor: pointer;
+  transition: all 0.2s; background: var(--bg-alt);
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+}
+.som-file-area:hover { border-color: var(--accent); background: var(--accent-soft); }
+.som-file-area svg { color: var(--accent); }
+.som-file-label { font-size: 14px; font-weight: 600; color: var(--ink); }
+.som-file-hint { font-size: 11px; color: var(--muted); font-family: 'DM Sans', sans-serif; }
+
+/* ─── MOBILE STICKY ORDER BAR ─── */
+.cf-sticky-bar {
+  display: none;
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: var(--ink);
+  padding: 14px 20px 20px;
+  z-index: 200;
+  box-shadow: 0 -4px 24px rgba(0,0,0,0.2);
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.cf-sticky-bar .csb-price {
+  display: flex; flex-direction: column;
+}
+.cf-sticky-bar .csb-total {
+  font-family: 'Inter Tight', sans-serif;
+  font-size: 20px; font-weight: 700;
+  color: #fff; letter-spacing: -0.5px;
+}
+.cf-sticky-bar .csb-unit {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 10px; color: rgba(255,255,255,0.5);
+  letter-spacing: 0.5px; margin-top: 2px;
+}
+.cf-sticky-bar .csb-btn {
+  background: var(--accent); color: #fff;
+  border: none; border-radius: 9px;
+  padding: 12px 22px;
+  font-family: 'Inter Tight', sans-serif;
+  font-size: 14px; font-weight: 700;
+  cursor: pointer; white-space: nowrap;
+  flex-shrink: 0;
+}
+@media (max-width: 768px) {
+  .cf-sticky-bar { display: flex; }
+  body { padding-bottom: 80px; }
+}
+
+/* ─── MOBILE ORDER MODAL  -  sheet style ─── */
+@media (max-width: 640px) {
+  #ss-order-modal { align-items: flex-end; padding: 0; }
+  .som-panel {
+    border-radius: 20px 20px 0 0 !important;
+    max-height: 92vh !important;
+    padding-bottom: 32px !important;
+  }
+  .som-row { grid-template-columns: 1fr !important; }
+}
+
+/* ─── CROSS-SELL ─── */
+.cross-sell { padding: 24px 32px; background: var(--bg-alt); border-top: 1px solid var(--line); }
+.cs-head { font-family: 'Inter Tight', sans-serif; font-size: 24px; font-weight: 700; letter-spacing: -0.5px; color: var(--ink); margin-bottom: 28px; }
+.cs-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; max-width: 1100px; margin: 0 auto; }
+.cs-card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; transition: all 0.2s; text-decoration: none; display: block; }
+.cs-card:hover { border-color: var(--accent-light); transform: translateY(-2px); box-shadow: 0 8px 24px -6px rgba(0,0,0,0.1); }
+.cs-img { aspect-ratio: 1.6/1; overflow: hidden; background: var(--bg-alt); }
+.cs-img img { width:100%; height:100%; object-fit:cover; transition: transform 0.4s; }
+.cs-card:hover .cs-img img { transform: scale(1.04); }
+.cs-body { padding: 18px 20px; }
+.cs-label { font-family: 'DM Sans',sans-serif; font-size: 10px; color: var(--accent); letter-spacing: 1px; text-transform: uppercase; font-weight: 500; margin-bottom: 6px; }
+.cs-title { font-family: 'Inter Tight',sans-serif; font-size: 17px; font-weight: 700; color: var(--ink); letter-spacing: -0.3px; margin-bottom: 6px; }
+.cs-desc { font-size: 13px; color: var(--ink-soft); line-height: 1.55; }
+@media (max-width: 768px) { .cs-grid { grid-template-columns: 1fr; } .cross-sell { padding: 20px 20px; } }
+
+
+  /* ── Dark background text readability fixes (mobile) ── */
+  .ann { color: #FFFFFF; }
+  .ann-track { color: #FFFFFF; font-size: 12.5px; }
+  .ann-cta { color: #C4B5FD !important; font-weight: 600; }
+  .ann-hl  { color: #C4B5FD !important; }
+
+  /* Sticky bar mobile  -  ensure all text is clearly visible */
+  .cf-sticky-bar .csb-total { color: #FFFFFF; }
+  .cf-sticky-bar .csb-unit  { color: rgba(255,255,255,0.85); font-size: 11px; }
+
+  /* Cross-sell dark section (.csb)  -  improve contrast */
+  .csb { color: #FFFFFF; }
+  .csbta { color: #C4B5FD; }
+  .csbs  { color: rgba(255,255,255,0.75); }
+  .csbs li { color: rgba(255,255,255,0.75); }
+
+  /* Comparison card (purple bg)  -  ensure readability */
+  .comp-us { color: #FFFFFF; }
+  .comp-us .comp-item { color: rgba(255,255,255,0.95); }
+  .comp-us p { color: rgba(255,255,255,0.9); }
+
+  /* Mobile-specific fixes */
+  @media (max-width: 768px) {
+    .ann-track { font-size: 11.5px; gap: 32px; animation-duration: 12s; }
+    .cf-sticky-bar { padding: 12px 16px 16px; }
+    .cf-sticky-bar .csb-total { font-size: 18px; }
+    .cf-sticky-bar .csb-unit  { font-size: 11px; }
+    .csb { padding: 32px 20px; }
+    .csbta { font-size: 11px; }
+  }
+
+
+  .p-choose { font-size:12px; color:var(--accent); font-family:'Inter',sans-serif; margin-top:10px; line-height:1.5; font-style:italic; }
+
+  @media (max-width: 640px) {
+    .h-btns { flex-direction: column; gap: 6px; }
+    .h-btns .bp.blg { width: 100%; justify-content: center; text-align: center; }
+    .h-btns .bo.blg { background: none; border: none; color: var(--accent); font-size: 14px; text-align: center; padding: 4px 0; text-decoration: underline; text-underline-offset: 3px; display: block; }
+  }
+
+  /* ── HOMEPAGE GALLERY STRIP ───────────────────────────── */
+  .hg-strip {
+    padding: 0 0 24px;
+    background: var(--bg);
+    overflow: hidden;
+  }
+  .hg-header {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 32px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .hg-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .hg-all {
+    font-family: 'Inter Tight', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent);
+    text-decoration: none;
+    transition: opacity 0.15s;
+  }
+  .hg-all:hover { opacity: 0.75; }
+  .hg-track-wrap {
+    overflow: hidden;
+    position: relative;
+  }
+  .hg-track-wrap::before,
+  .hg-track-wrap::after {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 80px;
+    z-index: 2;
+    pointer-events: none;
+  }
+  .hg-track-wrap::before { left: 0; background: linear-gradient(to right, var(--bg), transparent); }
+  .hg-track-wrap::after  { right: 0; background: linear-gradient(to left, var(--bg), transparent); }
+  .hg-track {
+    display: flex;
+    gap: 12px;
+    animation: hg-scroll 40s linear infinite;
+    width: max-content;
+  }
+  .hg-track:hover { animation-play-state: paused; }
+  @keyframes hg-scroll {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  .hg-tile {
+    flex-shrink: 0;
+    width: 220px;
+    height: 220px;
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--bg-alt);
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .hg-tile:hover {
+    transform: scale(1.03);
+    box-shadow: var(--shadow-md);
+  }
+  .hg-tile img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s;
+  }
+  .hg-tile:hover img { transform: scale(1.05); }
+  @media (max-width: 640px) {
+    .hg-strip { padding: 0 0 20px; }
+    .hg-header { padding: 0 20px 16px; }
+    .hg-tile { width: 160px; height: 160px; }
+    .hg-track { gap: 8px; }
+    .hg-track-wrap::before,
+    .hg-track-wrap::after { width: 40px; }
+  }
+
+
+  /* ── HAMBURGER BUTTON ── */
+  #ss-burger {
+    position: relative;
+    z-index: 200;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    min-width: 44px;
+    min-height: 44px;
+    -webkit-tap-highlight-color: transparent;
+  }
+  #ss-burger.is-open {
+    background: rgba(126,107,194,0.12);
+  }
+
+
+    /* ── MOBILE PROMO STICKY BAR ── */
+  @media(max-width:1024px){
+            /* Push page content up so bottom bar doesn't overlap */
+    body{padding-bottom:54px;}
+  }
+</style>
+  <style>
+    .ua-wrap { max-width: 720px; margin: 0 auto; padding: 48px 32px 80px; }
+    .ua-eyebrow { font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+    .ua-title { font-family: 'Inter Tight', sans-serif; font-size: clamp(26px,4vw,34px); font-weight: 700; letter-spacing: -0.8px; color: var(--ink); margin: 0 0 10px; }
+    .ua-title em { font-style: italic; color: var(--accent); }
+    .ua-sub { font-size: 16px; color: var(--muted); line-height: 1.6; margin: 0 0 32px; }
+
+    /* Order bar */
+    .ua-order-bar { background: var(--accent-soft); border: 1px solid var(--accent-light); border-radius: 10px; padding: 14px 18px; margin-bottom: 28px; display: flex; align-items: center; gap: 12px; }
+    .ua-order-label { font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600; color: var(--accent-deep); letter-spacing: 0.4px; }
+    .ua-order-num { font-family: 'Inter Tight', sans-serif; font-size: 16px; font-weight: 700; color: var(--ink); }
+
+    /* Per-product upload card */
+    .ua-product-card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 24px; margin-bottom: 16px; }
+    .ua-product-card.ua-done { border-color: #86efac; background: #f0fdf4; }
+    .ua-product-num { font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 600; color: var(--muted); letter-spacing: 0.6px; text-transform: uppercase; margin-bottom: 8px; }
+    .ua-product-title { font-family: 'Inter Tight', sans-serif; font-size: 18px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+    .ua-product-spec { font-size: 13px; color: var(--muted); margin-bottom: 16px; line-height: 1.5; }
+    .ua-product-spec span { display: inline-block; background: var(--bg-alt); border-radius: 5px; padding: 3px 8px; margin: 2px 3px 2px 0; font-size: 12px; color: var(--ink); font-family: 'DM Sans', sans-serif; }
+
+    /* Dropzone */
+    .ua-dropzone { border: 2px dashed var(--accent-light); border-radius: 10px; padding: 24px 16px; text-align: center; cursor: pointer; transition: all 0.2s; background: var(--accent-tint); position: relative; }
+    .ua-dropzone:hover, .ua-dropzone.drag-over { border-color: var(--accent); background: var(--accent-soft); }
+    .ua-dropzone input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+    .ua-dropzone-icon { margin: 0 auto 10px; width: 36px; height: 36px; background: var(--accent-soft); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .ua-dropzone-title { font-family: 'Inter Tight', sans-serif; font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 3px; }
+    .ua-dropzone-sub { font-size: 12px; color: var(--muted); }
+    .ua-dropzone-formats { font-size: 11px; color: var(--accent); font-family: 'DM Sans', sans-serif; font-weight: 600; margin-top: 6px; }
+    .ua-file-chosen { margin-top: 10px; padding: 9px 12px; background: var(--card); border: 1px solid #86efac; border-radius: 8px; font-size: 13px; color: var(--ink); display: none; align-items: center; gap: 8px; }
+    .ua-file-chosen svg { flex-shrink: 0; }
+
+    /* Canva tip */
+    .ua-canva-tip { background: #f0f0ff; border: 1px solid #c4b5fd; border-radius: 8px; padding: 12px 14px; margin-top: 12px; font-size: 12px; color: var(--accent-deep); line-height: 1.6; }
+    .ua-canva-tip strong { display: block; margin-bottom: 4px; font-size: 12px; }
+
+    /* Notes */
+    .ua-notes { width: 100%; box-sizing: border-box; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; font-size: 13px; font-family: 'Inter', sans-serif; color: var(--ink); background: var(--bg-alt); outline: none; resize: vertical; min-height: 60px; margin-top: 12px; transition: border-color 0.15s; }
+    .ua-notes:focus { border-color: var(--accent); background: var(--card); }
+
+    /* Upload button */
+    .ua-upload-btn { width: 100%; margin-top: 14px; padding: 13px; background: var(--accent); color: #fff; border: none; border-radius: 10px; font-family: 'Inter Tight', sans-serif; font-size: 15px; font-weight: 700; cursor: pointer; transition: background 0.15s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .ua-upload-btn:hover { background: var(--accent-deep); }
+
+    /* Upload loading overlay */
+    @keyframes ua-spin { to { transform: rotate(360deg); } }
+    @keyframes ua-progress { from { width: 0%; } to { width: 92%; } }
+    @keyframes ua-pulse { 0%,100%{opacity:1;} 50%{opacity:0.5;} }
+    #ua-upload-overlay {
+      position: fixed; inset: 0; z-index: 9999;
+      background: rgba(255,255,255,0.96);
+      backdrop-filter: blur(8px);
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 32px;
+      text-align: center;
+    }
+    #ua-upload-overlay.active { display: flex; }
+    .ua-overlay-icon {
+      width: 80px; height: 80px;
+      background: var(--accent-soft);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 24px;
+      animation: ua-pulse 1.5s ease-in-out infinite;
+    }
+    .ua-overlay-icon svg { animation: ua-spin 1.2s linear infinite; }
+    .ua-overlay-title {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: 20px; font-weight: 700;
+      color: var(--ink); margin: 0 0 8px;
+    }
+    .ua-overlay-filename {
+      font-size: 13px; color: var(--muted);
+      font-family: 'DM Sans', sans-serif;
+      margin: 0 0 24px;
+      max-width: 300px;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .ua-overlay-bar-wrap {
+      width: 100%; max-width: 320px;
+      height: 6px; background: var(--bg-alt);
+      border-radius: 100px; overflow: hidden;
+      margin-bottom: 16px;
+    }
+    .ua-overlay-bar {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 100px;
+      width: 0%;
+      animation: ua-progress 12s ease-out forwards;
+    }
+    .ua-overlay-note {
+      font-size: 12px; color: var(--muted);
+      font-family: 'DM Sans', sans-serif;
+    }
+    .ua-upload-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+    /* Done state */
+    .ua-done-banner { display: none; align-items: center; gap: 10px; padding: 12px 14px; background: #dcfce7; border: 1px solid #86efac; border-radius: 8px; margin-top: 12px; }
+    .ua-done-banner span { font-family: 'Inter Tight', sans-serif; font-size: 14px; font-weight: 600; color: #15803d; }
+
+    /* Error */
+    .ua-err { display: none; padding: 10px 14px; background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; font-size: 13px; color: #991b1b; margin-top: 10px; }
+
+    /* Overall success */
+    .ua-all-done { display: none; text-align: center; padding: 48px 20px; }
+    .ua-all-done h2 { font-family: 'Inter Tight', sans-serif; font-size: 24px; font-weight: 700; color: var(--ink); margin: 16px 0 8px; }
+    .ua-all-done p { font-size: 15px; color: var(--muted); line-height: 1.6; margin: 0; }
+
+    /* Checklist */
+    .ua-checklist { list-style: none; padding: 0; margin: 0; }
+    .ua-checklist li { display: flex; gap: 8px; align-items: flex-start; font-size: 13px; color: var(--ink); padding: 5px 0; border-bottom: 1px solid var(--line-soft); }
+    .ua-checklist li:last-child { border: none; }
+    .ua-ck { color: var(--accent); font-weight: 700; font-size: 12px; min-width: 18px; padding-top: 1px; }
+
+    @media (max-width: 640px) { .ua-wrap { padding: 32px 20px 64px; } }
+  </style>
+<!-- Google Analytics -->
+<!-- Contentsquare -->
+<script src="https://t.contentsquare.net/uxa/34873b88a537f.js" defer></script>
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZJHQT8DL21"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-ZJHQT8DL21', {
+    linker: {
+      domains: ['checkout.stickysitch.com.au'],
+      accept_incoming: true
+    }
+  });
+</script></head>
+<body>
+<!-- Upload loading overlay -->
+<div id="ua-upload-overlay">
+  <div class="ua-overlay-icon">
+    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
+  </div>
+  <div class="ua-overlay-title">Uploading your artwork</div>
+  <div class="ua-overlay-filename" id="ua-overlay-filename">Preparing file...</div>
+  <div class="ua-overlay-bar-wrap">
+    <div class="ua-overlay-bar" id="ua-overlay-bar"></div>
+  </div>
+  <div class="ua-overlay-note">Please don't close this page — this may take a few seconds for large files.</div>
+</div>
+
+<div id="ss-ann"></div>
+<div id="ss-nav"></div>
+
+<div class="ua-wrap">
+  <div class="ua-eyebrow">Almost done</div>
+  <h1 class="ua-title">Send us your artwork,<br><em>then complete your order.</em></h1>
+  <p class="ua-sub">Upload your artwork below. Once your payment is confirmed, we'll send a free proof to your email — nothing prints until you approve it.</p>
+
+  <div id="ua-order-bar" class="ua-order-bar" style="display:none;">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+    <div>
+      <div class="ua-order-label">Your order is placed</div>
+      <div id="ua-order-num" class="ua-order-num"></div>
+    </div>
+  </div>
+
+  <!-- Checkout banner -->
+  <div id="ua-checkout-banner" style="display:none;margin-bottom:24px;">
+    <div style="background:#1a1625;border-radius:12px;padding:18px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+      <div>
+        <div style="font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;color:rgba(255,255,255,0.5);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:4px;">Ready to pay?</div>
+        <div style="font-family:'Inter Tight',sans-serif;font-size:14px;font-weight:600;color:#fff;">Add your artwork first, then complete your order below.</div>
+      </div>
+      <a id="ua-checkout-link" href="#" style="display:flex;align-items:center;gap:7px;padding:12px 20px;background:var(--accent);color:#fff;border-radius:8px;font-family:'Inter Tight',sans-serif;font-size:14px;font-weight:700;text-decoration:none;white-space:nowrap;flex-shrink:0;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        Proceed to checkout
+      </a>
+    </div>
+  </div>
+
+  <!-- Email capture — required before upload unlocks -->
+  <div id="ua-email-wrap" style="margin-bottom:32px;background:var(--accent-soft);border:2px solid var(--accent-light);border-radius:14px;padding:20px 24px;">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <label for="ua-customer-email" style="font-family:'Inter Tight',sans-serif;font-size:15px;font-weight:700;color:var(--ink);">
+        Enter your email to unlock uploads
+      </label>
+    </div>
+    <input
+      type="email"
+      id="ua-customer-email"
+      placeholder="your@email.com"
+      autocomplete="email"
+      autofocus
+      style="width:100%;box-sizing:border-box;padding:13px 16px;border:2px solid var(--accent-light);border-radius:10px;
+             font-family:'DM Sans',sans-serif;font-size:15px;color:var(--ink);background:var(--card);
+             outline:none;transition:border-color .2s;"
+      oninput="window._uaEmailChange(this.value)"
+    />
+    <p style="font-size:12px;color:var(--muted);margin:8px 0 0;font-family:'DM Sans',sans-serif;">
+      Your proof is sent within a few hours of payment. Nothing prints until you approve it — the faster you approve, the faster your order ships.
+    </p>
+    <div style="display:flex;gap:8px;align-items:flex-start;margin-top:10px;padding:10px 13px;background:#fff8e6;border:1.5px solid #f0c040;border-radius:8px;">
+      <span style="flex-shrink:0;font-size:15px;">⚠️</span>
+      <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:#7a5c00;line-height:1.55;">
+        <strong style="color:#5c4400;">Use this same email address when you pay at checkout.</strong>
+        We use it to automatically link your artwork to your order — no manual matching needed.
+      </span>
+    </div>
+  </div>
+
+  <!-- Per-product upload cards injected here -->
+  <div id="ua-products"></div>
+
+  <!-- Single submit button for all items -->
+  <div id="ua-global-wrap" style="display:none;margin-top:8px;">
+    <div id="ua-global-err" class="ua-err" style="margin-bottom:10px;"></div>
+    <button id="ua-global-btn" class="ua-upload-btn" disabled
+      style="font-size:16px;padding:16px;letter-spacing:-0.2px;"
+      onclick="submitAllArtwork()">
+      Lock in artwork →
+    </button>
+  </div>
+
+  <!-- Fallback: no items in localStorage -->
+  <div id="ua-fallback" style="display:none;">
+    <div style="background:var(--bg-alt);border:1px solid var(--line);border-radius:12px;padding:24px;margin-bottom:24px;">
+      <div style="font-family:'Inter Tight',sans-serif;font-size:16px;font-weight:700;color:var(--ink);margin-bottom:8px;">Add your artwork</div>
+      <p style="font-size:14px;color:var(--muted);margin:0 0 16px;line-height:1.6;">Add your artwork file — your order details are attached automatically.</p>
+      <!-- Order number hidden — auto-filled from URL or session -->
+      <input type="hidden" id="ua-fallback-order" value="">
+      <div class="ua-dropzone" id="ua-fallback-dz">
+        <input type="file" id="ua-fallback-file" accept=".pdf,.png,.jpg,.jpeg,.svg,.ai,.eps">
+        <div class="ua-dropzone-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg></div>
+        <div class="ua-dropzone-title">Drop file or tap to browse</div>
+        <div class="ua-dropzone-formats">PDF · PNG · SVG · AI · EPS · JPG</div>
+        <div style="background:#fff8e6;border:1.5px solid #f0c040;border-radius:8px;padding:11px 14px;margin-top:10px;display:flex;gap:9px;align-items:flex-start;"><span style="font-size:15px;flex-shrink:0;">⚠️</span><span style="font-family:'DM Sans',sans-serif;font-size:12px;color:#7a5c00;line-height:1.5;"><strong style="color:#5c4400;">Some AI-generated images may be rejected.</strong> Images from ChatGPT and similar tools are often flat, low-resolution files that can't be edited for print. If you're using an AI-generated image, please ensure it's at least 300 DPI at print size. Not sure? Email it to info@stickysitch.com.au before uploading.</span></div>
+      </div>
+      <div id="ua-fallback-chosen" class="ua-file-chosen">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+        <span id="ua-fallback-fname"></span>
+      </div>
+      <div id="ua-fallback-err" class="ua-err"></div>
+      <button class="ua-upload-btn" onclick="uploadFallback()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
+        Add artwork for proofing
+      </button>
+    </div>
+  </div>
+
+  <!-- All done state -->
+  <div class="ua-all-done" id="ua-all-done">
+    <div style="width:64px;height:64px;background:#dcfce7;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto;">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <h2>Artwork received.</h2>
+    <p>Now complete your payment below.<br>We'll send your proof within a few hours of payment. Approve it quickly and we can start production the same day.</p>
+    <p style="margin-top:8px;font-size:13px;color:var(--muted);">Nothing prints until you approve each proof.</p>
+    <p style="margin-top:16px;font-size:12px;color:var(--muted);background:var(--bg-alt);border-radius:8px;padding:10px 14px;line-height:1.6;">Didn't receive your proof within 24 hours? Email your artwork directly to <a href="mailto:info@stickysitch.com.au" style="color:var(--accent);">info@stickysitch.com.au</a> with your order number in the subject line.</p>
+  </div>
+
+  <!-- Artwork checklist -->
+  <div style="background:var(--bg-alt);border-radius:12px;padding:20px 24px;margin-top:32px;" id="ua-checklist-section">
+    <div style="font-family:'Inter Tight',sans-serif;font-size:14px;font-weight:700;color:var(--ink);margin-bottom:14px;">Quick artwork checklist</div>
+    <ul class="ua-checklist">
+      <li><span class="ua-ck">✓</span><span><strong>300 DPI</strong> at actual print size — or use vector (PDF, SVG, AI, EPS)</span></li>
+      <li><span class="ua-ck">✓</span><span><strong>CMYK</strong> preferred — we convert RGB but colours may shift slightly</span></li>
+      <li><span class="ua-ck">✓</span><span><strong>Fonts outlined or embedded</strong> — no missing font errors</span></li>
+      <li><span class="ua-ck">✓</span><span><strong>Canva users:</strong> export as <strong>PDF Print (CMYK)</strong>. Do NOT use the standard PNG.</span></li>
+      <li><span class="ua-ck">✓</span><span><strong>Clear vinyl orders:</strong> white areas in artwork print transparent. Add a note below if white needs to stay white.</span></li>
+    </ul>
+    <p style="font-size:12px;color:var(--muted);margin:12px 0 0;line-height:1.6;">Not sure? Send what you have — we will flag any issues in the proof before printing.</p>
+  </div>
+
+  <div style="margin-top:32px;text-align:center;font-size:13px;color:var(--muted);">
+    Prefer email? Send artwork to <a href="mailto:info@stickysitch.com.au" style="color:var(--accent);font-weight:600;">info@stickysitch.com.au</a> with your order number in the subject line.
+  </div>
+</div>
+
+<footer><div id="ss-footer"></div></footer>
+
+<script>
+// ── Read order number and items ──────────────────────────────────────────────
+var orderNum = '';
+var orderItems = [];
+var uploadedCount = 0;
+
+(function init() {
+  var params = new URLSearchParams(window.location.search);
+  orderNum = params.get('order') || params.get('order_name') || '';
+
+  // Read checkout URL from URL params or localStorage
+  var checkoutUrl = params.get('checkout') || '';
+  if (!checkoutUrl) { try { checkoutUrl = localStorage.getItem('ss_checkout_url') || ''; } catch(e) {} }
+
+  // Read items from localStorage (saved at checkout)
+  try {
+    var stored = localStorage.getItem('ss_upload_items');
+    if (stored) orderItems = JSON.parse(stored);
+  } catch(e) {}
+
+  // Show order number bar
+  if (orderNum) {
+    document.getElementById('ua-order-bar').style.display = 'flex';
+    document.getElementById('ua-order-num').textContent = orderNum;
+  }
+
+  // Show checkout banner if we have a checkout URL
+  if (checkoutUrl) {
+    var banner = document.getElementById('ua-checkout-banner');
+    var link   = document.getElementById('ua-checkout-link');
+    if (banner) banner.style.display = 'block';
+    if (link)   link.href = checkoutUrl;
+  }
+
+  // Render per-product upload cards or fallback
+  if (orderItems.length > 0) {
+    renderProductCards();
+    // Check if returning from a FormSubmit redirect (uploaded=N in URL)
+    var uploadedParam = params.get('uploaded');
+    if (uploadedParam !== null && uploadedParam !== 'fallback') {
+      var idx = parseInt(uploadedParam);
+      if (!isNaN(idx)) {
+        setTimeout(function() { markItemDone(idx); }, 300);
+      }
+    } else if (uploadedParam === 'fallback') {
+      document.getElementById('ua-fallback').innerHTML = '<div style="text-align:center;padding:32px 0;"><div style="width:56px;height:56px;background:#dcfce7;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div><div style="font-family:Inter Tight,sans-serif;font-size:20px;font-weight:700;color:var(--ink);margin-bottom:8px;">Artwork received.</div><p style="color:var(--muted);font-size:14px;line-height:1.6;">Proof on the way within a few hours of payment confirmation.</p></div>';
+    }
+  } else {
+    document.getElementById('ua-fallback').style.display = 'block';
+    // Pre-fill order number in fallback
+    if (orderNum) {
+      var inp = document.getElementById('ua-fallback-order');
+      if (inp) inp.value = orderNum;
+    }
+  }
+
+  // Wire fallback file input
+  var fbFile = document.getElementById('ua-fallback-file');
+  if (fbFile) {
+    fbFile.addEventListener('change', function() {
+      if (this.files[0]) {
+        document.getElementById('ua-fallback-fname').textContent = this.files[0].name;
+        document.getElementById('ua-fallback-chosen').style.display = 'flex';
+      }
+    });
+  }
+})();
+
+function markItemDone(i) {
+  var card = document.getElementById('ua-card-' + i);
+  var btn  = document.getElementById('ua-btn-' + i);
+  var done = document.getElementById('ua-done-' + i);
+  var dz   = document.getElementById('ua-dz-' + i);
+  if (card) card.classList.add('ua-done');
+  if (btn)  btn.style.display = 'none';
+  if (done) done.style.display = 'flex';
+  if (dz)   { dz.style.pointerEvents = 'none'; dz.style.opacity = '0.5'; }
+  uploadedCount++;
+  // Also mark in localStorage so repeated returns don't reset
+  try { localStorage.setItem('ss_uploaded_' + i, '1'); } catch(e) {}
+  if (uploadedCount >= orderItems.length && !window._uaAllDoneShown) {
+    window._uaAllDoneShown = true;
+    setTimeout(function() {
+      document.getElementById('ua-products').style.display = 'none';
+      document.getElementById('ua-checklist-section').style.display = 'none';
+      var checkoutUrlFinal = '';
+      try { checkoutUrlFinal = new URLSearchParams(window.location.search).get('checkout') || localStorage.getItem('ss_checkout_url') || ''; } catch(e) {}
+      var doneEl = document.getElementById('ua-all-done');
+      if (doneEl && checkoutUrlFinal) {
+        doneEl.innerHTML = doneEl.innerHTML + '<div style="margin-top:24px;"><a href="' + checkoutUrlFinal + '" style="display:inline-flex;align-items:center;gap:8px;padding:14px 28px;background:var(--accent);color:#fff;border-radius:10px;font-family:Inter Tight,sans-serif;font-size:16px;font-weight:700;text-decoration:none;">Proceed to checkout &#x2192;</a></div>';
+      }
+      document.getElementById('ua-all-done').style.display = 'block';
+      try { localStorage.removeItem('ss_upload_items'); localStorage.removeItem('ss_checkout_url'); } catch(e) {}
+    }, 800);
+  }
+}
+
+function renderProductCards() {
+  var container = document.getElementById('ua-products');
+  container.innerHTML = orderItems.map(function(item, i) {
+    var specParts = [item.sizeLabel, item.matLabel, item.qty ? Number(item.qty).toLocaleString() + ' pcs' : ''].filter(Boolean);
+    var specTags  = specParts.map(function(s) { return '<span>' + s + '</span>'; }).join('');
+    return '<div class="ua-product-card" id="ua-card-' + i + '">' +
+      '<div class="ua-product-num">Item ' + (i + 1) + ' of ' + orderItems.length + '</div>' +
+      '<div class="ua-product-title">' + item.title + '</div>' +
+      '<div class="ua-product-spec">' + specTags + (item.price ? '<span style="color:var(--accent-deep);font-weight:600;">' + item.price + '</span>' : '') + '</div>' +
+      '<div class="ua-dropzone" id="ua-dz-' + i + '">' +
+        '<input type="file" id="ua-file-' + i + '" accept=".pdf,.png,.jpg,.jpeg,.svg,.ai,.eps" onchange="onFileChange(' + i + ')">' +
+        '<div class="ua-dropzone-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg></div>' +
+        '<div class="ua-dropzone-title">Drop artwork for ' + item.title + ' or tap to browse</div>' +
+        '<div class="ua-dropzone-sub">PDF, PNG, SVG, AI, EPS or JPG · Multiple files? Zip them first</div>' +
+        '<div class="ua-dropzone-formats">PDF Print (CMYK) recommended &middot; 300 DPI minimum</div>' +
+      '</div>' +
+      '<div id="ua-chosen-' + i + '" class="ua-file-chosen">' +
+        '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>' +
+        '<span id="ua-fname-' + i + '"></span>' +
+      '</div>' +
+      '<div class="ua-canva-tip" style="display:' + (item.matLabel && item.matLabel.toLowerCase().includes('clear') ? 'block' : 'none') + '">' +
+        '<strong>&#9888; Clear vinyl note</strong>White areas in your artwork will print transparent. If white text or elements need to stay white, add a note below and we will discuss white ink printing before proofing.' +
+      '</div>' +
+      '<textarea class="ua-notes" id="ua-notes-' + i + '" placeholder="Notes for this product — e.g. keep logo centred, white background, Pantone match required (optional)"></textarea>' +
+      '<div id="ua-err-' + i + '" class="ua-err"></div>' +
+      '<div id="ua-done-' + i + '" class="ua-done-banner">' +
+        '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>' +
+        '<span>Artwork received for ' + item.title + '. Your proof will be sent within a few hours of payment being confirmed.</span>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+
+  // Wire drag-and-drop on each dropzone
+  orderItems.forEach(function(_, i) {
+    var dz = document.getElementById('ua-dz-' + i);
+    if (!dz) return;
+    dz.addEventListener('dragover', function(e) { e.preventDefault(); dz.classList.add('drag-over'); });
+    dz.addEventListener('dragleave', function() { dz.classList.remove('drag-over'); });
+    dz.addEventListener('drop', function(e) {
+      e.preventDefault(); dz.classList.remove('drag-over');
+      var file = e.dataTransfer.files[0];
+      if (!file) return;
+      var inp = document.getElementById('ua-file-' + i);
+      var dt = new DataTransfer(); dt.items.add(file); inp.files = dt.files;
+      document.getElementById('ua-fname-' + i).textContent = file.name;
+      document.getElementById('ua-chosen-' + i).style.display = 'flex';
+      checkAllFilesReady();
+    });
+  });
+}
+
+function onFileChange(i) {
+  var inp = document.getElementById('ua-file-' + i);
+  if (inp && inp.files[0]) {
+    document.getElementById('ua-fname-' + i).textContent = inp.files[0].name;
+    document.getElementById('ua-chosen-' + i).style.display = 'flex';
+  }
+  checkAllFilesReady();
+}
+
+function checkAllFilesReady() {
+  if (!orderItems || !orderItems.length) return;
+  var emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(window._uaCustomerEmail || '');
+  var allFiles = orderItems.every(function(_, i) {
+    var inp = document.getElementById('ua-file-' + i);
+    return inp && inp.files && inp.files.length > 0;
+  });
+  var ready = emailValid && allFiles;
+  var wrap = document.getElementById('ua-global-wrap');
+  var btn  = document.getElementById('ua-global-btn');
+  if (wrap) wrap.style.display = 'block';
+  if (btn) {
+    btn.disabled = !ready;
+    btn.style.opacity = ready ? '1' : '0.45';
+    btn.style.cursor  = ready ? 'pointer' : 'not-allowed';
+    var n = orderItems.length;
+    btn.textContent = n > 1 ? 'Lock in all ' + n + ' artwork files →' : 'Lock in artwork →';
+  }
+}
+
+async function submitAllArtwork() {
+  var btn = document.getElementById('ua-global-btn');
+  var err = document.getElementById('ua-global-err');
+  err.style.display = 'none';
+
+  // Total size check (Resend limit ~40MB; base64 adds 33%)
+  var totalBytes = 0;
+  orderItems.forEach(function(_, i) {
+    var f = document.getElementById('ua-file-' + i).files[0];
+    if (f) totalBytes += f.size;
+  });
+  if (totalBytes > 30 * 1024 * 1024) {
+    err.textContent = 'Total file size is ' + (totalBytes/(1024*1024)).toFixed(0) + 'MB. Please compress files to under 30MB total, or email artwork directly to info@stickysitch.com.au';
+    err.style.display = 'block';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Sending artwork…';
+  _uaShowOverlay('Sending your artwork files…');
+
+  // Read all files as base64
+  var items = [];
+  for (var i = 0; i < orderItems.length; i++) {
+    var item = orderItems[i];
+    var file = document.getElementById('ua-file-' + i).files[0];
+    var notes = document.getElementById('ua-notes-' + i).value.trim();
+    var spec = [
+      item.shape ? 'Shape: ' + item.shape : '',
+      item.sizeLabel, item.matLabel,
+      item.lamLabel && item.lamLabel !== 'No Laminate' ? 'Lam: ' + item.lamLabel : '',
+      item.qty ? Number(item.qty).toLocaleString() + ' pcs' : '',
+      item.price ? 'Cost: ' + item.price : ''
+    ].filter(Boolean).join(' | ');
+    var base64 = await readFileAsBase64(file);
+    items.push({
+      product: item.title,
+      specification: spec,
+      notes: notes || '',
+      filename: (orderItems.length > 1 ? (i + 1) + '_' : '') + file.name,
+      fileContent: base64,
+      fileType: file.type
+    });
+  }
+
+  try {
+    var response = await fetch('/api/upload-artwork', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        orderNumber:   orderNum || '',
+        customerEmail: window._uaCustomerEmail || '',
+        items:         items
+      })
+    });
+    _uaHideOverlay();
+    if (response.ok) {
+      document.getElementById('ua-global-wrap').style.display = 'none';
+      for (var i = 0; i < orderItems.length; i++) {
+        try { localStorage.setItem('ss_uploaded_' + i, '1'); } catch(e) {}
+        markItemDone(i);
+      }
+    } else {
+      var data = await response.json().catch(function() { return {}; });
+      btn.disabled = false;
+      checkAllFilesReady(); // restore button text
+      err.textContent = 'Upload failed — ' + (data.error || 'please try again or email artwork to info@stickysitch.com.au');
+      err.style.display = 'block';
+    }
+  } catch(netErr) {
+    _uaHideOverlay();
+    btn.disabled = false;
+    checkAllFilesReady();
+    err.textContent = 'Network error — check your connection and try again, or email artwork to info@stickysitch.com.au';
+    err.style.display = 'block';
+  }
+}
+
+function readFileAsBase64(file) {
+  return new Promise(function(resolve, reject) {
+    var reader = new FileReader();
+    reader.onload  = function() { resolve(reader.result.split(',')[1]); };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+function uploadItem(i) {
+  var item  = orderItems[i];
+  var file  = document.getElementById('ua-file-' + i).files[0];
+  var notes = document.getElementById('ua-notes-' + i).value.trim();
+  var btn   = document.getElementById('ua-btn-' + i);
+  var err   = document.getElementById('ua-err-' + i);
+  err.style.display = 'none';
+
+  if (!file) { err.textContent = 'Please select your artwork file.'; err.style.display = 'block'; return; }
+
+  // 35MB limit (Resend supports ~40MB; base64 adds ~33%)
+  var maxSizeBytes = 35 * 1024 * 1024;
+  if (file.size > maxSizeBytes) {
+    var sizeMB = (file.size / (1024 * 1024)).toFixed(1);
+    err.textContent = 'Your file is ' + sizeMB + 'MB — maximum is 35MB. Please compress or zip it and try again.';
+    err.style.display = 'block';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="animation:ua-spin 0.8s linear infinite"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg> Uploading...';
+
+  // Show overlay
+  _uaShowOverlay(file.name);
+
+  // Build spec with all fields
+  var spec = [
+    item.shape ? 'Shape: ' + item.shape : '',
+    item.sizeLabel,
+    item.matLabel,
+    item.lamLabel && item.lamLabel !== 'No Laminate' ? 'Lam: ' + item.lamLabel : '',
+    item.qty ? Number(item.qty).toLocaleString() + ' pcs' : '',
+    item.price ? 'Cost: ' + item.price : ''
+  ].filter(Boolean).join(' | ');
+
+  // Read file as base64 then POST to our Vercel function
+  var reader = new FileReader();
+  reader.onerror = function() {
+    _uaHideOverlay();
+    btn.disabled = false;
+    btn.innerHTML = 'Try again';
+    err.textContent = 'Could not read the file. Please try again.';
+    err.style.display = 'block';
+  };
+  reader.onload = async function() {
+    var base64 = reader.result.split(',')[1]; // strip data:...;base64, prefix
+    try {
+      var response = await fetch('/api/upload-artwork', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          orderNumber:   orderNum || '',
+          product:       item.title,
+          specification: spec,
+          customerEmail: window._uaCustomerEmail || '',
+          notes:         notes || '',
+          filename:      file.name,
+          fileContent:   base64,
+          fileType:      file.type
+        })
+      });
+
+      _uaHideOverlay();
+
+      if (response.ok) {
+        try { localStorage.setItem('ss_uploaded_' + i, '1'); } catch(e) {}
+        markItemDone(i);
+      } else {
+        var data = await response.json().catch(() => ({}));
+        btn.disabled = false;
+        btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg> Add artwork for ' + item.title + ' ↑';
+        err.textContent = 'Upload failed — ' + (data.error || 'please try again or email artwork directly to info@stickysitch.com.au');
+        err.style.display = 'block';
+      }
+    } catch (networkErr) {
+      _uaHideOverlay();
+      btn.disabled = false;
+      btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg> Add artwork for ' + item.title + ' ↑';
+      err.textContent = 'Network error — check your connection and try again, or email artwork to info@stickysitch.com.au';
+      err.style.display = 'block';
+    }
+  };
+  reader.readAsDataURL(file);
+}
+
+function _uaShowOverlay(fname) {
+  var overlay = document.getElementById('ua-upload-overlay');
+  var fnEl    = document.getElementById('ua-overlay-filename');
+  var barEl   = document.getElementById('ua-overlay-bar');
+  if (fnEl)  fnEl.textContent = fname || 'Uploading...';
+  if (barEl) { barEl.style.animation = 'none'; void barEl.offsetHeight; barEl.style.animation = 'ua-progress 18s ease-out forwards'; }
+  if (overlay) overlay.classList.add('active');
+}
+
+function _uaHideOverlay() {
+  var overlay = document.getElementById('ua-upload-overlay');
+  if (overlay) overlay.classList.remove('active');
+}
+
+
+async function uploadFallback() {
+  var order = document.getElementById('ua-fallback-order').value.trim();
+  var file  = document.getElementById('ua-fallback-file').files[0];
+  var err   = document.getElementById('ua-fallback-err');
+  err.style.display = 'none';
+
+  if (!file) { err.textContent = 'Please select your artwork file.'; err.style.display = 'block'; return; }
+
+  var maxSizeBytes = 35 * 1024 * 1024;
+  if (file.size > maxSizeBytes) {
+    var sizeMB = (file.size / (1024*1024)).toFixed(1);
+    err.textContent = 'Your file is ' + sizeMB + 'MB — maximum is 35MB. Please compress or zip it.';
+    err.style.display = 'block';
+    return;
+  }
+
+  _uaShowOverlay(file.name);
+
+  var reader = new FileReader();
+  reader.onload = async function() {
+    var base64 = reader.result.split(',')[1];
+    try {
+      var response = await fetch('/api/upload-artwork', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          orderNumber:   order || '',
+          product:       'Artwork upload',
+          specification: '',
+          customerEmail: window._uaCustomerEmail || '',
+          notes:         '',
+          filename:      file.name,
+          fileContent:   base64,
+          fileType:      file.type
+        })
+      });
+      _uaHideOverlay();
+      if (response.ok) {
+        document.getElementById('ua-fallback').innerHTML = '<div style="text-align:center;padding:32px 0;"><div style="width:56px;height:56px;background:#dcfce7;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div><div style="font-family:Inter Tight,sans-serif;font-size:20px;font-weight:700;color:var(--ink);">Artwork received.</div><div style="font-size:14px;color:var(--muted);margin-top:8px;">Once your payment is confirmed, we\'ll send your proof within a few hours — the sooner you approve it, the sooner we start printing.</div></div>';
+      } else {
+        _uaHideOverlay();
+        err.textContent = 'Upload failed — please email artwork to info@stickysitch.com.au';
+        err.style.display = 'block';
+      }
+    } catch(e) {
+      _uaHideOverlay();
+      err.textContent = 'Network error — please email artwork to info@stickysitch.com.au';
+      err.style.display = 'block';
+    }
+  };
+  reader.readAsDataURL(file);
+}
+
+</script>
+
+<script>
+
+// ─── STICKY SITCH  -  SHARED PARTIALS ──────────────────────────────────────
+
+function SS_ANN() {
+  const items = [
+    'Free standard delivery on orders over $100',
+    'Melbourne studio · Printed locally, dispatched fast',
+    '<a href="sample-pack.html" class="ann-cta">Order a sample pack, $17.60 inc. GST →</a>',
+    'Dispatch within 1-2 business days · Free digital proof every order',
+  ];
+  const track = [...items, ...items].map(t => `<span>${t}</span>`).join('');
+  return `<div class="ann"><div class="ann-track">${track}</div></div>`;
+}
+
+function SS_NAV(activePage) {
+  return `
+<nav id="nav">
+  <a href="index.html" class="n-logo"><img src="assets/logo-nav-transparent.png" alt="Sticky Sitch" style="display:block;height:28px;width:auto;"></a>
+  <ul class="n-links">
+    <li><a href="labels-on-rolls.html">Labels on Rolls</a></li>
+    <li><a href="sticker-sheets.html">Sticker Sheets</a></li>
+    <li><a href="individual-stickers.html">Individual Stickers</a></li>
+    <li><a href="large-format.html">Other Products</a></li>
+    <li><a href="gallery.html">Gallery</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    
+  </ul>
+  <div class="n-act">
+    <a href="${
+      activePage==='sheets' ? 'sticker-sheets.html' :
+      activePage==='diecut' || activePage==='bumper' ? 'individual-stickers.html' :
+      'labels-on-rolls.html'
+    }" class="n-q">See live prices →</a>
+    <button class="ss-cart-btn n-cart" onclick="event.preventDefault();if(typeof ssOrderModal!=='undefined')ssOrderModal.showCartDropdown();" style="display:none;position:relative;background:var(--accent);border:none;border-radius:8px;padding:8px 14px;cursor:pointer;align-items:center;gap:6px;font-family:'Inter Tight',sans-serif;font-size:13px;font-weight:600;color:#fff;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>Cart<span class="ss-cart-badge" style="display:none;background:#fff;color:var(--accent);border-radius:50%;width:18px;height:18px;font-size:11px;font-weight:700;align-items:center;justify-content:center;margin-left:4px;"></span></button>
+  </div>
+  <button class="burger" id="ss-burger" onclick="ssMobNav()" aria-label="Menu">
+    <svg id="ss-burger-icon" width="22" height="16" viewBox="0 0 22 16" fill="none" style="display:block;"><line id="bgl1" x1="0" y1="2"  x2="22" y2="2"  stroke="var(--ink)" stroke-width="2" stroke-linecap="round" style="transform-origin:11px 2px;transition:transform 0.25s cubic-bezier(.4,0,.2,1),opacity 0.2s;"/><line id="bgl2" x1="0" y1="8"  x2="22" y2="8"  stroke="var(--ink)" stroke-width="2" stroke-linecap="round" style="transform-origin:11px 8px;transition:transform 0.25s cubic-bezier(.4,0,.2,1),opacity 0.2s;"/><line id="bgl3" x1="0" y1="14" x2="22" y2="14" stroke="var(--ink)" stroke-width="2" stroke-linecap="round" style="transform-origin:11px 14px;transition:transform 0.25s cubic-bezier(.4,0,.2,1),opacity 0.2s;"/></svg>
+  </button>
+</nav>
+<div id="ss-mob-nav" style="display:none;position:fixed;inset:0;top:57px;background:var(--card);z-index:101;padding:20px 28px 24px;display:none;flex-direction:column;gap:4px;border-top:1px solid var(--line);">
+  <button onclick="ssMobNav()" aria-label="Close menu" style="align-self:flex-end;background:var(--bg-alt);border:1px solid var(--line);border-radius:8px;padding:8px 14px;font-size:13px;font-weight:600;color:var(--ink);cursor:pointer;font-family:'Inter Tight',sans-serif;display:flex;align-items:center;gap:6px;margin-bottom:8px;-webkit-tap-highlight-color:transparent;"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="1" y1="1" x2="11" y2="11"/><line x1="11" y1="1" x2="1" y2="11"/></svg> Close</button>
+  <a href="labels-on-rolls.html" style="padding:14px 0;font-size:16px;font-weight:500;color:var(--ink);border-bottom:1px solid var(--line);">Labels on Rolls</a>
+  <a href="sticker-sheets.html" style="padding:14px 0;font-size:16px;font-weight:500;color:var(--ink);border-bottom:1px solid var(--line);">Sticker Sheets</a>
+  <a href="individual-stickers.html" style="padding:14px 0;font-size:16px;font-weight:500;color:var(--ink);border-bottom:1px solid var(--line);display:block;">Individual Stickers</a>
+  <a href="large-format.html" style="padding:14px 0;font-size:16px;font-weight:500;color:var(--ink);border-bottom:1px solid var(--line);">Other Products</a>
+  <a href="gallery.html" style="padding:14px 0;font-size:16px;font-weight:500;color:var(--ink);border-bottom:1px solid var(--line);">Gallery</a>
+  <a href="about.html" style="padding:14px 0;font-size:16px;font-weight:500;color:var(--ink);border-bottom:1px solid var(--line);">About</a>
+  <a href="contact.html" style="padding:14px 0;font-size:16px;font-weight:500;color:var(--ink);border-bottom:1px solid var(--line);">Contact</a>
+  <a href="${
+      activePage==='sheets' ? 'sticker-sheets.html' :
+      activePage==='diecut' || activePage==='bumper' ? 'individual-stickers.html' :
+      'labels-on-rolls.html'
+    }" class="n-q" style="margin-top:16px;text-align:center;display:block;padding:14px;">See live prices →</a>
+  </div>`;
+}
+
+function ssMobNav() {
+  const nav    = document.getElementById('ss-mob-nav');
+  const icon   = document.getElementById('ss-burger-icon');
+  const btn    = document.getElementById('ss-burger');
+  if (!nav) return;
+  const isOpen = nav.style.display === 'flex';
+  nav.style.display    = isOpen ? 'none' : 'flex';
+  document.body.style.overflow = isOpen ? '' : 'hidden';
+  if (btn) btn.classList.toggle('is-open', !isOpen);
+  if (icon) {
+    var l1 = document.getElementById('bgl1');
+    var l2 = document.getElementById('bgl2');
+    var l3 = document.getElementById('bgl3');
+    if (l1 && l2 && l3) {
+      l1.style.transform = isOpen ? 'none' : 'translateY(6px) rotate(45deg)';
+      l2.style.opacity  = isOpen ? '1' : '0';
+      l3.style.transform = isOpen ? 'none' : 'translateY(-6px) rotate(-45deg)';
+    }
+  }
+}
+
+function SS_FOOTER() {
+  return `
+<footer>
+  <div class="ft">
+    <div class="fbr">
+      <div class="flo"><img src="assets/logo-footer-transparent.png" alt="Sticky Sitch" style="display:block;height:25px;width:auto;"></div>
+      <p>Custom labels and stickers, printed in Melbourne. Fast turnaround, free proofs, free standard delivery over $100.</p>
+      <div class="fco">
+        <a href="mailto:info@stickysitch.com.au">info@stickysitch.com.au</a>
+        <a href="tel:+61405136951">0405 136 951</a>
+        <span>Mon–Fri 9am–5pm AEST</span>
+        <span>Braybrook 3019</span>
+      </div>
+    </div>
+    <div>
+      <div class="fct">Products</div>
+      <div class="fcol">
+        <a href="labels-on-rolls.html">Labels on Rolls</a>
+        <a href="sticker-sheets.html">Sticker Sheets</a>
+        <a href="individual-stickers.html#die-cut">Die-Cut Stickers</a>
+        <a href="individual-stickers.html#bumper">Bumper Stickers</a>
+        <a href="large-format.html">Other Products</a>
+        <a href="sample-pack.html">Sample Pack</a>
+        <a href="sticker-printing-melbourne.html">Sticker Printing Melbourne</a>
+        <a href="custom-labels-melbourne.html">Custom Labels Melbourne</a>
+        <a href="sticker-printing-sydney.html">Sticker Printing Sydney</a>
+        <a href="sticker-printing-brisbane.html">Sticker Printing Brisbane</a>
+        <a href="sticker-printing-perth.html">Sticker Printing Perth</a>
+        <a href="sticker-printing-adelaide.html">Sticker Printing Adelaide</a>
+      </div>
+    </div>
+    <div>
+      <div class="fct">Help</div>
+      <div class="fcol">
+        
+        
+        <a href="artwork.html">Artwork Guide</a>
+        <a href="upload-artwork.html">Upload Artwork</a>
+        <a href="faq.html">FAQ</a>
+        <a href="contact.html">Contact Us</a>
+        <a href="gallery.html">Our Work</a>
+      </div>
+    </div>
+    <div>
+      <div class="fct">Company</div>
+      <div class="fcol">
+        <a href="about.html">About Us</a>
+        <a href="https://packlabb.com.au" target="_blank" rel="noopener">Packlabb ↗</a>
+        <a href="contact.html">Contact</a>
+        <a href="privacy-policy.html">Privacy Policy</a>
+        <a href="terms.html">Terms &amp; Conditions</a>
+        
+      </div>
+    </div>
+  </div>
+  <div class="fb">
+    <span>© 2026 Sticky Sitch · ABN 61 661 239 943 · Printed in Melbourne</span>
+    <div class="fps">
+      <span>Visa</span><span>Mastercard</span><span>AmEx</span><span>PayPal</span><span>Apple Pay</span>
+    </div>
+  </div>
+</footer>`;
+}
+
+function SS_FAB() {
+  return `
+<div class="help-fab" id="ss-help-fab">
+  <button class="help-fab-toggle" onclick="document.getElementById('ss-help-fab').classList.toggle('open')" aria-label="Need help?">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    <span class="hf-label">Need help?</span>
+  </button>
+  <div class="help-fab-panel">
+    <div class="hfp-h">How can we help?</div>
+    <div class="hfp-s">Mon–Fri 9am–5pm AEST · Usually reply within a few hours</div>
+    <a href="contact.html" class="hfa">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      <div><span class="hfa-name">Help me choose</span><span class="hfa-meta">60-second product quiz</span></div>
+    </a>
+    <a href="tel:+61405136951" class="hfa">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.77 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 8.91a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      <div><span class="hfa-name">Call us</span><span class="hfa-meta">0405 136 951</span></div>
+    </a>
+    <a href="mailto:info@stickysitch.com.au" class="hfa">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      <div><span class="hfa-name">Email us</span><span class="hfa-meta">info@stickysitch.com.au</span></div>
+    </a>
+    <a href="sample-pack.html" class="hfa">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+      <div><span class="hfa-name">Order a sample pack</span><span class="hfa-meta">$17.60 inc. GST · See before you order</span></div>
+    </a>
+  </div>
+</div>`;
+}
+
+window.ssInit = function ssInit(activePage) {
+  const ann  = document.getElementById('ss-ann');
+  const nav  = document.getElementById('ss-nav');
+  const foot = document.getElementById('ss-footer');
+  const fab  = document.getElementById('ss-fab');
+  if (ann)  ann.innerHTML  = SS_ANN();
+  if (nav)  nav.innerHTML  = SS_NAV(activePage);
+  if (foot) foot.innerHTML = SS_FOOTER();
+  if (fab)  fab.innerHTML  = SS_FAB();
+
+  // Close mobile nav on outside click
+  document.addEventListener('click', e => {
+    if (!e.target.closest('#ss-burger') && !e.target.closest('#ss-mob-nav')) {
+      const mobNav = document.getElementById('ss-mob-nav');
+      if (mobNav && mobNav.style.display === 'flex') {
+        mobNav.style.display = 'none';
+        document.body.style.overflow = '';
+        const icon = document.getElementById('ss-burger-icon');
+        if (icon) var l1r=document.getElementById('bgl1'),l2r=document.getElementById('bgl2'),l3r=document.getElementById('bgl3');if(l1r){l1r.style.transform='none';l2r.style.opacity='1';l3r.style.transform='none';} var btnr=document.getElementById('ss-burger'); if(btnr) btnr.classList.remove('is-open');
+      }
+    }
+    if (!e.target.closest('.help-fab')) {
+      document.getElementById('ss-help-fab')?.classList.remove('open');
+    }
+  });
+
+  // FAQ accordions  -  use .open class toggle (matches CSS .fi.open)
+  document.querySelectorAll('.fq').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const fi = btn.closest('.fi');
+      if (!fi) return;
+      const isOpen = fi.classList.contains('open');
+      // Close all
+      document.querySelectorAll('.fi').forEach(f => f.classList.remove('open'));
+      // Open clicked if was closed
+      if (!isOpen) fi.classList.add('open');
+    });
+  });
+};
+
+// ── ORDER MODAL ────────────────────────────────────────────────────────────
+window.ssOrderModal = (function() {
+  let _pending = {};
+
+  // ── Cart stored in sessionStorage ─────────────────────────────────────────
+  function getCart() { try { return JSON.parse(sessionStorage.getItem('ss_cart') || '[]'); } catch { return []; } }
+  function saveCart(c) { sessionStorage.setItem('ss_cart', JSON.stringify(c)); updateCartBadge(); }
+  function updateCartBadge() {
+    const n = getCart().length;
+    document.querySelectorAll('.ss-cart-badge').forEach(b => { b.textContent = n; b.style.display = n > 0 ? 'flex' : 'none'; });
+    document.querySelectorAll('.ss-cart-btn').forEach(b => b.style.display = n > 0 ? 'flex' : 'none');
+  }
+
+  // ── Modal open ────────────────────────────────────────────────────────────
+  function open(spec) {
+    _pending = spec || {};
+    const isQuote = !spec.price || spec.price === 'Quote required' || spec.price === 'TBC';
+    let el = document.getElementById('ss-order-modal');
+    if (!el) { el = document.createElement('div'); el.id = 'ss-order-modal'; document.body.appendChild(el); }
+    el.innerHTML = `<div class="som-backdrop" onclick="ssOrderModal.close()"></div><div class="som-panel">
+      <button class="som-close" onclick="ssOrderModal.close()">&#x2715;</button>
+      <div class="som-head">${isQuote ? 'Request a free quote' : 'Review your order'}</div>
+      <div class="som-spec">
+        ${spec.shape     ? '<div class="som-spec-row"><span>Shape</span><span>' + spec.shape.charAt(0).toUpperCase() + spec.shape.slice(1) + '</span></div>' : ''}
+        ${spec.sizeLabel ? '<div class="som-spec-row"><span>Size</span><span>' + spec.sizeLabel + '</span></div>' : ''}
+        ${spec.matLabel  ? '<div class="som-spec-row"><span>Material</span><span>' + spec.matLabel + '</span></div>' : ''}
+        ${spec.qty       ? '<div class="som-spec-row"><span>Quantity</span><span>' + (Number(spec.qty)||spec.qty).toLocaleString() + '</span></div>' : ''}
+        ${!isQuote       ? '<div class="som-spec-row som-price"><span>Total (inc. GST)</span><span>' + spec.price + '</span></div>' : ''}
+        ${spec.delivery && !isQuote ? '<div class="som-spec-row"><span>Est. in your hands</span><span>' + spec.delivery + '</span></div>' : ''}
+      </div>
+      <div class="som-sub" style="background:var(--accent-soft);border-radius:8px;padding:10px 13px;color:var(--accent-deep);font-size:13px;">
+        ${isQuote ? 'Tell us what you need and our team will get back to you within a few hours.' : '<strong>Add to cart</strong> to keep browsing, or <strong>checkout now</strong> to pay straight away. Your details are collected at Shopify checkout.'}
+      </div>
+      <div class="som-fields" id="som-fields">
+        <div><label>Notes (optional)</label><textarea id="som-notes" rows="2" placeholder="${isQuote ? 'Size, quantity, material, any special requirements.' : 'e.g. Pantone colour match, white ink needed, tight deadline'}"></textarea></div>
+        <div id="som-error" style="display:none;color:#c0392b;font-size:13px;padding:10px 14px;background:#fdf2f2;border-radius:8px;line-height:1.5;"></div>
+        ${isQuote
+          ? `<button id="som-submit" class="bp" style="width:100%;justify-content:center;padding:14px;" onclick="ssOrderModal.doAction('quote')">Send quote request &#x2192;</button>
+             <div style="font-size:11px;color:var(--muted);text-align:center;font-family:'DM Sans',sans-serif;margin-top:8px;">We reply within a few hours on business days.</div>`
+          : `<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px;">
+               <button id="som-add-cart" class="bo" style="width:100%;justify-content:center;padding:13px;display:flex;align-items:center;gap:7px;" onclick="ssOrderModal.doAction('cart')">
+                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                 Add to cart
+               </button>
+               <button id="som-submit" class="bp" style="width:100%;justify-content:center;padding:13px;" onclick="ssOrderModal.doAction('checkout')">Checkout now &#x2192;</button>
+             </div>
+             <div style="font-size:11px;color:var(--muted);text-align:center;font-family:'DM Sans',sans-serif;margin-top:8px;">Secure checkout. Upload your artwork before paying.</div>`
+        }
+      </div>
+      <div id="som-success" style="display:none;padding:20px 0 8px;"></div>
+    </div>`;
+    el.style.display = 'flex';
+    requestAnimationFrame(() => el.classList.add('som-open'));
+    document.body.style.overflow = 'hidden';
+  }
+
+  function openCurrent() { if (_pending && Object.keys(_pending).length) open(_pending); }
+
+  function close() {
+    const el = document.getElementById('ss-order-modal');
+    if (!el) return;
+    el.classList.remove('som-open');
+    setTimeout(() => { el.style.display = 'none'; }, 200);
+    document.body.style.overflow = '';
+  }
+
+  function onFileChange() {}
+  function onLaterChange() {}
+
+  function setBtn(id, loading, txt) {
+    const b = document.getElementById(id);
+    if (!b) return;
+    if (loading) { b.disabled = true; b.dataset.orig = b.textContent; b.textContent = txt; }
+    else { b.disabled = false; b.textContent = b.dataset.orig || b.textContent; }
+  }
+
+  function showError(msg) {
+    const el = document.getElementById('som-error');
+    if (el) { el.innerHTML = msg + '<br><small style="color:var(--muted)">Call 0405 136 951 or email info@stickysitch.com.au</small>'; el.style.display = 'block'; }
+  }
+
+  function showSuccess(html) {
+    const f = document.getElementById('som-fields'), s = document.getElementById('som-success');
+    if (f) f.style.display = 'none';
+    if (s) { s.style.display = 'block'; s.innerHTML = html; }
+  }
+
+  // ── API call ───────────────────────────────────────────────────────────────
+  async function callApi(items, isQuote) {
+    // items = array of { spec, notes }
+    const body = items.length === 1
+      ? { spec: items[0].spec, notes: items[0].notes, isQuote }
+      : { items, isQuote };
+    const res = await fetch('/api/create-order', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    const data = await res.json();
+    if (!res.ok || !data.success) throw new Error(data.error || 'Something went wrong');
+    return data;
+  }
+
+  // ── Actions ───────────────────────────────────────────────────────────────
+  async function doAction(action) {
+    const notes   = document.getElementById('som-notes')?.value.trim();
+    const isQuote = action === 'quote';
+    const errEl   = document.getElementById('som-error');
+    if (errEl) errEl.style.display = 'none';
+    const btnId = action === 'cart' ? 'som-add-cart' : 'som-submit';
+    setBtn(btnId, true, action === 'cart' ? 'Adding...' : 'Processing...');
+
+    try {
+      const NAMES = { rolls: 'Roll Labels', sheets: 'Sticker Sheets', diecut: 'Die-Cut Stickers', bumper: 'Bumper Stickers' };
+
+      if (action === 'cart') {
+        // ── ADD TO CART: save locally, NO API call yet ──────────────────────
+        const cart = getCart();
+        cart.push({
+          title:    NAMES[_pending.productType] || 'Custom Print',
+          spec:     { productType: _pending.productType||'', sizeLabel: _pending.sizeLabel||'',
+                      matLabel: _pending.matLabel||'', lamLabel: _pending.lamLabel||'',
+                      qty: _pending.qty||'', price: _pending.price||'', delivery: _pending.delivery||'' },
+          notes:    notes || '',
+          price:    _pending.price || '',
+          sizeLabel: _pending.sizeLabel || '',
+          matLabel:  _pending.matLabel  || '',
+          qty:       _pending.qty       || '',
+          delivery:  _pending.delivery  || '',
+          addedAt:   Date.now()
+        });
+        saveCart(cart);
+        showSuccess(`<div style="text-align:center;padding:16px 0 8px;">
+          <div style="width:52px;height:52px;background:#DCFCE7;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div style="font-family:Inter Tight,sans-serif;font-size:18px;font-weight:700;color:var(--ink);margin-bottom:6px;">Added to cart!</div>
+          <div style="font-size:13px;color:var(--muted);margin-bottom:20px;">You have ${cart.length} item${cart.length > 1 ? 's' : ''} in your cart. Keep browsing or go to cart to checkout.</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:280px;margin:0 auto;">
+            <button onclick="ssOrderModal.close()" style="padding:11px;background:var(--bg-alt);border:1px solid var(--line);border-radius:8px;font-family:Inter Tight,sans-serif;font-size:13px;font-weight:600;color:var(--ink);cursor:pointer;">Keep shopping</button>
+            <button onclick="ssOrderModal.close();ssOrderModal.showCartDropdown();" style="padding:11px;background:var(--accent);border:none;border-radius:8px;font-family:Inter Tight,sans-serif;font-size:13px;font-weight:600;color:#fff;cursor:pointer;">View cart &#x2192;</button>
+          </div>
+        </div>`);
+
+      } else if (action === 'checkout') {
+        // ── CHECKOUT NOW: single item, call API immediately ─────────────────
+        const data = await callApi([{ spec: { productType: _pending.productType||'', sizeLabel: _pending.sizeLabel||'', matLabel: _pending.matLabel||'', lamLabel: _pending.lamLabel||'', qty: _pending.qty||'', price: _pending.price||'', delivery: _pending.delivery||'' }, notes }], false);
+        if (data.checkout_url) {
+          setBtn('som-submit', true, 'Redirecting...');
+          if (data.order_name) sessionStorage.setItem('ss_last_order', data.order_name);
+          // Save spec for upload page
+          try { localStorage.setItem('ss_upload_items', JSON.stringify([
+            { title: (function(t){return{rolls:'Roll Labels',sheets:'Sticker Sheets',diecut:'Die-Cut Stickers',bumper:'Bumper Stickers'}[t]||t;})(_pending.productType), sizeLabel: _pending.sizeLabel||'', matLabel: _pending.matLabel||'', qty: _pending.qty||'', price: _pending.price||'' }
+          ])); } catch(e) {}
+          window.location.href = data.checkout_url;
+        }
+
+      } else if (action === 'cart_checkout') {
+        // ── CHECKOUT ALL: called from cart dropdown, all items at once ───────
+        const cart = getCart();
+        if (!cart.length) return;
+        const items = cart.map(i => ({ spec: i.spec, notes: i.notes || '' }));
+        const data  = await callApi(items, false);
+        if (data.checkout_url) {
+          if (data.order_name) sessionStorage.setItem('ss_last_order', data.order_name);
+          window.location.href = data.checkout_url;
+        }
+
+      } else if (action === 'quote') {
+        // Capture customer email from quote modal if provided
+        const quoteEmail = document.getElementById('som-email')?.value?.trim() || '';
+        if (quoteEmail) { try { sessionStorage.setItem('ua_email', quoteEmail); } catch(e) {} }
+        const data = await callApi([{ spec: { productType: _pending.productType||'', sizeLabel: _pending.sizeLabel||'', matLabel: _pending.matLabel||'', lamLabel: _pending.lamLabel||'', qty: _pending.qty||'', price: _pending.price||'', delivery: _pending.delivery||'' }, notes }], true);
+        showSuccess(`<div style="text-align:center;padding:20px 0;">
+          <div style="font-size:36px;margin-bottom:14px;">&#x2713;</div>
+          <div style="font-family:Inter Tight,sans-serif;font-size:18px;font-weight:700;color:var(--ink);margin-bottom:8px;">Quote request sent</div>
+          <div style="font-size:13px;color:var(--muted);line-height:1.7;">Our team will reply within a few hours.<br>Call <a href="tel:0405136951" style="color:var(--accent);">0405 136 951</a> if urgent.</div>
+          <button onclick="ssOrderModal.close()" style="margin-top:20px;background:none;border:1px solid var(--line);border-radius:8px;padding:10px 20px;font-size:13px;cursor:pointer;color:var(--ink);">Close</button>
+        </div>`);
+      }
+    } catch(err) {
+      setBtn(btnId, false);
+      showError('Error: ' + err.message);
+    }
+  }
+
+  // ── Cart dropdown ─────────────────────────────────────────────────────────
+  function showCartDropdown() {
+    const cart = getCart();
+    if (!cart.length) return;
+    var existing = document.getElementById('ss-cart-dropdown');
+    if (existing) { existing.remove(); return; }
+    const el = document.createElement('div');
+    el.id = 'ss-cart-dropdown';
+    el.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;z-index:500;display:flex;align-items:flex-start;justify-content:flex-end;padding:70px 20px 0;';
+
+    // Calculate total
+    const total = cart.reduce((sum, item) => {
+      const p = parseFloat(String(item.price || '0').replace(/[^0-9.]/g, ''));
+      return sum + (isNaN(p) ? 0 : p);
+    }, 0);
+
+    const items = cart.map((item, i) =>
+      '<div style="padding:12px 20px;border-bottom:1px solid var(--line-soft);display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">' +
+        '<div style="flex:1;min-width:0;">' +
+          '<div style="font-family:Inter Tight,sans-serif;font-size:14px;font-weight:600;color:var(--ink);">' + item.title + '</div>' +
+          '<div style="font-size:12px;color:var(--muted);margin-top:3px;">' + [item.sizeLabel, item.matLabel, item.qty ? Number(item.qty).toLocaleString() + ' pcs' : ''].filter(Boolean).join(' · ') + '</div>' +
+          (item.delivery ? '<div style="font-size:11px;color:var(--accent);margin-top:3px;">By ' + item.delivery + '</div>' : '') +
+        '</div>' +
+        '<div style="text-align:right;flex-shrink:0;">' +
+          '<div style="font-family:Inter Tight,sans-serif;font-size:15px;font-weight:700;color:var(--ink);">' + item.price + '</div>' +
+          '<button onclick="ssOrderModal.removeFromCart(' + i + ')" style="font-size:11px;color:var(--muted);background:none;border:none;cursor:pointer;padding:2px 0;display:block;margin-left:auto;">Remove</button>' +
+        '</div>' +
+      '</div>'
+    ).join('');
+
+    el.innerHTML =
+      '<div style="background:var(--card);border:1px solid var(--line);border-radius:14px;width:100%;max-width:380px;box-shadow:0 8px 40px rgba(0,0,0,0.14);overflow:hidden;display:flex;flex-direction:column;max-height:85vh;">' +
+        '<div style="padding:16px 20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;flex-shrink:0;">' +
+          '<div style="font-family:Inter Tight,sans-serif;font-weight:700;font-size:16px;color:var(--ink);">Cart &#8212; ' + cart.length + ' item' + (cart.length > 1 ? 's' : '') + '</div>' +
+          '<button onclick="document.getElementById(\'ss-cart-dropdown\').remove()" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--muted);">&#x2715;</button>' +
+        '</div>' +
+        '<div style="overflow-y:auto;flex:1;">' + items + '</div>' +
+        '<div style="padding:16px 20px;border-top:1px solid var(--line);flex-shrink:0;background:var(--card);">' +
+          (total > 0
+            ? '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;"><span style="font-family:Inter Tight,sans-serif;font-size:14px;color:var(--muted);">Total (inc. GST)</span><span style="font-family:Inter Tight,sans-serif;font-size:18px;font-weight:700;color:var(--ink);">$' + total.toFixed(2) + '</span></div>'
+            : ''
+          ) +
+          '<button id="ss-cart-checkout-btn" onclick="ssOrderModal.checkoutAll()" ' +
+            'style="width:100%;padding:14px;background:var(--accent);border:none;border-radius:10px;' +
+            'font-family:\'Inter Tight\',sans-serif;font-size:15px;font-weight:700;color:#fff;cursor:pointer;' +
+            'display:flex;align-items:center;justify-content:center;gap:8px;">' +
+            '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>' +
+            'Checkout all ' + cart.length + ' item' + (cart.length > 1 ? 's' : '') + ' &#x2192;' +
+          '</button>' +
+          '<div style="font-size:11px;color:var(--muted);text-align:center;margin-top:8px;font-family:\'DM Sans\',sans-serif;">Secure checkout. Upload your artwork before paying.</div>' +
+          '<button onclick="document.getElementById(\'ss-cart-dropdown\').remove()" ' +
+            'style="width:100%;margin-top:8px;padding:10px;background:var(--bg-alt);border:1px solid var(--line);' +
+            'border-radius:8px;font-family:\'Inter Tight\',sans-serif;font-size:13px;font-weight:600;' +
+            'color:var(--ink);cursor:pointer;">Continue shopping</button>' +
+        '</div>' +
+      '</div>';
+
+    el.addEventListener('click', e => { if (e.target === el) el.remove(); });
+    document.body.appendChild(el);
+  }
+
+  async function checkoutAll() {
+    const cart = getCart();
+    if (!cart.length) return;
+    const btn = document.getElementById('ss-cart-checkout-btn');
+    if (btn) { btn.disabled = true; btn.textContent = 'Creating your order...'; }
+    try {
+      const items = cart.map(i => ({ spec: i.spec, notes: i.notes || '' }));
+      const data  = await callApi(items, false);
+      if (data.checkout_url) {
+        if (data.order_name) sessionStorage.setItem('ss_last_order', data.order_name);
+        // Save cart items for upload page (labelled per product)
+        try { localStorage.setItem('ss_upload_items', JSON.stringify(
+          cart.map(i => ({ title: i.title, sizeLabel: i.sizeLabel, matLabel: i.matLabel, qty: i.qty, price: i.price }))
+        )); } catch(e) {}
+        // Clear cart after checkout
+        saveCart([]);
+        window.location.href = data.checkout_url;
+      }
+    } catch(err) {
+      if (btn) { btn.disabled = false; btn.textContent = 'Checkout all items'; }
+      alert('Error: ' + err.message + '\nPlease call 0405 136 951 if the issue continues.');
+    }
+  }
+
+  function removeFromCart(i) {
+    const cart = getCart();
+    cart.splice(i, 1);
+    saveCart(cart);
+    var existing = document.getElementById('ss-cart-dropdown');
+    if (existing) existing.remove();
+    if (cart.length > 0) showCartDropdown();
+  }
+
+  function submit() { doAction('checkout'); }
+
+  const api = { open, openCurrent, close, submit, doAction, checkoutAll, onFileChange, onLaterChange, updateCartBadge, showCartDropdown, removeFromCart };
+  Object.defineProperty(api, '_pending', { get() { return _pending; }, set(v) { _pending = v; } });
+  return api;
+})();
+
+
+</script>
+<script>
+window.addEventListener('DOMContentLoaded', function() {
+  var ann  = document.getElementById('ss-ann');
+  var nav  = document.getElementById('ss-nav');
+  var foot = document.getElementById('ss-footer');
+  if (ann)  ann.outerHTML  = SS_ANN();
+  if (nav)  nav.outerHTML  = SS_NAV('');
+  if (foot) foot.innerHTML = SS_FOOTER();
+  if (typeof ssInit === 'function') ssInit();
+});
+function ssMobNav() {
+  var nav = document.getElementById('ss-mob-nav');
+  var btn = document.getElementById('ss-burger');
+  if (!nav) return;
+  var isOpen = nav.style.display === 'flex';
+  nav.style.display = isOpen ? 'none' : 'flex';
+  document.body.style.overflow = isOpen ? '' : 'hidden';
+  if (btn) btn.classList.toggle('is-open', !isOpen);
+  var l1=document.getElementById('bgl1'),l2=document.getElementById('bgl2'),l3=document.getElementById('bgl3');
+  if (l1&&l2&&l3) {
+    l1.style.transform = isOpen ? 'none' : 'translateY(6px) rotate(45deg)';
+    l2.style.opacity   = isOpen ? '1' : '0';
+    l3.style.transform = isOpen ? 'none' : 'translateY(-6px) rotate(-45deg)';
+  }
+}
+</script>
+
+<script>
+// Email capture + upload gating
+window._uaCustomerEmail = '';
+
+window._uaEmailChange = function(val) {
+  var emailInput = document.getElementById('ua-customer-email');
+  var valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val.trim());
+  window._uaCustomerEmail = valid ? val.trim() : '';
+
+  // Persist across page reloads (needed for multi-item orders)
+  try { sessionStorage.setItem('ua_email', valid ? val.trim() : ''); } catch(e) {}
+
+  // Visual feedback
+  emailInput.style.borderColor = val.length > 0 ? (valid ? '#6c63c7' : '#e85c5c') : 'var(--accent-light)';
+
+  // Re-check file readiness (updates global submit button)
+  checkAllFilesReady();
+};
+
+// On page load: disable buttons, then restore email if returning from a previous upload
+document.addEventListener('DOMContentLoaded', function() {
+  // Step 1: disable all buttons immediately
+  setTimeout(function() {
+    document.querySelectorAll('.ua-upload-btn').forEach(function(btn) {
+      btn.disabled = true;
+      btn.style.opacity = '0.45';
+      btn.style.cursor = 'not-allowed';
+    });
+
+    // Step 2: restore saved email + update button state
+    try {
+      var saved = sessionStorage.getItem('ua_email');
+      if (saved) {
+        var emailInput = document.getElementById('ua-customer-email');
+        if (emailInput) {
+          emailInput.value = saved;
+          window._uaCustomerEmail = saved;
+          emailInput.style.borderColor = '#6c63c7';
+        }
+      }
+    } catch(e) {}
+    // Step 3: check if files already selected (e.g. returning from navigation)
+    checkAllFilesReady();
+  }, 750);
+});
+</script>
+</body>
+</html>
