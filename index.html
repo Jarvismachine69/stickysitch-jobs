@@ -1115,16 +1115,60 @@ function handleProofFile(file){
   document.getElementById('sendProofBtn').style.display='block';
 }
 async function sendProof(){
-  if(!proofFile||!CURRENT_JOB_ID){ showToast('Select a proof file first'); return; }
-  const btn=document.getElementById('sendProofBtn'); btn.textContent='Sending…'; btn.disabled=true;
-  const form=new FormData(); form.append('proof',proofFile); form.append('jobId',CURRENT_JOB_ID);
+  if(!proofFile){ showToast('Select a proof file first'); return; }
+  if(!CURRENT_JOB_ID){ showToast('No job open — close and reopen the job'); return; }
+  const btn=document.getElementById('sendProofBtn');
+  btn.textContent='Sending…'; btn.disabled=true;
+
   try{
-    const r=await fetch('/api/send-proof',{method:'POST',body:form});
-    const d=await r.json();
-    if(d.ok){ showToast('Proof sent ✓'); document.getElementById('proofStatusMsg').textContent='Proof sent — awaiting customer response'; loadArtworkVersions(CURRENT_JOB_ID); }
-    else{ showToast('Send failed: '+d.error); }
-  }catch(e){ showToast('Error sending proof'); }
+    // 1. Upload proof file to Supabase Storage
+    const db2=getDB();
+    const ext=proofFile.name.split('.').pop();
+    const path=CURRENT_JOB_ID+'_proof_'+Date.now()+'.'+ext;
+    const {error:upErr}=await db2.storage.from('proofs').upload(path,proofFile,{contentType:proofFile.type,upsert:false});
+    if(upErr) throw new Error('Upload failed: '+upErr.message);
+
+    const {data:{publicUrl}}=db2.storage.from('proofs').getPublicUrl(path);
+
+    // 2. Save proof record
+    await db2.from('proofs').insert({
+      job_id:CURRENT_JOB_ID, file_url:publicUrl,
+      filename:proofFile.name, status:'sent'
+    });
+
+    // 3. Try sending email via API endpoint
+    try{
+      const form=new FormData();
+      form.append('proof',proofFile);
+      form.append('jobId',CURRENT_JOB_ID);
+      form.append('proofUrl',publicUrl);
+      const r=await fetch('/api/send-proof',{method:'POST',body:form});
+      const d=await r.json().catch(()=>({}));
+      if(!r.ok) throw new Error(d.error||'API error '+r.status);
+      showToast('Proof sent to customer ✓');
+    }catch(apiErr){
+      // API might not be set up — proof is saved, just alert
+      console.warn('send-proof API:', apiErr.message);
+      showToast('Proof saved — email send needs /api/send-proof configured');
+    }
+
+    // Update status to awaiting approval
+    await db2.from('jobs').update({status:'awaiting'}).eq('id',CURRENT_JOB_ID);
+    const statusSel=document.getElementById('pdStatus');
+    if(statusSel){statusSel.value='awaiting';statusSel.className='stat-pill-lg stat-pill awaiting';}
+    if(JOB_DATA[CURRENT_JOB_ID]) JOB_DATA[CURRENT_JOB_ID].status='awaiting';
+
+    document.getElementById('proofStatusMsg').textContent='Proof sent — awaiting customer response';
+    loadArtworkVersions(CURRENT_JOB_ID);
+
+  }catch(e){
+    console.error('sendProof error:',e);
+    showToast('Error: '+e.message);
+  }
   btn.textContent='📧 Send proof to customer'; btn.disabled=false; proofFile=null;
+  document.getElementById('proofFileName').style.display='none';
+  document.getElementById('uploadArtBtn').style.display='none';
+  btn.style.display='none';
 }
 
 // ══ DISPATCH ═══════════════════════════════════════════════
