@@ -287,6 +287,35 @@ tbody tr.prio-on td{background:#FFFBEB}
 /* ── Util ──────────────────────────────────────────────────── */
 .divider{height:1px;background:var(--line);margin:16px 0}
 .section-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);margin-bottom:8px}
+
+/* Edit mode */
+.edit-field{width:100%;padding:8px 10px;border:1.5px solid var(--purple);border-radius:8px;font-size:14px;font-family:inherit;outline:none;background:#fff;transition:.15s}
+.edit-field:focus{box-shadow:0 0 0 3px rgba(124,58,237,.1)}
+.edit-row{display:flex;flex-direction:column;gap:3px;padding:8px 0;border-bottom:1px solid var(--line)}
+.edit-row:last-child{border-bottom:none}
+.edit-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3)}
+.edit-actions{display:flex;gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
+.btn-save{background:var(--purple);color:#fff;border:none;border-radius:9px;padding:9px 20px;font-size:13px;font-weight:700;cursor:pointer;flex:1}
+.btn-save:hover{background:#6D28D9}
+.btn-discard{background:var(--card);color:var(--ink2);border:1.5px solid var(--line);border-radius:9px;padding:9px 16px;font-size:13px;font-weight:600;cursor:pointer}
+
+/* File timeline */
+.file-entry{display:flex;gap:10px;padding:12px 0;border-bottom:1px solid var(--line);align-items:flex-start}
+.file-entry:last-child{border-bottom:none}
+.file-thumb-sm{width:48px;height:48px;border-radius:8px;border:1.5px solid var(--line);overflow:hidden;flex-shrink:0;background:#F9FAFB;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.file-info{flex:1;min-width:0}
+.file-name{font-size:13px;font-weight:600;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.file-meta{font-size:11px;color:var(--ink3);margin-top:2px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.file-badge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:999px}
+.file-badge.art{background:#EDE9FD;color:#4C1D95}
+.file-badge.proof{background:#DBEAFE;color:#1E40AF}
+.file-badge.approved{background:#D1FAE5;color:#065F46}
+.file-badge.revision{background:#FEE2E2;color:#991B1B}
+.file-actions{display:flex;gap:4px;flex-shrink:0}
+.file-btn{background:#F9FAFB;border:1.5px solid var(--line);border-radius:7px;padding:5px 9px;font-size:11px;font-weight:600;color:var(--ink2);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center}
+.file-btn:hover{border-color:var(--purple);color:var(--purple)}
+.file-btn.del:hover{border-color:var(--red);color:var(--red)}
+
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
@@ -514,24 +543,69 @@ tbody tr.prio-on td{background:#FFFBEB}
       <span style="font-size:11px;color:var(--ink3);margin-left:auto" id="pdUpdatedBy"></span>
     </div>
 
+    <!-- Edit button -->
+    <div style="display:flex;justify-content:flex-end;margin-bottom:8px">
+      <button onclick="toggleEditMode()" id="editModeBtn" style="background:none;border:1.5px solid var(--line);border-radius:8px;padding:5px 14px;font-size:12px;font-weight:700;color:var(--ink2);cursor:pointer">✏ Edit job</button>
+    </div>
+
     <!-- Tabs -->
     <div class="tabs">
       <button class="tab-btn active" onclick="switchTab('details',this)">Details</button>
-      <button class="tab-btn" onclick="switchTab('artwork',this)">Artwork &amp; Proof</button>
+      <button class="tab-btn" onclick="switchTab('artwork',this)">Files</button>
       <button class="tab-btn" onclick="switchTab('dispatch',this)">Dispatch</button>
       <button class="tab-btn" onclick="switchTab('notes',this)">Notes</button>
     </div>
 
     <!-- DETAILS TAB -->
     <div class="tab-pane active" id="tab-details">
-      <div class="spec-grid">
-        <div class="spec-row"><span class="k">Product</span><span class="v" id="pd-product">—</span></div>
-        <div class="spec-row"><span class="k">Quantity</span><span class="v" id="pd-qty">—</span></div>
-        <div class="spec-row"><span class="k">Shape</span><span class="v" id="pd-shape">—</span></div>
-        <div class="spec-row"><span class="k">Size</span><span class="v" id="pd-size">—</span></div>
-        <div class="spec-row"><span class="k">Material</span><span class="v" id="pd-material">—</span></div>
-        <div class="spec-row"><span class="k">Laminate</span>
-          <select class="spec-lam-sel stat-pill" id="pd-lam" onchange="saveLaminate(this.value)">
+      <!-- VIEW MODE -->
+      <div id="specViewMode">
+        <div class="spec-grid">
+          <div class="spec-row"><span class="k">Product</span><span class="v" id="pd-product">—</span></div>
+          <div class="spec-row"><span class="k">Quantity</span><span class="v" id="pd-qty">—</span></div>
+          <div class="spec-row"><span class="k">Shape</span><span class="v" id="pd-shape">—</span></div>
+          <div class="spec-row"><span class="k">Size</span><span class="v" id="pd-size">—</span></div>
+          <div class="spec-row"><span class="k">Material</span><span class="v" id="pd-material">—</span></div>
+          <div class="spec-row"><span class="k">Laminate</span>
+            <select class="spec-lam-sel stat-pill" id="pd-lam" onchange="saveLaminate(this.value)">
+              <option value="">— select —</option>
+              <option value="None">None</option>
+              <option value="Gloss">Gloss</option>
+              <option value="Matte">Matte</option>
+              <option value="Soft Touch">Soft Touch</option>
+            </select>
+          </div>
+          <div class="spec-row"><span class="k">Dispatch</span><span class="v" id="pd-dispatch">—</span></div>
+          <div class="spec-row"><span class="k">Placed</span><span class="v" id="pd-placed">—</span></div>
+          <div class="spec-row" style="background:#F5F3FF"><span class="k" style="color:var(--purple)">Due date</span><span class="v" id="pd-due" style="color:var(--purple);font-weight:700">—</span></div>
+        </div>
+      </div>
+      <!-- EDIT MODE -->
+      <div id="specEditMode" style="display:none">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);margin-bottom:12px">Edit customer</div>
+        <div class="edit-row"><span class="edit-label">Business name</span><input class="edit-field" id="ef-biz" placeholder="Business name"></div>
+        <div class="edit-row"><span class="edit-label">Contact name</span><input class="edit-field" id="ef-contact" placeholder="Contact name"></div>
+        <div class="edit-row"><span class="edit-label">Email</span><input class="edit-field" id="ef-email" type="email" placeholder="Email"></div>
+        <div class="edit-row"><span class="edit-label">Phone</span><input class="edit-field" id="ef-phone" placeholder="Phone"></div>
+        <div class="edit-row"><span class="edit-label">Address</span><input class="edit-field" id="ef-addr" placeholder="Delivery address"></div>
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);margin:16px 0 12px">Edit job specs</div>
+        <div class="edit-row"><span class="edit-label">Product</span>
+          <select class="edit-field" id="ef-product">
+            <option value="rolls">Roll labels</option>
+            <option value="sheets">Sticker sheets</option>
+            <option value="individual">Individual stickers</option>
+            <option value="bumper">Bumper stickers</option>
+          </select>
+        </div>
+        <div class="edit-row"><span class="edit-label">Quantity</span><input class="edit-field" id="ef-qty" type="number" placeholder="e.g. 500"></div>
+        <div class="edit-row"><span class="edit-label">Shape</span><input class="edit-field" id="ef-shape" placeholder="e.g. Circle"></div>
+        <div class="edit-row" style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div><span class="edit-label">Width (mm)</span><input class="edit-field" id="ef-w" type="number" placeholder="90"></div>
+          <div><span class="edit-label">Height (mm)</span><input class="edit-field" id="ef-h" type="number" placeholder="60"></div>
+        </div>
+        <div class="edit-row"><span class="edit-label">Material</span><input class="edit-field" id="ef-material" placeholder="e.g. White Vinyl"></div>
+        <div class="edit-row"><span class="edit-label">Laminate</span>
+          <select class="edit-field" id="ef-lam">
             <option value="">— select —</option>
             <option value="None">None</option>
             <option value="Gloss">Gloss</option>
@@ -539,24 +613,32 @@ tbody tr.prio-on td{background:#FFFBEB}
             <option value="Soft Touch">Soft Touch</option>
           </select>
         </div>
-        <div class="spec-row"><span class="k">Dispatch</span><span class="v" id="pd-dispatch">—</span></div>
-        <div class="spec-row"><span class="k">Placed</span><span class="v" id="pd-placed">—</span></div>
-        <div class="spec-row" style="background:#F5F3FF"><span class="k" style="color:var(--purple)">Due date</span><span class="v" id="pd-due" style="color:var(--purple);font-weight:700">—</span></div>
+        <div class="edit-row"><span class="edit-label">Dispatch method</span>
+          <select class="edit-field" id="ef-dispatch">
+            <option value="road">Road dispatch</option>
+            <option value="pickup">Pickup</option>
+          </select>
+        </div>
+        <div class="edit-row"><span class="edit-label">Due date</span><input class="edit-field" id="ef-due" type="date"></div>
+        <div class="edit-row"><span class="edit-label">Notes</span><input class="edit-field" id="ef-notes" placeholder="Special instructions"></div>
+        <div class="edit-actions">
+          <button class="btn-discard" onclick="toggleEditMode()">Discard</button>
+          <button class="btn-save" onclick="saveJobEdits()">Save changes</button>
+        </div>
       </div>
     </div>
 
-    <!-- ARTWORK & PROOF TAB -->
+    <!-- FILES TAB -->
     <div class="tab-pane" id="tab-artwork">
-      <!-- Artwork versions list -->
-      <div class="section-label">Artwork &amp; proof versions</div>
-      <div id="artVersionList" style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px">
-        <div style="padding:20px;text-align:center;color:var(--ink3);font-size:13px">No files uploaded yet</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <span class="section-label" style="margin:0">All files</span>
+        <span style="font-size:11px;color:var(--ink3)" id="fileCountLabel"></span>
       </div>
-
+      <div id="artVersionList" style="background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:0 14px;margin-bottom:14px">
+        <div style="padding:24px;text-align:center;color:var(--ink3);font-size:13px">No files yet</div>
+      </div>
       <div class="divider"></div>
-
-      <!-- Upload new version -->
-      <div class="section-label">Upload new version</div>
+      <div class="section-label">Upload new file</div>
       <!-- Proof thumbnails (shows uploaded proofs) -->
       <div id="proofThumbArea" style="display:none;margin-bottom:10px">
         <div class="section-label">Uploaded proofs</div>
@@ -1687,112 +1769,6 @@ async function loadArtworkVersions(jobId) {
   renderArtVersions(allVersions, jobId);
 }
 
-function renderArtVersions(versions, jobId) {
-  // Full list in artwork tab
-  var list = document.getElementById('artVersionList');
-  // Quick strip above customer
-  var strip = document.getElementById('artVersionStrip');
-  var stripWrap = document.getElementById('artQuickStrip');
-
-  if(!versions || !versions.length) {
-    if(list) list.innerHTML = '<div style="padding:24px;text-align:center;color:var(--ink3);font-size:13px">No files uploaded yet</div>';
-    if(stripWrap) stripWrap.style.display = 'none';
-    return;
-  }
-
-  if(stripWrap) stripWrap.style.display = 'block';
-
-  // Quick strip — small thumbnails
-  if(strip) {
-    strip.innerHTML = '';
-    versions.forEach(function(v) {
-      var label = v.type === 'proof' ? 'PROOF' : 'ART';
-      var wrap = document.createElement('div');
-      wrap.setAttribute('style', 'position:relative;flex-shrink:0');
-      var thumb = makeThumbEl(v.url, v.name, 130, 'border:1.5px solid #DDD6FE;');
-      thumb.setAttribute('title', v.name);
-      var badge = document.createElement('div');
-      badge.setAttribute('style',
-        'position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.55);' +
-        'font-size:8px;color:#fff;padding:2px;text-align:center;font-weight:700;' +
-        'border-radius:0 0 6px 6px;pointer-events:none'
-      );
-      badge.textContent = label;
-      wrap.appendChild(thumb);
-      wrap.appendChild(badge);
-      strip.appendChild(wrap);
-    });
-  }
-
-  // Full list in artwork tab
-  if(list) {
-    list.innerHTML = '';
-    versions.forEach(function(v, i) {
-      var isImg = /\.(png|jpg|jpeg|gif|webp)$/i.test(v.name || '');
-      var statusBadge = v.status === 'approved'
-        ? '<span style="background:#D1FAE5;color:#065F46;font-size:10px;font-weight:700;padding:2px 7px;border-radius:999px">✓ Approved</span>'
-        : v.status === 'revision_requested'
-        ? '<span style="background:#FEE2E2;color:#991B1B;font-size:10px;font-weight:700;padding:2px 7px;border-radius:999px">↩ Revision</span>'
-        : v.status === 'sent'
-        ? '<span style="background:#DBEAFE;color:#1E40AF;font-size:10px;font-weight:700;padding:2px 7px;border-radius:999px">📧 Sent</span>'
-        : '<span style="background:#EDE9FD;color:#4C1D95;font-size:10px;font-weight:700;padding:2px 7px;border-radius:999px">Original</span>';
-
-      var row = document.createElement('div');
-      row.setAttribute('style',
-        'display:flex;align-items:center;gap:10px;padding:10px 12px;background:#F9FAFB;' +
-        'border:1.5px solid var(--line);border-radius:10px'
-      );
-
-      // Thumbnail
-      var thumbDiv = makeThumbEl(v.url, v.name, 52);
-
-      // Info
-      var info = document.createElement('div');
-      info.setAttribute('style', 'flex:1;min-width:0');
-      var versionNum = versions.length - i;
-      info.innerHTML =
-        '<div style="font-size:12px;font-weight:700;color:var(--ink);margin-bottom:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'
-        + 'v' + versionNum + ' — ' + v.name + '</div>'
-        + '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">'
-        + statusBadge
-        + (v.sentAt ? '<span style="font-size:11px;color:var(--ink3)">' + fmtDate(v.sentAt) + '</span>' : '')
-        + '</div>';
-
-      // Actions
-      var actions = document.createElement('div');
-      actions.setAttribute('style', 'display:flex;gap:6px;flex-shrink:0');
-
-      var dlBtn = document.createElement('a');
-      dlBtn.href = v.url;
-      dlBtn.target = '_blank';
-      dlBtn.rel = 'noopener';
-      dlBtn.setAttribute('style',
-        'background:var(--navy);color:#fff;border:none;border-radius:7px;padding:6px 10px;' +
-        'font-size:11px;font-weight:700;text-decoration:none;cursor:pointer'
-      );
-      dlBtn.textContent = '⬇';
-
-      var delBtn = document.createElement('button');
-      delBtn.setAttribute('style',
-        'background:#FEE2E2;color:#991B1B;border:none;border-radius:7px;padding:6px 10px;' +
-        'font-size:11px;font-weight:700;cursor:pointer'
-      );
-      delBtn.textContent = '✕';
-      if(v.table === 'proofs') {
-        delBtn.setAttribute('onclick', "deleteVersion('" + v.id + "','" + jobId + "')");
-      } else {
-        delBtn.setAttribute('onclick', "removeJobArtwork('" + jobId + "')");
-      }
-
-      actions.appendChild(dlBtn);
-      actions.appendChild(delBtn);
-      row.appendChild(thumbDiv);
-      row.appendChild(info);
-      row.appendChild(actions);
-      list.appendChild(row);
-    });
-  }
-}
 
 async function deleteVersion(proofId, jobId) {
   if(!confirm('Remove this version?')) return;
@@ -1919,6 +1895,224 @@ async function applyPdfThumbs() {
         page.render({canvasContext: canvas.getContext('2d'), viewport: svp});
       }).catch(function(){ canvas.parentNode.innerHTML = '📄'; });
     }
+  });
+}
+
+// ══ EDIT MODE ═════════════════════════════════════════════════════════
+var _editMode = false;
+
+function toggleEditMode() {
+  _editMode = !_editMode;
+  var viewEl = document.getElementById('specViewMode');
+  var editEl = document.getElementById('specEditMode');
+  var btn    = document.getElementById('editModeBtn');
+  if(!viewEl || !editEl) return;
+
+  if(_editMode) {
+    viewEl.style.display = 'none';
+    editEl.style.display = 'block';
+    btn.textContent = '✕ Cancel edit';
+    btn.style.borderColor = 'var(--red)';
+    btn.style.color = 'var(--red)';
+    // Pre-fill edit fields from current job data
+    var d = JOB_DATA[CURRENT_JOB_ID] || {};
+    var sf = function(id, val) { var el=document.getElementById(id); if(el) el.value=val||''; };
+    sf('ef-biz', d.name); sf('ef-contact', d.contact);
+    sf('ef-email', d.email); sf('ef-phone', d.phone); sf('ef-addr', d.addr);
+    sf('ef-qty', (d.qty||'').replace(/,/g,'')); sf('ef-shape', d.shape);
+    sf('ef-material', d.material); sf('ef-notes', d.notes||'');
+    // Size — parse from "90×60 mm"
+    var sizeParts = (d.size||'').match(/(\d+)[×x](\d+)/);
+    if(sizeParts) { sf('ef-w', sizeParts[1]); sf('ef-h', sizeParts[2]); }
+    // Selects
+    var ps=document.getElementById('ef-product'); if(ps) ps.value=d.productKey||'rolls';
+    var ls=document.getElementById('ef-lam'); if(ls) ls.value=d.lam||'';
+    var ds=document.getElementById('ef-dispatch'); if(ds) ds.value=d.dispatchMethod||'road';
+    // Due date — convert from "3 Jul" back to YYYY-MM-DD using raw if available
+    if(d.dueRaw) { sf('ef-due', d.dueRaw); }
+  } else {
+    viewEl.style.display = 'block';
+    editEl.style.display = 'none';
+    btn.textContent = '✏ Edit job';
+    btn.style.borderColor = '';
+    btn.style.color = '';
+  }
+}
+
+async function saveJobEdits() {
+  var jobId = CURRENT_JOB_ID; if(!jobId) return;
+  var db2 = getDB(); if(!db2) return;
+
+  var btn = document.querySelector('.btn-save'); if(btn) { btn.textContent='Saving…'; btn.disabled=true; }
+
+  try {
+    var gf = function(id) { var el=document.getElementById(id); return el?el.value.trim():''; };
+
+    // Update customer record
+    var d = JOB_DATA[jobId] || {};
+    if(d.customerId || true) {
+      // Get customer_id from jobs table
+      var {data:jobRow} = await db2.from('jobs').select('customer_id').eq('id',jobId).single();
+      if(jobRow && jobRow.customer_id) {
+        await db2.from('customers').update({
+          business_name: gf('ef-biz') || null,
+          contact_name:  gf('ef-contact') || null,
+          email:         gf('ef-email') || null,
+          phone:         gf('ef-phone') || null,
+          address_full:  gf('ef-addr') || null,
+        }).eq('id', jobRow.customer_id);
+      }
+    }
+
+    // Update job record
+    var dueVal = gf('ef-due');
+    await db2.from('jobs').update({
+      dispatch_method: gf('ef-dispatch') || 'road',
+      due_date:        dueVal || null,
+    }).eq('id', jobId);
+
+    // Update job_items
+    var w = parseFloat(gf('ef-w')) || null;
+    var h = parseFloat(gf('ef-h')) || null;
+    var qty = parseInt(gf('ef-qty')) || null;
+    var {data:items} = await db2.from('job_items').select('id').eq('job_id',jobId).limit(1);
+    if(items && items.length) {
+      await db2.from('job_items').update({
+        product_type: gf('ef-product') || null,
+        quantity:     qty,
+        shape:        gf('ef-shape') || null,
+        width_mm:     w,
+        height_mm:    h,
+        material:     gf('ef-material') || null,
+        laminate:     gf('ef-lam') || null,
+      }).eq('id', items[0].id);
+    }
+
+    // Update local cache
+    if(JOB_DATA[jobId]) {
+      JOB_DATA[jobId].name   = gf('ef-biz');
+      JOB_DATA[jobId].contact = gf('ef-contact');
+      JOB_DATA[jobId].email  = gf('ef-email');
+      JOB_DATA[jobId].phone  = gf('ef-phone');
+      JOB_DATA[jobId].addr   = gf('ef-addr');
+      JOB_DATA[jobId].lam    = gf('ef-lam');
+      JOB_DATA[jobId].dispatchMethod = gf('ef-dispatch');
+      JOB_DATA[jobId].dueRaw = dueVal;
+    }
+
+    showToast('Job updated ✓');
+    _editMode = true; // force toggle off
+    toggleEditMode();
+    populateJobDetail(jobId);
+
+  } catch(e) {
+    showToast('Save failed: ' + e.message);
+    console.error('saveJobEdits:', e);
+  }
+  if(btn) { btn.textContent='Save changes'; btn.disabled=false; }
+}
+
+// ══ FILE TIMELINE ══════════════════════════════════════════════════════
+async function loadArtworkVersions(jobId) {
+  var db2 = getDB(); if(!db2) return;
+  var list = document.getElementById('artVersionList');
+  var strip = document.getElementById('artVersionStrip');
+  var stripWrap = document.getElementById('artQuickStrip');
+  var countLbl = document.getElementById('fileCountLabel');
+
+  // Fetch proofs
+  var {data:proofs} = await db2.from('proofs').select('*').eq('job_id',jobId).order('created_at',{ascending:false});
+  var job = JOB_DATA[jobId] || {};
+  var allFiles = [];
+
+  if(proofs && proofs.length) {
+    proofs.forEach(function(p) {
+      allFiles.push({ id:p.id, url:p.file_url, name:p.filename||'Proof', type:'proof',
+        status:p.status||'sent', date:p.created_at, table:'proofs' });
+    });
+  }
+  if(job.artUrl) {
+    allFiles.push({ id:'job-art', url:job.artUrl, name:job.artFilename||'Original artwork',
+      type:'artwork', status:'original', date:null, table:'jobs' });
+  }
+
+  if(countLbl) countLbl.textContent = allFiles.length ? allFiles.length + ' file' + (allFiles.length===1?'':'s') : '';
+
+  // Quick strip
+  if(stripWrap) stripWrap.style.display = allFiles.length ? 'block' : 'none';
+  if(strip) {
+    strip.innerHTML = '';
+    allFiles.forEach(function(f) {
+      var label = f.type==='proof'?'PROOF':'ART';
+      var wrap = document.createElement('div');
+      wrap.style.cssText = 'position:relative;flex-shrink:0';
+      var thumb = makeThumbEl(f.url, f.name, 90, 'border:1.5px solid #DDD6FE;');
+      thumb.title = f.name;
+      var badge = document.createElement('div');
+      badge.style.cssText = 'position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.55);font-size:8px;color:#fff;padding:2px;text-align:center;font-weight:700;border-radius:0 0 6px 6px;pointer-events:none';
+      badge.textContent = label;
+      wrap.appendChild(thumb); wrap.appendChild(badge);
+      strip.appendChild(wrap);
+    });
+  }
+
+  // Full timeline list
+  if(!list) return;
+  if(!allFiles.length) {
+    list.innerHTML = '<div style="padding:24px;text-align:center;color:var(--ink3);font-size:13px">No files yet</div>';
+    return;
+  }
+
+  list.innerHTML = '';
+  allFiles.forEach(function(f, i) {
+    var isImg = /\.(png|jpg|jpeg|gif|webp)$/i.test(f.name||'');
+    var statusMap = { original:'art', proof:'proof', sent:'proof', approved:'approved', revision_requested:'revision' };
+    var badgeClass = statusMap[f.status] || 'proof';
+    var badgeLabel = f.status==='approved'?'✓ Approved':f.status==='revision_requested'?'↩ Revision':f.status==='original'?'Original artwork':f.status==='sent'?'Sent to customer':'Proof';
+
+    var entry = document.createElement('div');
+    entry.className = 'file-entry';
+
+    // Thumb
+    var thumbDiv = document.createElement('div');
+    thumbDiv.className = 'file-thumb-sm';
+    thumbDiv.onclick = function() { window.open(f.url); };
+    if(isImg) {
+      var img = document.createElement('img');
+      img.src = f.url; img.style.cssText = 'width:100%;height:100%;object-fit:cover';
+      thumbDiv.appendChild(img);
+    } else {
+      thumbDiv.innerHTML = '<div style="font-size:22px">📄</div>';
+      renderPdfThumb(f.url, thumbDiv, 46);
+    }
+
+    // Info
+    var info = document.createElement('div');
+    info.className = 'file-info';
+    var versionNum = allFiles.length - i;
+    info.innerHTML = '<div class="file-name" title="' + f.name + '">v' + versionNum + ' — ' + f.name + '</div>'
+      + '<div class="file-meta">'
+      + '<span class="file-badge ' + badgeClass + '">' + badgeLabel + '</span>'
+      + (f.date ? '<span>' + fmtDate(f.date) + '</span>' : '')
+      + '</div>';
+
+    // Actions
+    var acts = document.createElement('div');
+    acts.className = 'file-actions';
+    var dl = document.createElement('a');
+    dl.href=f.url; dl.target='_blank'; dl.rel='noopener';
+    dl.className='file-btn'; dl.textContent='⬇'; dl.title='Download';
+    var del = document.createElement('button');
+    del.className='file-btn del'; del.textContent='✕'; del.title='Remove';
+    if(f.table==='proofs') {
+      del.onclick = function() { deleteVersion(f.id, jobId); };
+    } else {
+      del.onclick = function() { removeJobArtwork(jobId); };
+    }
+    acts.appendChild(dl); acts.appendChild(del);
+
+    entry.appendChild(thumbDiv); entry.appendChild(info); entry.appendChild(acts);
+    list.appendChild(entry);
   });
 }
 
