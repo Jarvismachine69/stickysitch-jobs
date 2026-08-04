@@ -701,6 +701,17 @@ tbody tr.prio-on td{background:#FFFBEB}
               <option value="pickup">Pickup</option>
             </select>
           </div>
+          <div class="form-field"><span class="form-label">Source / how received</span>
+            <select class="form-sel" id="fSource">
+              <option value="email">Email</option>
+              <option value="phone">Phone</option>
+              <option value="instagram">Instagram</option>
+              <option value="facebook">Facebook</option>
+              <option value="walkin">Walk-in</option>
+              <option value="manual">Manual entry</option>
+              <option value="website">Website</option>
+            </select>
+          </div>
           <div class="form-field"><span class="form-label">Due date</span><input class="form-input" id="fDue" type="date"></div>
           <div class="form-field full"><span class="form-label">Notes</span><input class="form-input" id="fNotes" placeholder="Any special instructions…"></div>
 
@@ -1305,8 +1316,9 @@ async function createJob(){
 
     // Create job
     const dispatchMethod=document.getElementById('fDispatch').value||'road';
+    const jobSource = document.getElementById('fSource')?.value || 'email';
     const {data:job,error:jobErr}=await db2.from('jobs').insert({
-      customer_id:customerId, source:'manual', status:'new',
+      customer_id:customerId, source:jobSource, status:'new',
       dispatch_method:dispatchMethod,
       placed_at:new Date().toISOString(),
       due_date:document.getElementById('fDue').value||null,
