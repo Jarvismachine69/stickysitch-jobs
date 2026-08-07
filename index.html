@@ -1373,7 +1373,9 @@ async function extractFromText() {
     try { data = await resp.json(); } catch(e) { throw new Error('Server returned invalid response (status ' + resp.status + ')'); }
 
     if (!resp.ok) {
-      throw new Error(data.error || ('Server error ' + resp.status));
+      var errMsg = data.error || ('Server error ' + resp.status);
+      if (data.detail) errMsg += ' — ' + data.detail;
+      throw new Error(errMsg);
     }
 
     const ex = data.extracted;
