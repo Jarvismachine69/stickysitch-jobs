@@ -407,6 +407,7 @@ tbody tr.prio-on td{background:#FFFBEB}
         <option value="bumper">Bumper stickers</option>
       </select>
       <button class="btn-ghost" id="syncBtn" onclick="manualSync()" title="Re-sync from Shopify">↻ Sync</button>
+      <button class="btn-ghost" onclick="syncArtwork()" title="Link artwork from Shopify orders">🖼 Sync artwork</button>
       <button class="btn-primary" onclick="openNewJob()">＋ New job</button>
     </div>
 
@@ -1373,9 +1374,7 @@ async function extractFromText() {
     try { data = await resp.json(); } catch(e) { throw new Error('Server returned invalid response (status ' + resp.status + ')'); }
 
     if (!resp.ok) {
-      var errMsg = data.error || ('Server error ' + resp.status);
-      if (data.detail) errMsg += ' — ' + data.detail;
-      throw new Error(errMsg);
+      throw new Error(data.error || ('Server error ' + resp.status));
     }
 
     const ex = data.extracted;
@@ -2078,6 +2077,22 @@ async function loadArtworkVersions(jobId) {
   });
 }
 
+
+async function syncArtwork() {
+  var btn = event.target;
+  btn.textContent = '🖼 Syncing…';
+  btn.disabled = true;
+  try {
+    var r = await fetch('/api/sync-artwork?secret=stickysitch2024&missing=1');
+    var d = await r.json();
+    showToast(d.linked + ' artwork' + (d.linked===1?'':'s') + ' linked from Shopify ✓');
+    if(d.linked > 0) setTimeout(loadBoard, 1000);
+  } catch(e) {
+    showToast('Artwork sync failed: ' + e.message);
+  }
+  btn.textContent = '🖼 Sync artwork';
+  btn.disabled = false;
+}
 
 function previewProofEmail() {
   var jobId = CURRENT_JOB_ID; if(!jobId) return;
