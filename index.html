@@ -407,6 +407,7 @@ tbody tr.prio-on td{background:#FFFBEB}
         <option value="bumper">Bumper stickers</option>
       </select>
       <button class="btn-ghost" id="syncBtn" onclick="manualSync()" title="Re-sync from Shopify">↻ Sync</button>
+      <button class="btn-ghost" onclick="archiveFulfilled()" title="Remove fulfilled Shopify orders from board">✅ Archive fulfilled</button>
       <button class="btn-ghost" onclick="syncArtwork()" title="Link artwork from Shopify orders">🖼 Sync artwork</button>
       <button class="btn-primary" onclick="openNewJob()">＋ New job</button>
     </div>
@@ -2077,6 +2078,31 @@ async function loadArtworkVersions(jobId) {
   });
 }
 
+
+async function archiveFulfilled() {
+  // Preview first
+  var btn = event.target;
+  btn.textContent = '⏳ Checking…'; btn.disabled = true;
+  try {
+    var r = await fetch('/api/archive-fulfilled?secret=stickysitch2024');
+    var d = await r.json();
+    if(d.jobs_to_archive === 0) {
+      showToast(d.message || 'Board is already clean ✓');
+    } else {
+      var msg = d.jobs_to_archive + ' fulfilled job(s) will be archived: ' +
+        (d.preview||[]).slice(0,3).map(function(j){return j.order;}).join(', ') +
+        (d.jobs_to_archive > 3 ? ' +' + (d.jobs_to_archive-3) + ' more' : '') +
+        '. Confirm?';
+      if(confirm(msg)) {
+        var r2 = await fetch('/api/archive-fulfilled?secret=stickysitch2024&run=1');
+        var d2 = await r2.json();
+        showToast(d2.archived + ' job(s) archived ✓');
+        setTimeout(loadBoard, 800);
+      }
+    }
+  } catch(e) { showToast('Archive failed: ' + e.message); }
+  btn.textContent = '✅ Archive fulfilled'; btn.disabled = false;
+}
 
 async function syncArtwork() {
   var btn = event.target;
