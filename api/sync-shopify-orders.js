@@ -275,9 +275,12 @@ async function processOrder(order) {
 export default async function handler(req, res) {
   if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
 
-  // Simple secret check to prevent accidental calls
-  const secret = req.query.secret;
-  if (process.env.SYNC_SECRET && secret !== process.env.SYNC_SECRET) {
+  // Accept either: Vercel's own cron invocation (Authorization: Bearer CRON_SECRET,
+  // set automatically by Vercel — see vercel.json), or your manual ?secret= link.
+  const authHeader = req.headers.authorization;
+  const isCron   = !!process.env.CRON_SECRET && authHeader === `Bearer ${process.env.CRON_SECRET}`;
+  const isManual = !!process.env.SYNC_SECRET && req.query.secret === process.env.SYNC_SECRET;
+  if (!isCron && !isManual) {
     return res.status(401).json({ error: 'Invalid secret. Pass ?secret=YOUR_SYNC_SECRET' });
   }
 
