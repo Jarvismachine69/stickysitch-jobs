@@ -16,7 +16,7 @@ const supabase = createClient(
 
 const RESEND_KEY   = process.env.RESEND_API_KEY;
 const NOTIFY_EMAIL = 'info@stickysitch.com.au';
-const FROM_EMAIL   = 'jobs@stickysitch.com.au';
+const FROM_EMAIL   = 'StickySitch Jobs <info@stickysitch.com.au>'; // jobs@ isn't a real mailbox — use a display name on the real address
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -28,6 +28,7 @@ export default async function handler(req, res) {
 
     const customerEmail = (body.customerEmail || '').toLowerCase().trim();
     const draftOrderNum = String(body.orderNumber || '').replace(/^#/, '').trim();
+    const draftOrderId  = String(body.orderId || '').trim();
 
     // Items — handles both single upload and submitAllArtwork (array)
     const items = body.items
@@ -92,6 +93,11 @@ export default async function handler(req, res) {
     const firstItem = items[0] || {};
     const subject   = ['Artwork received', draftOrderNum ? 'Draft #'+draftOrderNum : '', firstItem.product || ''].filter(Boolean).join(' · ');
 
+    const storeHandle    = (process.env.SHOPIFY_STORE_DOMAIN || '').replace('.myshopify.com', '');
+    const draftOrderLink = (storeHandle && draftOrderId)
+      ? `https://admin.shopify.com/store/${storeHandle}/draft_orders/${draftOrderId}`
+      : null;
+
     const specRows = items.map((it, idx) => `
       ${items.length > 1 ? `<div style="font-weight:700;margin-top:${idx>0?'16px':'0'};color:#1E1B4B">Item ${idx+1}: ${it.product}</div>` : ''}
       <table style="width:100%;border-collapse:collapse;margin-top:4px">
@@ -106,7 +112,7 @@ export default async function handler(req, res) {
       <h2 style="color:#1E1B4B">📎 Artwork received — StickySitch</h2>
       <table style="width:100%;border-collapse:collapse;margin-bottom:16px">
         ${customerEmail ? `<tr><td style="padding:5px 0;color:#6B7280;width:120px">Customer email</td><td><a href="mailto:${customerEmail}">${customerEmail}</a></td></tr>` : ''}
-        ${draftOrderNum ? `<tr><td style="padding:5px 0;color:#6B7280">Draft order</td><td>#${draftOrderNum}</td></tr>` : ''}
+        ${draftOrderNum ? `<tr><td style="padding:5px 0;color:#6B7280">Draft order</td><td>#${draftOrderNum}${draftOrderLink ? ` &nbsp;<a href="${draftOrderLink}" style="color:#7C3AED;font-weight:600">View in Shopify &rarr;</a>` : ''}</td></tr>` : ''}
       </table>
       ${specRows}
       ${urlLinks ? `<div style="margin-top:14px;padding:12px;background:#F5F3FF;border-radius:8px;font-size:13px"><b>Saved to job board storage:</b><br>${urlLinks}<br><small style="color:#6B7280">Links to the job automatically when customer pays.</small></div>` : ''}
@@ -115,10 +121,15 @@ export default async function handler(req, res) {
     </div>`;
 
     if (RESEND_KEY) {
+      const emailPayload = { from: FROM_EMAIL, to: NOTIFY_EMAIL, subject, html, attachments };
+      // Reply-To the customer directly so staff can hit Reply on desktop or
+      // mobile and it goes straight to them, no manual address change needed.
+      if (customerEmail) emailPayload.reply_to = customerEmail;
+
       await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${RESEND_KEY}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ from: FROM_EMAIL, to: NOTIFY_EMAIL, subject, html, attachments }),
+        body: JSON.stringify(emailPayload),
       });
     }
 
