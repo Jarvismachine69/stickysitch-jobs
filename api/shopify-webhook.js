@@ -277,6 +277,20 @@ export default async function handler(req, res) {
   }
 
   try {
+    // ── IDEMPOTENCY: skip if this Shopify order already exists ────────
+    const shopifyOrderId = order.id?.toString();
+    if (shopifyOrderId) {
+      const { data: existingJob } = await supabase
+        .from('jobs')
+        .select('id')
+        .eq('shopify_order_id', shopifyOrderId)
+        .maybeSingle();
+      if (existingJob) {
+        console.log(`Order ${order.order_number} already exists as ${existingJob.id} — skipping duplicate webhook`);
+        return res.status(200).json({ success: true, skipped: true, existingJob: existingJob.id });
+      }
+    }
+
     // ── Upsert customer ───────────────────────────────────────────────
     const customerId = await upsertCustomer(order);
 
@@ -322,7 +336,7 @@ export default async function handler(req, res) {
     const placedAt     = order.created_at || new Date().toISOString();
     const orderValue   = parseFloat(order.total_price || 0);
     const orderGroup   = `SHOP-${order.id}`;
-    const orderNumber  = `#${order.order_number}`;
+    const orderNumber  = String(order.order_number); // stored without # prefix; display adds it
 
     const createdJobIds = [];
 
@@ -400,44 +414,51 @@ export default async function handler(req, res) {
       }
 
       // ── Match pending_orders by customer email ─────────────────────
-      // If no artwork from Shopify, look up pending submission from configurator
-      if (!jobArtworkUrl) {
-        const customerEmail = (order.email || '').toLowerCase().trim();
-        if (customerEmail) {
-          const { data: pending } = await supabase
-            .from('pending_orders')
-            .select('*')
-            .eq('email', customerEmail)
-            .is('matched_job_id', null)
-            .order('created_at', { ascending: false })
-            .limit(1)
-            .single();
+      // Fetch ALL unmatched pending records for this email — handles multi-item orders
+      const customerEmail = (order.email || '').toLowerCase().trim();
+      if (customerEmail) {
+        const { data: pendingRecords } = await supabase
+          .from('pending_orders')
+          .select('*')
+          .eq('email', customerEmail)
+          .is('matched_job_id', null)
+          .order('created_at', { ascending: false });
 
-          if (pending) {
-            // Attach artwork and any missing specs from the pending record
-            const updates = { matched_job_id: job.id };
-            if (pending.artwork_url) {
+        const pending = (pendingRecords || []);
+        if (pending.length > 0) {
+          // Use most recent pending record for this product type (or first available)
+          const match = pending.find(p => {
+            if (!p.product_type) return true;
+            return (p.product_type || '').toLowerCase().includes(productType);
+          }) || pending[0];
+
+          if (match) {
+            // Link artwork if job doesn't already have one
+            if (!jobArtworkUrl && match.artwork_url) {
               await supabase.from('jobs').update({
-                artwork_url:      pending.artwork_url,
-                artwork_filename: pending.artwork_filename || 'artwork',
+                artwork_url:      match.artwork_url,
+                artwork_filename: match.artwork_filename || 'artwork',
               }).eq('id', job.id);
+              console.log(\`✓ Linked artwork from pending_orders to job \${job.id}\`);
             }
             // Fill any null job_item fields from pending record
             await supabase.from('job_items').update({
-              ...(pending.shape    && { shape:    pending.shape }),
-              ...(pending.material && { material: pending.material }),
-              ...(pending.laminate && { laminate: pending.laminate }),
-              ...(pending.width_mm && { width_mm:  pending.width_mm }),
-              ...(pending.height_mm&& { height_mm: pending.height_mm }),
+              ...(match.shape     && { shape:     match.shape }),
+              ...(match.material  && { material:  match.material }),
+              ...(match.laminate  && { laminate:  match.laminate }),
+              ...(match.width_mm  && { width_mm:  match.width_mm }),
+              ...(match.height_mm && { height_mm: match.height_mm }),
             }).eq('job_id', job.id).is('shape', null);
 
-            // Mark pending record as matched
+            // Mark as matched
             await supabase.from('pending_orders')
-              .update(updates)
-              .eq('id', pending.id);
+              .update({ matched_job_id: job.id, matched_at: new Date().toISOString() })
+              .eq('id', match.id);
 
-            console.log(\`✓ Matched pending order \${pending.id} to job \${job.id} (email: \${customerEmail})\`);
+            console.log(\`✓ Matched pending_orders \${match.id} to job \${job.id} (email: \${customerEmail})\`);
           }
+        } else {
+          console.log(\`No pending artwork found for \${customerEmail} — job \${job.id} created without artwork\`);
         }
       }
     }
@@ -455,7 +476,7 @@ export default async function handler(req, res) {
       }
     }
 
-    console.log(`✓ Order ${orderNumber} created as job(s): ${createdJobIds.map(j => j.id).join(', ')}`);
+    console.log(`✓ Order #${orderNumber} created as job(s): ${createdJobIds.map(j => j.id).join(', ')}`);
     return res.status(200).json({
       success: true,
       jobs: createdJobIds.map(j => j.id)
