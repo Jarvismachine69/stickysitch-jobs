@@ -6,6 +6,8 @@
     { "src": "/(.*)", "dest": "/index.html" }
   ],
   "crons": [
-    { "path": "/api/send-review-requests", "schedule": "0 22 * * *" }
+    { "path": "/api/send-review-requests", "schedule": "0 22 * * *" },
+    { "path": "/api/sync-shopify-orders", "schedule": "0 19 * * *" },
+    { "path": "/api/archive-fulfilled?run=1", "schedule": "0 20 * * *" }
   ]
 }
