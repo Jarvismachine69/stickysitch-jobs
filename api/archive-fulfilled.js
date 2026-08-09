@@ -18,7 +18,7 @@ const TOKEN = process.env.SHOPIFY_ACCESS_TOKEN;
 
 async function getAllFulfilledOrderNumbers() {
   const orderNums = [];
-  let url = `https://${SHOP}/admin/api/2024-01/orders.json?fulfillment_status=shipped&status=any&limit=250&fields=order_number`;
+  let url = `https://${SHOP}/admin/api/2024-01/orders.json?fulfillment_status=fulfilled&status=any&limit=250&fields=order_number`;
 
   // Paginate through all fulfilled orders
   while (url) {
@@ -57,12 +57,15 @@ export default async function handler(req, res) {
     }
 
     // 2. Find matching active jobs in Supabase — SHOPIFY SOURCE ONLY
+    // Match both with and without # prefix (handles old jobs stored as '#1285' and new as '1285')
+    const fulfilledWithHash = fulfilledNums.map(n => '#' + n);
+    const allSearchNums = [...fulfilledNums, ...fulfilledWithHash];
     const { data: matchedJobs, error } = await supabase
       .from('jobs')
       .select('id, shopify_order_number, status, source')
-      .in('shopify_order_number', fulfilledNums)
-      .eq('source', 'shopify')                                // never touch manual/email/phone jobs
-      .not('status', 'in', '("dispatched","pickedup","cancelled","refunded")'); // skip already done
+      .in('shopify_order_number', allSearchNums)
+      .eq('source', 'shopify')
+      .not('status', 'in', '("dispatched","pickedup","cancelled","refunded")');
 
     if (error) throw new Error('Supabase query error: ' + error.message);
 
