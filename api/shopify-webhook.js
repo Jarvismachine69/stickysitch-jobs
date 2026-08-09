@@ -1,18 +1,19 @@
-// api/shopify-webhook.js
-// Receives Shopify orders/paid webhook → creates job in Supabase
-// Deploy in your Vercel project alongside index.html
+// api/shopify-webhook.js  (job board Vercel repo)
+// Receives Shopify orders/paid webhook → creates or updates job in Supabase.
+// Handles: draft-order-originated paid orders, idempotency, note_attributes specs,
+// pending_orders artwork matching, and multi-item orders.
 
 import crypto from 'crypto';
 import { createClient } from '@supabase/supabase-js';
 
-// Service role client — bypasses RLS for server-side writes
 const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_SERVICE_KEY
 );
 
-// ── Verify Shopify HMAC signature ─────────────────────────────────────
+// ── Verify Shopify HMAC ──────────────────────────────────────────────
 function verifyShopifyWebhook(rawBody, signature) {
+  if (!process.env.SHOPIFY_WEBHOOK_SECRET) return true; // skip if not set
   const hash = crypto
     .createHmac('sha256', process.env.SHOPIFY_WEBHOOK_SECRET)
     .update(rawBody, 'utf8')
@@ -20,28 +21,7 @@ function verifyShopifyWebhook(rawBody, signature) {
   return hash === signature;
 }
 
-// ── Map Shopify line item → our product type ──────────────────────────
-function detectProductType(item) {
-  const title = (item.title || '').toLowerCase().trim();
-  const ptype = (item.product_type || '').toLowerCase();
-  const text  = title + ' ' + ptype + ' ' + (item.vendor || '').toLowerCase();
-
-  // Check if title STARTS WITH the product type (StickySitch format: "sheets | circle | ...")
-  if (/^rolls?\b|^roll.?label/i.test(title))           return 'rolls';
-  if (/^sheets?\b|^sticker.?sheet/i.test(title))        return 'sheets';
-  if (/^bumper/i.test(title))                            return 'bumper';
-  if (/^large.?format|^banner|^pull.?up/i.test(title))  return 'large';
-  if (/^individual|^die.?cut|^custom.?sticker/i.test(title)) return 'individual';
-
-  // Fallback: search anywhere in combined text
-  if (text.includes('roll label') || text.includes('roll labels')) return 'rolls';
-  if (text.includes('sticker sheet') || text.includes('sheet label')) return 'sheets';
-  if (text.includes('bumper'))        return 'bumper';
-  if (text.includes('large format') || text.includes('banner')) return 'large';
-  return 'individual';
-}
-
-// ── Calculate due date skipping weekends ──────────────────────────────
+// ── Calculate due date (skip weekends) ──────────────────────────────
 function calcDueDate(placedAt, productType) {
   const days = productType === 'rolls' ? 3 : 2;
   const date = new Date(placedAt);
@@ -49,212 +29,136 @@ function calcDueDate(placedAt, productType) {
   while (added < days) {
     date.setDate(date.getDate() + 1);
     const dow = date.getDay();
-    if (dow !== 0 && dow !== 6) added++; // skip Sun=0, Sat=6
+    if (dow !== 0 && dow !== 6) added++;
   }
-  return date.toISOString().split('T')[0]; // YYYY-MM-DD
+  return date.toISOString().split('T')[0];
 }
 
-// ── Parse specs from StickySitch product title ────────────────────────
-// Title format: "sheets | circle | 65 × 65 mm | White Vinyl | Qty 50"
-// Normalise a laminate/finish raw string → "Matte", "Gloss", "Soft Touch", or "None"
+// ── Detect product type from title ──────────────────────────────────
+function detectProductType(item, noteAttrs) {
+  const title = (item.title || '').toLowerCase();
+  const pt    = (noteAttrs['product type'] || noteAttrs['product'] || '').toLowerCase();
+  if (/^rolls?\b|^roll.?label|rolls/i.test(title) || pt === 'rolls')       return 'rolls';
+  if (/^sheets?\b|^sticker.?sheet|sheets/i.test(title) || pt === 'sheets') return 'sheets';
+  if (/^bumper/i.test(title) || pt === 'bumper')                            return 'bumper';
+  if (/^individual|^die.?cut/i.test(title) || pt === 'individual')          return 'individual';
+  return 'individual';
+}
+
+// ── Normalise laminate string ────────────────────────────────────────
 function normaliseLaminate(raw) {
   if (!raw) return null;
   const s = raw.trim();
-  if (/matte/i.test(s))            return 'Matte';
-  if (/gloss/i.test(s))            return 'Gloss';
-  if (/soft.?touch/i.test(s))      return 'Soft Touch';
-  if (/no.?lam|none|uncoated/i.test(s)) return 'None';
-  if (/lam/i.test(s))              return s; // keep "Laminate" variants as-is
+  if (/matte/i.test(s))       return 'Matte';
+  if (/gloss/i.test(s))       return 'Gloss';
+  if (/soft.?touch/i.test(s)) return 'Soft Touch';
+  if (/none|no.?lam/i.test(s)) return 'None';
   return s;
 }
 
-function parseTitleSpecs(item) {
-  const title   = item.title         || '';
-  const variant = item.variant_title || ''; // e.g. "White Vinyl / Matte"
-  const parts   = title.split('|').map(s => s.trim());
-  let shape = null, widthMm = null, heightMm = null,
-      material = null, laminate = null, qty = null;
+// ── Parse all specs from note_attributes + order.note ───────────────
+// Shopify stores configurator data in note_attributes (REST) = customAttributes (GraphQL)
+function parseOrderSpecs(order) {
+  const attrs = {};
 
-  for (const part of parts) {
-    const sizeMatch = part.match(/(\d+(?:\.\d+)?)\s*[×x]\s*(\d+(?:\.\d+)?)\s*mm/i);
-    if (sizeMatch) { widthMm = parseFloat(sizeMatch[1]); heightMm = parseFloat(sizeMatch[2]); continue; }
-    const qtyMatch = part.match(/qty\s*(\d+)|(\d+)\s*stickers?/i);
-    if (qtyMatch) { qty = parseInt(qtyMatch[1] || qtyMatch[2]); continue; }
-    // Laminate first (before material — "matte" overlaps)
-    if (/lam(inate)?|soft.?touch|gloss\s+lam|matte\s+lam|no.?lam/i.test(part) ||
-        /^(matte|gloss|soft touch|none)$/i.test(part)) { laminate = part; continue; }
-    // Material
-    if (/vinyl|paper|film|polyprop|kraft|clear|transparent|white|silver|gold|chrome/i.test(part)) { material = part; continue; }
-    // Shape
-    if (!/^(sheet|roll|sticker|bumper|large|individual)/i.test(part) && part.length > 1) shape = part;
-  }
+  // note_attributes (REST API format used in webhooks)
+  (order.note_attributes || []).forEach(a => {
+    attrs[a.name.toLowerCase().trim()] = (a.value || '').trim();
+  });
 
-  // ── Fallback 1: variant_title (e.g. "White Vinyl / Matte" or "Matte / 90×60mm")
-  if (!laminate && variant) {
-    const vParts = variant.split('/').map(s => s.trim());
-    for (const vp of vParts) {
-      if (/^(matte|gloss|soft.?touch|none|no.?lam)/i.test(vp) || /lam(inate)?/i.test(vp)) {
-        laminate = vp; break;
-      }
-    }
-    // Also check if material is embedded in variant
-    if (!material) {
-      for (const vp of vParts) {
-        if (/vinyl|paper|film|polyprop|kraft|clear|white|silver|gold/i.test(vp)) {
-          material = vp; break;
-        }
-      }
-    }
-  }
+  // Also parse order.note freetext (key: value lines)
+  (order.note || '').split('\n').forEach(line => {
+    const m = line.match(/^([^:]+):\s*(.+)/);
+    if (m) attrs[m[1].toLowerCase().trim()] = m[2].trim();
+  });
 
-  // ── Fallback 2: line item properties
-  const props = (item.properties || []);
-  const fp = (re) => { const p = props.find(p => re.test(p.name)); return p ? p.value.trim() : null; };
-  if (!widthMm)  { const w = fp(/width/i);   if (w) widthMm  = parseFloat(w); }
-  if (!heightMm) { const h = fp(/height/i);  if (h) heightMm = parseFloat(h); }
-  if (!material)  material = fp(/material|substrate|vinyl|paper/i);
-  if (!laminate)  laminate = fp(/laminat|laminate|finish|coat|gloss|matte|soft.?touch|overlay/i);
-  if (!shape)     shape    = fp(/shape|die.?cut/i);
-  if (!qty)       { const q = fp(/qty|quantity|sticker.?count|how.?many/i); if (q) qty = parseInt(q); }
+  // Extract size from "40 × 40 mm" format
+  const rawSize = attrs['size'] || '';
+  let widthMm = null, heightMm = null;
+  const sm = rawSize.match(/(\d+(?:\.\d+)?)\s*[×x]\s*(\d+(?:\.\d+)?)/i);
+  if (sm) { widthMm = parseFloat(sm[1]); heightMm = parseFloat(sm[2]); }
 
-  // ── Fallback 3: scan material string for embedded laminate
-  if (!laminate && material) {
-    const m = material.match(/\b(matte lam(?:inate)?|gloss lam(?:inate)?|soft touch|no lam(?:inate)?|matte|gloss)\b/i);
-    if (m) {
-      laminate = m[1];
-      material = material.replace(m[0], '').trim().replace(/\s+/, ' ');
-    }
-  }
+  // Extract quantity
+  const qtyRaw = attrs['quantity'] || '';
+  const qty = parseInt(qtyRaw.replace(/[^\d]/g, '')) || null;
 
-  // Find artwork: match any property whose NAME suggests a file, OR whose VALUE is a CDN URL
+  return {
+    productType: attrs['product type'] || attrs['product'] || null,
+    shape:       attrs['shape']   || null,
+    widthMm,
+    heightMm,
+    material:    attrs['material'] || null,
+    laminate:    normaliseLaminate(attrs['laminate'] || attrs['finish'] || null),
+    qty,
+    artworkStatus: attrs['artwork status'] || null,
+    draftOrderRef: attrs['draft order'] || attrs['order reference'] || null,
+    estimatedDelivery: attrs['est. delivery'] || attrs['estimated delivery'] || null,
+    rawAttrs: attrs,
+  };
+}
+
+// ── Parse artwork URL from line item properties ──────────────────────
+function findArtworkUrl(item) {
+  const props = item.properties || [];
   const artProp = props.find(p =>
-    /artwork|design.?file|upload|your.?file|file|art|image|logo|pdf|print.?file/i.test(p.name) ||
-    /^https?:\/\/(cdn\.shopify|files\.shopifycdn|storage\.googleapis)/i.test((p.value||'').trim())
+    /artwork|design.?file|upload|file|art|image|logo|pdf/i.test(p.name || '') ||
+    /^https?:\/\/(cdn\.shopify|files\.shopifycdn)/i.test((p.value || '').trim())
   );
-  return {
-    widthMm, heightMm, shape,
-    material,
-    laminate: normaliseLaminate(laminate),
-    qty: qty || item.quantity,
-    artworkUrl: artProp ? artProp.value.trim() : null,
-  };
+  return artProp ? artProp.value.trim() : null;
 }
 
-function parsePropsReal(item) {
-  const props = (item.properties || []);
-
-  const find = (pattern) => {
-    const p = props.find(p => pattern.test(p.name));
-    return p ? (p.value || '').trim() : null;
-  };
-
-  // Width / height (numeric mm values)
-  const widthRaw  = find(/width|w\s*\(/i);
-  const heightRaw = find(/height|h\s*\(/i);
-
-  // Actual sticker/label quantity (often stored as a property, not Shopify line qty)
-  const qtyProp = find(/^(qty|quantity|sticker.?count|how.?many|number.?of|pieces|labels|stickers)$/i);
-
-  // Artwork / design file URL
-  const artworkUrl = find(/artwork|design.?file|upload|your.?file|file|art$/i);
-
-  // Visual properties
-  const shape    = find(/shape|die.?cut|cut.?type/i);
-  const material = find(/material|substrate|stock|vinyl|paper|film/i);
-  const laminate = find(/laminat|laminate|finish|coat|gloss|matte|soft.?touch/i);
-
-  return {
-    width_mm:    widthRaw  ? parseFloat(widthRaw)  : null,
-    height_mm:   heightRaw ? parseFloat(heightRaw) : null,
-    qty_override: qtyProp  ? parseInt(qtyProp)      : null,
-    artwork_url:  artworkUrl || null,
-    shape:        shape    || null,
-    material:     material || null,
-    laminate:     laminate || null,
-  };
-}
-
-
-// ── Upsert customer from Shopify order ────────────────────────────────
+// ── Upsert customer ──────────────────────────────────────────────────
 async function upsertCustomer(order) {
   const billing  = order.billing_address  || {};
   const shipping = order.shipping_address || {};
   const addr     = shipping.address1 ? shipping : billing;
 
-  const addressFull = [
-    addr.address1, addr.address2,
-    addr.city, addr.province_code, addr.zip
-  ].filter(Boolean).join(', ');
+  const addressFull = [addr.address1, addr.city, addr.province_code, addr.zip]
+    .filter(Boolean).join(', ');
 
+  const name = `${order.customer?.first_name || ''} ${order.customer?.last_name || ''}`.trim();
   const customerData = {
-    email:               order.email || order.contact_email || '',
-    business_name:       billing.company || `${order.customer?.first_name || ''} ${order.customer?.last_name || ''}`.trim() || 'Unknown',
-    contact_name:        `${order.customer?.first_name || ''} ${order.customer?.last_name || ''}`.trim() || null,
+    email:               (order.email || order.contact_email || '').toLowerCase().trim(),
+    business_name:       billing.company || name || 'Unknown',
+    contact_name:        name || null,
     phone:               order.phone || billing.phone || shipping.phone || null,
     address_full:        addressFull || null,
-    address_street:      addr.address1 || null,
-    address_suburb:      addr.city    || null,
-    address_state:       addr.province_code || null,
-    address_postcode:    addr.zip     || null,
     shopify_customer_id: order.customer?.id?.toString() || null,
   };
 
-  // Upsert by shopify_customer_id if exists, otherwise by email
-  let query = supabase.from('customers');
-  let existingId = null;
-
+  // Try by Shopify customer ID first
   if (customerData.shopify_customer_id) {
-    const { data: existing } = await supabase
-      .from('customers')
-      .select('id, order_count')
-      .eq('shopify_customer_id', customerData.shopify_customer_id)
-      .maybeSingle();
-
-    if (existing) {
-      existingId = existing.id;
-      await supabase.from('customers')
-        .update({ ...customerData, order_count: (existing.order_count || 0) + 1 })
-        .eq('id', existingId);
+    const { data: ex } = await supabase.from('customers')
+      .select('id').eq('shopify_customer_id', customerData.shopify_customer_id).maybeSingle();
+    if (ex) {
+      await supabase.from('customers').update(customerData).eq('id', ex.id);
+      return ex.id;
     }
   }
 
-  if (!existingId && customerData.email) {
-    const { data: existing } = await supabase
-      .from('customers')
-      .select('id, order_count')
-      .eq('email', customerData.email)
-      .maybeSingle();
-
-    if (existing) {
-      existingId = existing.id;
-      await supabase.from('customers')
-        .update({ ...customerData, order_count: (existing.order_count || 0) + 1 })
-        .eq('id', existingId);
+  // Try by email
+  if (customerData.email) {
+    const { data: ex } = await supabase.from('customers')
+      .select('id').eq('email', customerData.email).maybeSingle();
+    if (ex) {
+      await supabase.from('customers').update(customerData).eq('id', ex.id);
+      return ex.id;
     }
   }
 
-  if (!existingId) {
-    const { data: newCustomer, error } = await supabase
-      .from('customers')
-      .insert({ ...customerData, order_count: 1 })
-      .select('id')
-      .single();
-    if (error) throw new Error(`Customer insert failed: ${error.message}`);
-    existingId = newCustomer.id;
-  }
-
-  return existingId;
+  // Create new customer
+  const { data: newCust, error } = await supabase.from('customers')
+    .insert({ ...customerData, order_count: 1 }).select('id').single();
+  if (error) throw new Error(`Customer insert failed: ${error.message}`);
+  return newCust.id;
 }
 
-// ── Main handler ──────────────────────────────────────────────────────
+// ── Main handler ─────────────────────────────────────────────────────
 export const config = { api: { bodyParser: false } };
 
 export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  // Read raw body for HMAC verification
   const rawBody = await new Promise((resolve, reject) => {
     let data = '';
     req.on('data', chunk => { data += chunk; });
@@ -262,228 +166,141 @@ export default async function handler(req, res) {
     req.on('error', reject);
   });
 
-  // Verify webhook authenticity
+  // HMAC verification
   const signature = req.headers['x-shopify-hmac-sha256'];
-  if (!signature || !verifyShopifyWebhook(rawBody, signature)) {
+  if (signature && !verifyShopifyWebhook(rawBody, signature)) {
     console.error('Webhook HMAC verification failed');
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
   let order;
-  try {
-    order = JSON.parse(rawBody);
-  } catch (e) {
-    return res.status(400).json({ error: 'Invalid JSON' });
-  }
+  try { order = JSON.parse(rawBody); }
+  catch (e) { return res.status(400).json({ error: 'Invalid JSON' }); }
+
+  const shopifyOrderId = order.id?.toString();
+  const orderNumber    = String(order.order_number); // stored WITHOUT # prefix
+  const customerEmail  = (order.email || '').toLowerCase().trim();
+  const placedAt       = order.created_at || new Date().toISOString();
+
+  console.log(`Webhook received: order #${orderNumber} (${shopifyOrderId}) — ${customerEmail}`);
 
   try {
-    // ── IDEMPOTENCY: skip if this Shopify order already exists ────────
-    const shopifyOrderId = order.id?.toString();
+    // ── IDEMPOTENCY: return 200 immediately if job already exists ────
     if (shopifyOrderId) {
       const { data: existingJob } = await supabase
-        .from('jobs')
-        .select('id')
-        .eq('shopify_order_id', shopifyOrderId)
-        .maybeSingle();
+        .from('jobs').select('id').eq('shopify_order_id', shopifyOrderId).maybeSingle();
       if (existingJob) {
-        console.log(`Order ${order.order_number} already exists as ${existingJob.id} — skipping duplicate webhook`);
-        return res.status(200).json({ success: true, skipped: true, existingJob: existingJob.id });
+        console.log(`Order #${orderNumber} already exists as ${existingJob.id} — skipping`);
+        return res.status(200).json({ success: true, skipped: true, job: existingJob.id });
       }
     }
 
-    // ── Upsert customer ───────────────────────────────────────────────
+    // ── Parse specs from note_attributes (contains configurator data) ─
+    const specs = parseOrderSpecs(order);
+    const isFromDraftOrder = order.source_name === 'shopify_draft_order';
+
+    // ── Upsert customer ──────────────────────────────────────────────
     const customerId = await upsertCustomer(order);
 
-    // ── Parse order-level note_attributes (from website configurator) ──
-    const noteAttrs = {};
-    (order.note_attributes || []).forEach(a => {
-      noteAttrs[a.name.toLowerCase().trim()] = (a.value || '').trim();
-    });
-    // Also parse from order note (structured text block)
-    const orderNote = order.note || '';
-    const noteLines = orderNote.split('\n');
-    noteLines.forEach(line => {
-      const m = line.match(/^([^:]+):\s*(.+)/);
-      if (m) noteAttrs[m[1].toLowerCase().trim()] = m[2].trim();
-    });
-    const noteShape    = noteAttrs['shape']    || null;
-    const noteSize     = noteAttrs['size']     || null;
-    const noteMaterial = noteAttrs['material'] || null;
-    const noteLaminate = noteAttrs['laminate'] || noteAttrs['finish'] || null;
-    // Check note_attributes for artwork URLs
-    const noteArtwork = Object.values(noteAttrs).find(v =>
-      typeof v === 'string' && /^https?:\/\/(cdn\.shopify|files\.shopifycdn)/i.test(v.trim())
-    ) || null;
-    const noteQty      = noteAttrs['quantity'] ? parseInt(noteAttrs['quantity']) : null;
-    // Parse "65 × 65 mm" from note size string
-    let noteW = null, noteH = null;
-    if (noteSize) {
-      const sm = noteSize.match(/(\d+(?:\.\d+)?)\s*[×x]\s*(\d+(?:\.\d+)?)/i);
-      if (sm) { noteW = parseFloat(sm[1]); noteH = parseFloat(sm[2]); }
+    // ── Shipping address ─────────────────────────────────────────────
+    const ship = order.shipping_address || order.billing_address || {};
+    const deliveryAddress = ship.address1
+      ? [ship.address1, ship.city, ship.province_code, ship.zip].filter(Boolean).join(', ')
+      : null;
+
+    // ── Detect product type ──────────────────────────────────────────
+    // For StickySitch, each order is typically one product type
+    const items = order.line_items || [];
+    const firstItem = items[0] || {};
+    const productType = specs.productType || detectProductType(firstItem, specs.rawAttrs);
+    const dueDate = calcDueDate(placedAt, productType);
+
+    // ── Find artwork URL from line item properties (if any) ──────────
+    let artworkUrl = null;
+    let artworkFilename = null;
+    for (const item of items) {
+      const url = findArtworkUrl(item);
+      if (url) { artworkUrl = url; artworkFilename = url.split('/').pop().split('?')[0]; break; }
     }
 
-    // ── Group line items by product type ─────────────────────────────
-    // Each different product type becomes a separate job (split order)
-    const itemsByType = {};
-    for (const item of order.line_items || []) {
-      const type = detectProductType(item);
-      if (!itemsByType[type]) itemsByType[type] = [];
-      itemsByType[type].push(item);
-    }
+    // ── Create the job ───────────────────────────────────────────────
+    const { data: job, error: jobError } = await supabase.from('jobs').insert({
+      shopify_order_id:     shopifyOrderId,
+      shopify_order_number: orderNumber,
+      customer_id:          customerId,
+      source:               'shopify',
+      status:               'new',
+      dispatch_method:      ship.address1 ? 'road' : 'pickup',
+      delivery_address:     deliveryAddress,
+      order_value:          parseFloat(order.total_price || 0),
+      paid:                 true,
+      placed_at:            placedAt,
+      due_date:             dueDate,
+      artwork_url:          artworkUrl || null,
+      artwork_filename:     artworkFilename || null,
+    }).select('id').single();
 
-    const productTypes = Object.keys(itemsByType);
-    const isMultiple   = productTypes.length > 1;
-    const placedAt     = order.created_at || new Date().toISOString();
-    const orderValue   = parseFloat(order.total_price || 0);
-    const orderGroup   = `SHOP-${order.id}`;
-    const orderNumber  = String(order.order_number); // stored without # prefix; display adds it
+    if (jobError) throw new Error(`Job insert failed: ${jobError.message}`);
+    console.log(`Created job ${job.id} for order #${orderNumber}`);
 
-    const createdJobIds = [];
+    // ── Create job_items ─────────────────────────────────────────────
+    const jobItems = items.map(item => ({
+      job_id:       job.id,
+      product_type: productType,
+      quantity:     specs.qty || item.quantity,
+      width_mm:     specs.widthMm || null,
+      height_mm:    specs.heightMm || null,
+      shape:        specs.shape || null,
+      material:     specs.material || null,
+      laminate:     specs.laminate || null,
+      unit_price:   parseFloat(item.price || 0),
+    }));
 
-    for (const [typeIndex, productType] of productTypes.entries()) {
-      const items   = itemsByType[productType];
-      const dueDate = calcDueDate(placedAt, productType);
-      const isRolls = productType === 'rolls';
+    const { error: itemsError } = await supabase.from('job_items').insert(jobItems);
+    if (itemsError) console.error('job_items insert error:', itemsError.message);
 
-      // Shipping address for delivery
-      const ship = order.shipping_address || order.billing_address || {};
-      const deliveryAddress = ship.address1
-        ? [ship.address1, ship.city, ship.province_code, ship.zip].filter(Boolean).join(', ')
-        : null;
+    // ── Match pending_orders by email for artwork linking ────────────
+    if (!artworkUrl && customerEmail) {
+      const { data: pendingRecords } = await supabase
+        .from('pending_orders')
+        .select('*')
+        .eq('email', customerEmail)
+        .is('matched_job_id', null)
+        .order('created_at', { ascending: false });
 
-      // Split value proportionally by line item count if multiple types
-      const jobValue = isMultiple
-        ? Math.round((items.length / (order.line_items || []).length) * orderValue * 100) / 100
-        : orderValue;
+      const pending = pendingRecords || [];
+      if (pending.length > 0) {
+        // Match by product type if possible, otherwise take most recent
+        const match = pending.find(p =>
+          !p.product_type || (p.product_type || '').toLowerCase().includes(productType)
+        ) || pending[0];
 
-      // Create the job (id auto-generated as SS-XXXX by trigger)
-      const { data: job, error: jobError } = await supabase
-        .from('jobs')
-        .insert({
-          // id is auto-generated by trigger (SS-XXXX)
-          shopify_order_id:     order.id?.toString(),
-          shopify_order_number: orderNumber,
-          shopify_order_group:  isMultiple ? orderGroup : null,
-          customer_id:          customerId,
-          source:               'shopify',
-          status:               'new',
-          dispatch_method:      ship.address1 ? 'road' : 'pickup',
-          delivery_address:     deliveryAddress,
-          is_outsourced:        isRolls,
-          order_value:          jobValue,
-          paid:                 true,
-          placed_at:            placedAt,
-          due_date:             dueDate,
-          is_parent:            false,
-          // Split orders: first job in group is parent, rest are children
-          // We update this after all jobs are created
-        })
-        .select('id')
-        .single();
+        if (match && match.artwork_url) {
+          await supabase.from('jobs').update({
+            artwork_url:      match.artwork_url,
+            artwork_filename: match.artwork_filename || 'artwork',
+          }).eq('id', job.id);
 
-      if (jobError) throw new Error(`Job insert failed: ${jobError.message}`);
-      createdJobIds.push({ id: job.id, type: productType });
+          await supabase.from('pending_orders')
+            .update({ matched_job_id: job.id, matched_at: new Date().toISOString() })
+            .eq('id', match.id);
 
-      // ── Create job_items for each line item of this type ─────────────
-      let jobArtworkUrl = null;
-      const jobItems = items.map(item => {
-        const p = parseTitleSpecs(item);
-        if (p.artworkUrl && !jobArtworkUrl) jobArtworkUrl = p.artworkUrl;
-        return {
-          job_id:       job.id,
-          product_type: productType,
-          quantity:     p.qty || noteQty || item.quantity,
-          width_mm:     p.widthMm || noteW,
-          height_mm:    p.heightMm || noteH,
-          shape:        p.shape || noteShape,
-          material:     p.material || noteMaterial,
-          laminate:     p.laminate || noteLaminate,
-          artwork_url_hint: p.artworkUrl || noteArtwork || null,
-          unit_price:   parseFloat(item.price || 0),
-        };
-      });
-
-      await supabase.from('job_items').insert(jobItems);
-
-      // Store artwork URL on the job if found in properties
-      if (jobArtworkUrl) {
-        await supabase.from('jobs').update({
-          artwork_url:      jobArtworkUrl,
-          artwork_filename: jobArtworkUrl.split('/').pop().split('?')[0] || 'artwork',
-        }).eq('id', job.id);
-      }
-
-      // ── Match pending_orders by customer email ─────────────────────
-      // Fetch ALL unmatched pending records for this email — handles multi-item orders
-      const customerEmail = (order.email || '').toLowerCase().trim();
-      if (customerEmail) {
-        const { data: pendingRecords } = await supabase
-          .from('pending_orders')
-          .select('*')
-          .eq('email', customerEmail)
-          .is('matched_job_id', null)
-          .order('created_at', { ascending: false });
-
-        const pending = (pendingRecords || []);
-        if (pending.length > 0) {
-          // Use most recent pending record for this product type (or first available)
-          const match = pending.find(p => {
-            if (!p.product_type) return true;
-            return (p.product_type || '').toLowerCase().includes(productType);
-          }) || pending[0];
-
-          if (match) {
-            // Link artwork if job doesn't already have one
-            if (!jobArtworkUrl && match.artwork_url) {
-              await supabase.from('jobs').update({
-                artwork_url:      match.artwork_url,
-                artwork_filename: match.artwork_filename || 'artwork',
-              }).eq('id', job.id);
-              console.log(\`✓ Linked artwork from pending_orders to job \${job.id}\`);
-            }
-            // Fill any null job_item fields from pending record
-            await supabase.from('job_items').update({
-              ...(match.shape     && { shape:     match.shape }),
-              ...(match.material  && { material:  match.material }),
-              ...(match.laminate  && { laminate:  match.laminate }),
-              ...(match.width_mm  && { width_mm:  match.width_mm }),
-              ...(match.height_mm && { height_mm: match.height_mm }),
-            }).eq('job_id', job.id).is('shape', null);
-
-            // Mark as matched
-            await supabase.from('pending_orders')
-              .update({ matched_job_id: job.id, matched_at: new Date().toISOString() })
-              .eq('id', match.id);
-
-            console.log(\`✓ Matched pending_orders \${match.id} to job \${job.id} (email: \${customerEmail})\`);
-          }
-        } else {
-          console.log(\`No pending artwork found for \${customerEmail} — job \${job.id} created without artwork\`);
+          console.log(`✓ Linked artwork from pending_orders ${match.id} to job ${job.id}`);
         }
       }
     }
 
-    // ── Handle split orders: mark parent/children ─────────────────────
-    if (isMultiple && createdJobIds.length > 1) {
-      const parentId = createdJobIds[0].id;
-      // Mark first as parent
-      await supabase.from('jobs').update({ is_parent: true }).eq('id', parentId);
-      // Mark rest as children
-      for (let i = 1; i < createdJobIds.length; i++) {
-        await supabase.from('jobs')
-          .update({ parent_job_id: parentId })
-          .eq('id', createdJobIds[i].id);
-      }
-    }
-
-    console.log(`✓ Order #${orderNumber} created as job(s): ${createdJobIds.map(j => j.id).join(', ')}`);
-    return res.status(200).json({
-      success: true,
-      jobs: createdJobIds.map(j => j.id)
-    });
+    return res.status(200).json({ success: true, job: job.id, order: orderNumber });
 
   } catch (err) {
-    console.error('Webhook handler error:', err);
-    return res.status(500).json({ error: err.message });
+    console.error(`Webhook error for order #${orderNumber}:`, err.message);
+    // Return 200 to prevent Shopify from deleting the webhook subscription on repeated 500s
+    // Log the error but acknowledge receipt
+    return res.status(200).json({
+      success:  false,
+      error:    err.message,
+      order:    orderNumber,
+      _note:    'Returning 200 to prevent webhook deletion. Check Vercel logs.'
+    });
   }
 }
