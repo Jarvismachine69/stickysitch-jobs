@@ -1,0 +1,2172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>StickySitch · Job Board</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Inter+Tight:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ── Reset & Variables ─────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:   #1E1B4B;
+  --purple: #7C3AED;
+  --lilac:  #A78BFA;
+  --green:  #059669;
+  --amber:  #D97706;
+  --red:    #DC2626;
+  --sky:    #0EA5E9;
+  --bg:     #F4F4F0;
+  --card:   #FFFFFF;
+  --line:   #E5E7EB;
+  --ink:    #111827;
+  --ink2:   #6B7280;
+  --ink3:   #9CA3AF;
+  --radius: 12px;
+  --shadow: 0 1px 3px rgba(0,0,0,.08),0 4px 16px rgba(0,0,0,.06);
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);font-size:14px;min-height:100vh}
+button{font-family:inherit;cursor:pointer}
+input,select,textarea{font-family:inherit;color:var(--ink)}
+a{color:inherit;text-decoration:none}
+
+/* ── Login ─────────────────────────────────────────────────── */
+#screen-login{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1E1B4B 0%,#4C1D95 100%)}
+.login-card{background:var(--card);border-radius:20px;padding:40px;width:360px;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.login-logo{font-family:'Inter Tight',sans-serif;font-size:26px;font-weight:800;color:var(--navy);margin-bottom:28px;text-align:center}
+.login-logo span{color:var(--purple)}
+.login-field{margin-bottom:14px}
+.login-field label{display:block;font-size:12px;font-weight:600;color:var(--ink2);margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em}
+.login-field input{width:100%;padding:11px 14px;border:1.5px solid var(--line);border-radius:10px;font-size:15px;outline:none;transition:.15s}
+.login-field input:focus{border-color:var(--purple);box-shadow:0 0 0 3px rgba(124,58,237,.1)}
+.login-btn{width:100%;background:var(--purple);color:#fff;border:none;border-radius:10px;padding:13px;font-size:15px;font-weight:700;margin-top:6px;transition:.15s}
+.login-btn:hover{background:#6D28D9}
+.login-err{color:var(--red);font-size:13px;margin-top:10px;text-align:center;display:none}
+
+/* ── App Shell ─────────────────────────────────────────────── */
+#app{display:none;min-height:100vh}
+.app-header{background:var(--card);border-bottom:1px solid var(--line);padding:0 20px;height:54px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.header-logo{font-family:'Inter Tight',sans-serif;font-size:20px;font-weight:800;color:var(--navy)}
+.header-logo span{color:var(--purple)}
+.header-right{display:flex;align-items:center;gap:10px}
+.header-user{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--ink2)}
+.avatar{width:32px;height:32px;background:var(--purple);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700}
+.btn-logout{background:none;border:1.5px solid var(--line);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--ink2)}
+.btn-logout:hover{border-color:var(--red);color:var(--red)}
+
+/* ── Board ─────────────────────────────────────────────────── */
+.board-wrap{max-width:1400px;margin:0 auto;padding:18px 16px}
+.filter-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.search-input{flex:1;min-width:200px;padding:9px 14px;border:1.5px solid var(--line);border-radius:10px;font-size:14px;background:var(--card);outline:none}
+.search-input:focus{border-color:var(--purple)}
+.filter-sel{padding:9px 12px;border:1.5px solid var(--line);border-radius:10px;font-size:13px;font-weight:500;background:var(--card);outline:none;cursor:pointer}
+.filter-sel:focus{border-color:var(--purple)}
+.btn-primary{background:var(--purple);color:#fff;border:none;border-radius:10px;padding:9px 16px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px;white-space:nowrap}
+.btn-primary:hover{background:#6D28D9}
+.btn-ghost{background:var(--card);color:var(--ink2);border:1.5px solid var(--line);border-radius:10px;padding:9px 14px;font-size:13px;font-weight:600}
+.btn-ghost:hover{border-color:var(--purple);color:var(--purple)}
+.btn-ghost.active{border-color:var(--purple);color:var(--purple);background:#F5F3FF}
+
+/* ── Date section headers ──────────────────────────────────── */
+.date-header{background:var(--navy);border-radius:12px;padding:11px 18px;margin:14px 0 4px;display:flex;align-items:center;justify-content:space-between}
+.date-header.today{background:#1E1B4B}
+.date-header.overdue{background:#FEE2E2}
+.date-label{font-family:'Inter Tight',sans-serif;font-size:15px;font-weight:800;color:#fff;display:flex;align-items:center;gap:10px}
+.date-header.overdue .date-label{color:#7F1D1D}
+.date-sub{font-size:12px;color:rgba(255,255,255,.55)}
+.date-header.overdue .date-sub{color:#991B1B}
+.date-pill{font-size:10px;font-weight:800;padding:2px 9px;border-radius:999px;letter-spacing:.04em}
+.date-pill.today-pill{background:#818CF8;color:#fff}
+.date-pill.overdue-pill{background:#DC2626;color:#fff}
+.date-pill.tomorrow-pill{background:#7C3AED;color:#fff}
+
+/* ── Job Table ─────────────────────────────────────────────── */
+.job-table-wrap{background:var(--card);border-radius:var(--radius);border:1px solid var(--line);overflow:hidden;box-shadow:var(--shadow)}
+table{width:100%;border-collapse:collapse}
+thead{background:#F9FAFB}
+th{padding:10px 14px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:8px 14px;border-bottom:1px solid var(--line);vertical-align:middle}
+tbody tr:last-child td{border-bottom:none}
+tbody tr{cursor:pointer;transition:.12s}
+tbody tr:hover td{background:#F9FAFB}
+tbody tr.prio-on td{background:#FFFBEB}
+.col-check{width:36px}
+.col-prio{width:32px}
+.col-thumb{width:68px}
+.col-order{min-width:120px}
+.col-customer{min-width:160px}
+.col-product{min-width:130px}
+.col-size{min-width:100px}
+.col-qty{min-width:60px;text-align:right}
+.col-placed{min-width:90px}
+.col-status{min-width:160px}
+.col-dispatch{min-width:110px}
+
+.job-id{font-family:'Inter Tight',sans-serif;font-size:13px;font-weight:700;color:var(--purple)}
+.shopify-ref{font-size:11px;color:var(--ink3);margin-top:1px}
+.cust-name{font-size:14px;font-weight:600;color:var(--ink)}
+.cust-sub{font-size:12px;color:var(--ink3);margin-top:1px}
+.src-badge{font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px;background:#D1FAE5;color:#065F46}
+.src-badge.manual{background:#FEF3C7;color:#92400E}
+.row-thumb{width:56px;height:56px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:22px;background:#EDE9FD;overflow:hidden}
+
+/* ── Status pill select ────────────────────────────────────── */
+.stat-pill{appearance:none;-webkit-appearance:none;border:none;outline:none;cursor:pointer;font-family:'Inter Tight',sans-serif;font-weight:700;font-size:11.5px;padding:5px 24px 5px 10px;border-radius:999px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='currentColor' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 7px center;background-size:10px;transition:.12s;max-width:155px}
+.stat-pill.new        {background-color:#EDE9FD!important;color:#4C1D95!important}
+.stat-pill.prepress   {background-color:#DBEAFE!important;color:#1E40AF!important}
+.stat-pill.awaiting   {background-color:#FEF3C7!important;color:#92400E!important}
+.stat-pill.revision   {background-color:#FEE2E2!important;color:#991B1B!important}
+.stat-pill.print      {background-color:#D1FAE5!important;color:#065F46!important}
+.stat-pill.lam        {background-color:#D1FAE5!important;color:#065F46!important}
+.stat-pill.cut        {background-color:#D1FAE5!important;color:#065F46!important}
+.stat-pill.qa         {background-color:#D1FAE5!important;color:#065F46!important}
+.stat-pill.ready      {background-color:#ECFDF5!important;color:#047857!important}
+.stat-pill.dispatched {background-color:#CFFAFE!important;color:#155E75!important}
+.stat-pill.pickedup   {background-color:#CFFAFE!important;color:#155E75!important}
+.stat-pill.outsource  {background-color:#F3E8FF!important;color:#6B21A8!important}
+.stat-pill.hold       {background-color:#FEF9C3!important;color:#713F12!important}
+.stat-pill.cancelled  {background-color:#F3F4F6!important;color:#6B7280!important}
+
+/* ── Bulk bar ──────────────────────────────────────────────── */
+.bulk-bar{background:var(--navy);border-radius:0;padding:11px 20px;display:none;align-items:center;gap:10px;flex-wrap:wrap;position:sticky;top:54px;z-index:90;box-shadow:0 4px 20px rgba(30,27,75,.25)}
+.bulk-bar.show{display:flex}
+.bulk-count{font-family:'Inter Tight',sans-serif;font-size:13px;font-weight:700;color:rgba(255,255,255,.7)}
+.bulk-btn{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#fff;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:600}
+.bulk-btn:hover{background:rgba(255,255,255,.2)}
+
+/* ── Mobile card view ──────────────────────────────────────── */
+.card-grid{display:none;gap:10px}
+.job-card{background:var(--card);border-radius:var(--radius);padding:14px;border:1.5px solid var(--line);cursor:pointer;transition:.12s;box-shadow:var(--shadow)}
+.job-card:hover{border-color:var(--purple)}
+.card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px}
+.card-id{font-family:'Inter Tight',sans-serif;font-size:13px;font-weight:700;color:var(--purple)}
+.card-name{font-size:15px;font-weight:700;margin:2px 0}
+.card-sub{font-size:12px;color:var(--ink2)}
+.card-specs{display:grid;grid-template-columns:1fr 1fr;gap:4px 16px;margin:10px 0;padding:10px;background:#F9FAFB;border-radius:8px}
+.card-spec-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ink3)}
+.card-spec-val{font-size:13px;font-weight:600;color:var(--ink)}
+.card-footer{display:flex;align-items:center;justify-content:space-between;margin-top:10px}
+.card-date{font-size:11px;color:var(--ink3)}
+
+@media(max-width:768px){
+  table{display:none}
+  .card-grid{display:grid}
+  .filter-bar{gap:6px}
+  .search-input{min-width:0}
+}
+
+/* ── Job Detail Panel ──────────────────────────────────────── */
+.panel-overlay{position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:200;display:none;opacity:0;transition:.2s}
+.panel-overlay.open{display:block;opacity:1}
+.job-panel{position:fixed;top:0;right:-100%;width:min(640px,100vw);height:100vh;background:var(--card);z-index:201;box-shadow:-8px 0 40px rgba(0,0,0,.15);transition:.25s cubic-bezier(.4,0,.2,1);overflow-y:auto;display:flex;flex-direction:column}
+.job-panel.open{right:0}
+.panel-header{padding:16px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;position:sticky;top:0;background:var(--card);z-index:10}
+.panel-back{background:none;border:1.5px solid var(--line);border-radius:8px;padding:6px 12px;font-size:13px;font-weight:600;color:var(--ink2);display:flex;align-items:center;gap:6px}
+.panel-back:hover{border-color:var(--purple);color:var(--purple)}
+.panel-job-id{font-family:'Inter Tight',sans-serif;font-size:14px;font-weight:700;color:var(--purple)}
+.panel-body{flex:1;padding:20px}
+
+/* Customer block */
+.cust-block{margin-bottom:20px}
+.cust-biz-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);margin-bottom:3px}
+.cust-biz-name{font-family:'Inter Tight',sans-serif;font-size:22px;font-weight:800;color:var(--ink);margin-bottom:10px}
+.cust-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:12px;background:#F9FAFB;border-radius:10px;margin-bottom:8px}
+.cust-field-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);margin-bottom:2px}
+.cust-field-val{font-size:14px;font-weight:500;color:var(--ink)}
+.cust-addr{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--ink2);padding:6px 0}
+
+/* Status section */
+.status-row{display:flex;align-items:center;gap:12px;margin-bottom:20px;padding:12px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.status-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3)}
+.stat-pill-lg{appearance:none;-webkit-appearance:none;border:none;outline:none;cursor:pointer;font-family:'Inter Tight',sans-serif;font-weight:800;font-size:14px;padding:9px 32px 9px 16px;border-radius:999px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7'%3E%3Cpath d='M1 1l5 5 5-5' stroke='currentColor' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;background-size:12px;transition:.15s}
+
+/* Tabs */
+.tabs{display:flex;border-bottom:2px solid var(--line);margin-bottom:16px}
+.tab-btn{padding:10px 16px;font-size:13px;font-weight:600;color:var(--ink3);border:none;background:none;border-bottom:2px solid transparent;margin-bottom:-2px;transition:.15s}
+.tab-btn.active{color:var(--purple);border-bottom-color:var(--purple)}
+.tab-pane{display:none}
+.tab-pane.active{display:block}
+
+/* Spec grid */
+.spec-grid{background:#F9FAFB;border-radius:10px;overflow:hidden;margin-bottom:16px}
+.spec-row{display:flex;align-items:baseline;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--line)}
+.spec-row:last-child{border-bottom:none}
+.spec-row .k{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3)}
+.spec-row .v{font-size:14px;font-weight:600;color:var(--ink);text-align:right}
+.spec-lam-sel{font-size:14px;font-weight:600;color:var(--ink);border:none;background:transparent;outline:none;cursor:pointer;text-align:right}
+
+/* Artwork */
+.art-box{border:2px dashed var(--line);border-radius:12px;padding:24px;text-align:center;background:#FAFAFA;margin-bottom:14px}
+.art-box.has-art{border-style:solid;border-color:var(--purple);background:#F5F3FF}
+.art-thumb{width:100%;max-height:200px;object-fit:contain;border-radius:8px;margin-bottom:10px;display:none}
+.art-filename{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:6px}
+.art-sub{font-size:12px;color:var(--ink3)}
+.art-placeholder{font-size:40px;margin-bottom:8px}
+
+/* Proof section */
+.proof-section{background:#F0FDF4;border:1.5px solid #86EFAC;border-radius:12px;padding:14px;margin-bottom:14px}
+.proof-title{font-family:'Inter Tight',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#166534;margin-bottom:10px}
+.proof-status{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#166534;margin-bottom:10px}
+.proof-upload-zone{border:2px dashed #86EFAC;border-radius:8px;padding:16px;text-align:center;cursor:pointer;background:#fff;transition:.15s}
+.proof-upload-zone:hover{border-color:var(--green);background:#F0FDF4}
+
+/* Tracking */
+.tracking-section{background:#EFF6FF;border:1.5px solid #93C5FD;border-radius:12px;padding:14px;margin-bottom:14px}
+.tracking-title{font-family:'Inter Tight',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#1E40AF;margin-bottom:10px}
+.tracking-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.tracking-input{padding:9px 12px;border:1.5px solid #BFDBFE;border-radius:8px;font-size:13px;background:#fff;width:100%;outline:none}
+.tracking-input:focus{border-color:var(--sky)}
+.courier-sel{padding:9px 12px;border:1.5px solid #BFDBFE;border-radius:8px;font-size:13px;background:#fff;width:100%;outline:none}
+.btn-dispatch{width:100%;background:#2563EB;color:#fff;border:none;border-radius:9px;padding:11px;font-size:13px;font-weight:700}
+.btn-dispatch:hover{background:#1D4ED8}
+
+/* Pickup section */
+.pickup-section{background:#F0FDF4;border:1.5px solid #86EFAC;border-radius:12px;padding:14px;margin-bottom:14px}
+
+/* Notes */
+.notes-area{margin-top:4px}
+.note-entry{padding:10px 0;border-bottom:1px solid var(--line)}
+.note-entry:last-child{border-bottom:none}
+.note-meta{font-size:11px;color:var(--ink3);margin-bottom:3px}
+.note-text{font-size:13px;color:var(--ink)}
+.note-input-row{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.note-textarea{width:100%;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;font-size:13px;resize:none;min-height:72px;outline:none}
+.note-textarea:focus{border-color:var(--purple)}
+.btn-add-note{background:var(--purple);color:#fff;border:none;border-radius:9px;padding:9px 18px;font-size:13px;font-weight:700;align-self:flex-end}
+
+/* ── New Job Modal ─────────────────────────────────────────── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;display:none;align-items:center;justify-content:center;padding:16px}
+.modal-overlay.open{display:flex}
+.modal{background:var(--card);border-radius:20px;width:100%;max-width:600px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.modal-head{padding:20px 24px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--card);z-index:10;border-radius:20px 20px 0 0}
+.modal-title{font-family:'Inter Tight',sans-serif;font-size:18px;font-weight:800;color:var(--ink)}
+.modal-close{background:none;border:none;font-size:20px;color:var(--ink3);width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center}
+.modal-close:hover{background:var(--line);color:var(--ink)}
+.modal-tabs{display:flex;padding:14px 24px 0;gap:4px;border-bottom:2px solid var(--line);margin-bottom:0}
+.modal-tab{padding:9px 16px;font-size:13px;font-weight:700;color:var(--ink3);border:none;background:none;border-bottom:2px solid transparent;margin-bottom:-2px;border-radius:8px 8px 0 0;transition:.15s}
+.modal-tab.active{color:var(--purple);border-bottom-color:var(--purple);background:#F5F3FF}
+.modal-body{padding:20px 24px}
+
+/* AI Extract */
+.ai-paste-area{width:100%;padding:12px;border:1.5px solid var(--line);border-radius:10px;font-size:13px;resize:none;min-height:120px;outline:none;font-family:inherit}
+.ai-paste-area:focus{border-color:var(--purple)}
+.ai-or{text-align:center;color:var(--ink3);font-size:12px;font-weight:600;margin:10px 0}
+.pdf-drop{border:2px dashed var(--line);border-radius:10px;padding:20px;text-align:center;cursor:pointer;transition:.15s}
+.pdf-drop:hover{border-color:var(--purple);background:#F5F3FF}
+.pdf-drop-icon{font-size:28px;margin-bottom:6px}
+.pdf-drop-text{font-size:13px;color:var(--ink2);font-weight:500}
+.btn-extract{width:100%;background:linear-gradient(135deg,var(--purple),#4F46E5);color:#fff;border:none;border-radius:10px;padding:12px;font-size:14px;font-weight:700;margin-top:12px;display:flex;align-items:center;justify-content:center;gap:8px}
+.extract-result{margin-top:12px;padding:12px;background:#F5F3FF;border:1.5px solid var(--lilac);border-radius:10px;font-size:13px;display:none}
+.extract-result pre{white-space:pre-wrap;font-family:inherit}
+
+/* Form fields */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.form-field{display:flex;flex-direction:column;gap:4px}
+.form-field.full{grid-column:1/-1}
+.form-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ink3)}
+.form-input{padding:9px 12px;border:1.5px solid var(--line);border-radius:9px;font-size:14px;outline:none;transition:.15s}
+.form-input:focus{border-color:var(--purple);box-shadow:0 0 0 3px rgba(124,58,237,.08)}
+.form-sel{padding:9px 12px;border:1.5px solid var(--line);border-radius:9px;font-size:14px;outline:none;background:var(--card)}
+.art-upload-btn{border:2px dashed var(--line);border-radius:9px;padding:14px;text-align:center;cursor:pointer;background:#FAFAFA;transition:.15s}
+.art-upload-btn:hover{border-color:var(--purple);background:#F5F3FF}
+.modal-footer{padding:16px 24px;border-top:1px solid var(--line);display:flex;gap:10px;justify-content:flex-end;position:sticky;bottom:0;background:var(--card);border-radius:0 0 20px 20px}
+.btn-create{background:var(--purple);color:#fff;border:none;border-radius:10px;padding:11px 24px;font-size:14px;font-weight:700}
+.btn-create:hover{background:#6D28D9}
+.btn-cancel{background:var(--card);color:var(--ink2);border:1.5px solid var(--line);border-radius:10px;padding:11px 20px;font-size:14px;font-weight:600}
+
+/* ── Toast ─────────────────────────────────────────────────── */
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--navy);color:#fff;padding:10px 20px;border-radius:999px;font-size:13px;font-weight:600;opacity:0;transition:.3s;z-index:500;white-space:nowrap;pointer-events:none}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ── Empty state ───────────────────────────────────────────── */
+.empty-state{padding:60px 20px;text-align:center;color:var(--ink3)}
+.empty-icon{font-size:40px;margin-bottom:12px}
+.empty-text{font-size:15px;font-weight:500}
+
+/* ── Util ──────────────────────────────────────────────────── */
+.divider{height:1px;background:var(--line);margin:16px 0}
+.section-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);margin-bottom:8px}
+
+/* Edit mode */
+.edit-field{width:100%;padding:8px 10px;border:1.5px solid var(--purple);border-radius:8px;font-size:14px;font-family:inherit;outline:none;background:#fff;transition:.15s}
+.edit-field:focus{box-shadow:0 0 0 3px rgba(124,58,237,.1)}
+.edit-row{display:flex;flex-direction:column;gap:3px;padding:8px 0;border-bottom:1px solid var(--line)}
+.edit-row:last-child{border-bottom:none}
+.edit-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3)}
+.edit-actions{display:flex;gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
+.btn-save{background:var(--purple);color:#fff;border:none;border-radius:9px;padding:9px 20px;font-size:13px;font-weight:700;cursor:pointer;flex:1}
+.btn-save:hover{background:#6D28D9}
+.btn-discard{background:var(--card);color:var(--ink2);border:1.5px solid var(--line);border-radius:9px;padding:9px 16px;font-size:13px;font-weight:600;cursor:pointer}
+
+/* File timeline */
+.file-entry{display:flex;gap:10px;padding:12px 0;border-bottom:1px solid var(--line);align-items:flex-start}
+.file-entry:last-child{border-bottom:none}
+.file-thumb-sm{width:48px;height:48px;border-radius:8px;border:1.5px solid var(--line);overflow:hidden;flex-shrink:0;background:#F9FAFB;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.file-info{flex:1;min-width:0}
+.file-name{font-size:13px;font-weight:600;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.file-meta{font-size:11px;color:var(--ink3);margin-top:2px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.file-badge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:999px}
+.file-badge.art{background:#EDE9FD;color:#4C1D95}
+.file-badge.proof{background:#DBEAFE;color:#1E40AF}
+.file-badge.approved{background:#D1FAE5;color:#065F46}
+.file-badge.revision{background:#FEE2E2;color:#991B1B}
+.file-actions{display:flex;gap:4px;flex-shrink:0}
+.file-btn{background:#F9FAFB;border:1.5px solid var(--line);border-radius:7px;padding:5px 9px;font-size:11px;font-weight:600;color:var(--ink2);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center}
+.file-btn:hover{border-color:var(--purple);color:var(--purple)}
+.file-btn.del:hover{border-color:var(--red);color:var(--red)}
+
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+</head>
+<body>
+
+<!-- ══ LOGIN ══════════════════════════════════════════════════ -->
+<section id="screen-login">
+  <div class="login-card">
+    <div class="login-logo">Sticky<span>Sitch</span></div>
+    <div class="login-field">
+      <label>Username</label>
+      <input type="text" id="loginUser" placeholder="Enter username" autocomplete="username">
+    </div>
+    <div class="login-field">
+      <label>Password</label>
+      <input type="password" id="loginPass" placeholder="Enter password" autocomplete="current-password">
+    </div>
+    <button class="login-btn" onclick="doLogin()">Sign in</button>
+    <div class="login-err" id="loginErr">Incorrect username or password</div>
+  </div>
+</section>
+
+<!-- ══ APP ════════════════════════════════════════════════════ -->
+<div id="app">
+
+  <!-- Header -->
+  <header class="app-header">
+    <div class="header-logo">Sticky<span>Sitch</span> <span style="font-size:12px;font-weight:500;color:var(--ink3);margin-left:6px">Job Board</span></div>
+    <div class="header-right">
+      <div class="header-user">
+        <div class="avatar" id="userAvatar">D</div>
+        <span id="userName">David</span>
+      </div>
+      <button class="btn-logout" onclick="doLogout()">Sign out</button>
+    </div>
+  </header>
+
+  <!-- Bulk action bar -->
+  <div class="bulk-bar" id="bulkBar">
+    <span class="bulk-count" id="bulkCount">0 selected</span>
+    <select id="bulkStatusSel" class="bulk-btn" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#fff;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:600" onchange="bulkChangeStatus(this.value)">
+      <option value="">Change status to…</option>
+      <option value="prepress">Prepress</option>
+      <option value="awaiting">Awaiting Approval</option>
+      <option value="print">Print</option>
+      <option value="lam">Laminate</option>
+      <option value="cut">Cut</option>
+      <option value="qa">QA &amp; Packing</option>
+      <option value="dispatched">Dispatched</option>
+      <option value="pickedup">Picked Up</option>
+      <option value="hold">On Hold</option>
+    </select>
+    <button class="bulk-btn" onclick="clearSelection()">✕ Clear</button>
+  </div>
+
+  <!-- Board -->
+  <div class="board-wrap">
+
+    <!-- Status cards strip -->
+    <div id="statusStrip" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px;padding:12px 14px;background:#fff;border:1.5px solid #E5E7EB;border-radius:12px">
+      <button onclick="toggleStatusStrip()" id="stripToggleBtn" style="font-size:12px;font-weight:600;color:#6B7280;background:none;border:1.5px solid #E5E7EB;border-radius:8px;padding:5px 10px;cursor:pointer;white-space:nowrap">📊 Hide overview</button>
+      <div id="statusCards" style="display:flex;gap:8px;flex-wrap:wrap;flex:1;align-items:flex-start">
+        <!-- Populated by JS -->
+      </div>
+      <button onclick="clearStatusFilter()" id="clearCardFilter" style="display:none;font-size:12px;font-weight:600;color:#7C3AED;background:none;border:1.5px solid #7C3AED;border-radius:8px;padding:5px 10px;cursor:pointer">✕ Clear filter</button>
+    </div>
+
+    <!-- Filter bar -->
+    <div class="filter-bar">
+      <input class="search-input" id="boardSearch" placeholder="Search order #, customer, email…" oninput="applyFilters()">
+      <select class="filter-sel" id="filterStatus" onchange="applyFilters()">
+        <option value="">All statuses</option>
+        <option value="new">New</option>
+        <option value="prepress">Prepress</option>
+        <option value="awaiting">Awaiting Approval</option>
+        <option value="revision">Revision</option>
+        <option value="print">Print</option>
+        <option value="lam">Laminate</option>
+        <option value="cut">Cut</option>
+        <option value="qa">QA &amp; Packing</option>
+        <option value="outsource">Outsource</option>
+        <option value="hold">On Hold</option>
+      </select>
+      <select class="filter-sel" id="filterProduct" onchange="applyFilters()">
+        <option value="">All products</option>
+        <option value="rolls">Roll labels</option>
+        <option value="sheets">Sticker sheets</option>
+        <option value="individual">Individual stickers</option>
+        <option value="bumper">Bumper stickers</option>
+      </select>
+      <button class="btn-ghost" id="syncBtn" onclick="manualSync()" title="Re-sync from Shopify">↻ Sync</button>
+      <button class="btn-ghost" onclick="archiveFulfilled()" title="Remove fulfilled Shopify orders from board">✅ Archive fulfilled</button>
+      <button class="btn-ghost" onclick="syncArtwork()" title="Link artwork from Shopify orders">🖼 Sync artwork</button>
+      <button class="btn-primary" onclick="openNewJob()">＋ New job</button>
+    </div>
+
+    <!-- Desktop table -->
+    <div class="job-table-wrap" id="tableWrap">
+      <table>
+        <thead>
+          <tr>
+            <th class="col-check"><input type="checkbox" id="selectAll" onchange="toggleSelectAll(this)"></th>
+            <th class="col-prio" title="Priority">⚡</th>
+            <th class="col-thumb"></th>
+            <th class="col-order">Order #</th>
+            <th class="col-customer">Customer</th>
+            <th class="col-product">Product</th>
+            <th class="col-size">Size</th>
+            <th class="col-qty">Qty</th>
+            <th class="col-placed">Placed</th>
+            <th class="col-status">Status</th>
+            <th class="col-dispatch">Dispatch</th>
+          </tr>
+        </thead>
+        <tbody id="jobTbody">
+          <tr><td colspan="11" style="padding:60px;text-align:center;color:var(--ink3)">
+            <div style="font-size:32px;margin-bottom:10px">⏳</div>Connecting to board…
+          </td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Mobile card grid -->
+    <div class="card-grid" id="cardGrid"></div>
+
+    <!-- Completed / dispatched jobs -->
+    <div class="completed-section" id="completedSection" style="display:none">
+      <div class="completed-toggle" onclick="toggleCompleted()">
+        <span style="font-size:16px">✅</span>
+        <span class="completed-toggle-label">Completed jobs (dispatched &amp; picked up)</span>
+        <span class="completed-chevron" id="completedChevron">▼</span>
+      </div>
+      <div id="completedBody" style="display:none">
+        <div class="job-table-wrap">
+          <table>
+            <thead><tr>
+              <th class="col-thumb"></th>
+              <th class="col-order">Order #</th>
+              <th class="col-customer">Customer</th>
+              <th class="col-product">Product</th>
+              <th class="col-size">Size</th>
+              <th class="col-qty">Qty</th>
+              <th class="col-status">Status</th>
+              <th>Tracking</th>
+            </tr></thead>
+            <tbody id="completedTbody">
+              <tr><td colspan="8" style="padding:30px;text-align:center;color:var(--ink3)">Loading…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:14px;text-align:center">
+      <button class="btn-ghost" onclick="toggleCompletedSection()" id="completedToggleBtn" style="font-size:12px">
+        ✅ Show completed jobs
+      </button>
+    </div>
+
+  </div><!-- /board-wrap -->
+</div><!-- /app -->
+
+<!-- ══ JOB DETAIL PANEL ═══════════════════════════════════════ -->
+<div class="panel-overlay" id="panelOverlay" onclick="closePanel()"></div>
+<div class="job-panel" id="jobPanel">
+  <div class="panel-header">
+    <button class="panel-back" onclick="closePanel()">← Back</button>
+    <span class="panel-job-id" id="panelJobId">SS-0001</span>
+    <span style="font-size:12px;color:var(--ink3);margin-left:4px" id="panelShopifyRef"></span>
+    <span style="margin-left:auto;font-size:12px;color:var(--green);font-weight:600" id="panelPaid"></span>
+    <button onclick="expandJob()" title="Full detail view" style="margin-left:auto;background:none;border:1.5px solid var(--line);border-radius:8px;padding:5px 10px;font-size:12px;font-weight:600;color:var(--ink2)">⤢ Expand</button>
+  </div>
+  <div class="panel-body">
+
+    <!-- Artwork quick view (always visible) -->
+    <div id="artQuickStrip" style="display:none;margin-bottom:16px;background:#F5F3FF;border:1.5px solid #DDD6FE;border-radius:12px;padding:12px;gap:12px;align-items:flex-start">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#7C3AED">Artwork versions</span>
+        <button onclick="switchTab('artwork',document.querySelectorAll('.tab-btn')[1])" style="font-size:11px;font-weight:600;color:#7C3AED;background:none;border:none;cursor:pointer;text-decoration:underline">Manage →</button>
+      </div>
+      <div id="artVersionStrip" style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-start"></div>
+    </div>
+
+    <!-- Customer -->
+    <div class="cust-block">
+      <div class="cust-biz-label">Business name</div>
+      <div class="cust-biz-name" id="pdName">—</div>
+      <div class="cust-grid">
+        <div>
+          <div class="cust-field-label">Contact</div>
+          <div class="cust-field-val" id="pdContact">—</div>
+        </div>
+        <div>
+          <div class="cust-field-label">Email</div>
+          <div class="cust-field-val" id="pdEmail">—</div>
+        </div>
+        <div>
+          <div class="cust-field-label">Phone</div>
+          <div class="cust-field-val" id="pdPhone">—</div>
+        </div>
+      </div>
+      <div class="cust-addr">
+        <span style="color:var(--ink3)">📍</span>
+        <span id="pdAddr">—</span>
+      </div>
+    </div>
+
+    <!-- Status -->
+    <div class="status-row">
+      <span class="status-label">Status</span>
+      <select class="stat-pill-lg stat-pill new" id="pdStatus" onchange="changeJobStatus(this.value)">
+        <option value="new">New</option>
+        <option value="prepress">Prepress</option>
+        <option value="awaiting">Awaiting Approval</option>
+        <option value="revision">Artwork Revision</option>
+        <option value="print">Print</option>
+        <option value="lam">Laminate</option>
+        <option value="cut">Cut</option>
+        <option value="qa">QA &amp; Packing</option>
+        <option value="outsource">Outsource</option>
+        <option value="ready">Ready</option>
+        <option value="dispatched">Dispatched</option>
+        <option value="pickedup">Picked Up</option>
+        <option value="hold">On Hold</option>
+        <option value="cancelled">Cancelled</option>
+      </select>
+      <span style="font-size:11px;color:var(--ink3);margin-left:auto" id="pdUpdatedBy"></span>
+    </div>
+
+    <!-- Edit button -->
+    <div style="display:flex;justify-content:flex-end;margin-bottom:8px">
+      <button onclick="toggleEditMode()" id="editModeBtn" style="background:none;border:1.5px solid var(--line);border-radius:8px;padding:5px 14px;font-size:12px;font-weight:700;color:var(--ink2);cursor:pointer">✏ Edit job</button>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('details',this)">Details</button>
+      <button class="tab-btn" onclick="switchTab('artwork',this)">Files</button>
+      <button class="tab-btn" onclick="switchTab('dispatch',this)">Dispatch</button>
+      <button class="tab-btn" onclick="switchTab('notes',this)">Notes</button>
+    </div>
+
+    <!-- DETAILS TAB -->
+    <div class="tab-pane active" id="tab-details">
+      <!-- VIEW MODE -->
+      <div id="specViewMode">
+        <div class="spec-grid">
+          <div class="spec-row"><span class="k">Product</span><span class="v" id="pd-product">—</span></div>
+          <div class="spec-row"><span class="k">Quantity</span><span class="v" id="pd-qty">—</span></div>
+          <div class="spec-row"><span class="k">Shape</span><span class="v" id="pd-shape">—</span></div>
+          <div class="spec-row"><span class="k">Size</span><span class="v" id="pd-size">—</span></div>
+          <div class="spec-row"><span class="k">Material</span><span class="v" id="pd-material">—</span></div>
+          <div class="spec-row"><span class="k">Laminate</span>
+            <select class="spec-lam-sel stat-pill" id="pd-lam" onchange="saveLaminate(this.value)">
+              <option value="">— select —</option>
+              <option value="None">None</option>
+              <option value="Gloss">Gloss</option>
+              <option value="Matte">Matte</option>
+              <option value="Soft Touch">Soft Touch</option>
+            </select>
+          </div>
+          <div class="spec-row"><span class="k">Dispatch</span><span class="v" id="pd-dispatch">—</span></div>
+          <div class="spec-row"><span class="k">Placed</span><span class="v" id="pd-placed">—</span></div>
+          <div class="spec-row" style="background:#F5F3FF"><span class="k" style="color:var(--purple)">Due date</span><span class="v" id="pd-due" style="color:var(--purple);font-weight:700">—</span></div>
+        </div>
+      </div>
+      <!-- EDIT MODE -->
+      <div id="specEditMode" style="display:none">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);margin-bottom:12px">Edit customer</div>
+        <div class="edit-row"><span class="edit-label">Business name</span><input class="edit-field" id="ef-biz" placeholder="Business name"></div>
+        <div class="edit-row"><span class="edit-label">Contact name</span><input class="edit-field" id="ef-contact" placeholder="Contact name"></div>
+        <div class="edit-row"><span class="edit-label">Email</span><input class="edit-field" id="ef-email" type="email" placeholder="Email"></div>
+        <div class="edit-row"><span class="edit-label">Phone</span><input class="edit-field" id="ef-phone" placeholder="Phone"></div>
+        <div class="edit-row"><span class="edit-label">Address</span><input class="edit-field" id="ef-addr" placeholder="Delivery address"></div>
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);margin:16px 0 12px">Edit job specs</div>
+        <div class="edit-row"><span class="edit-label">Product</span>
+          <select class="edit-field" id="ef-product">
+            <option value="rolls">Roll labels</option>
+            <option value="sheets">Sticker sheets</option>
+            <option value="individual">Individual stickers</option>
+            <option value="bumper">Bumper stickers</option>
+          </select>
+        </div>
+        <div class="edit-row"><span class="edit-label">Quantity</span><input class="edit-field" id="ef-qty" type="number" placeholder="e.g. 500"></div>
+        <div class="edit-row"><span class="edit-label">Shape</span><input class="edit-field" id="ef-shape" placeholder="e.g. Circle"></div>
+        <div class="edit-row" style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div><span class="edit-label">Width (mm)</span><input class="edit-field" id="ef-w" type="number" placeholder="90"></div>
+          <div><span class="edit-label">Height (mm)</span><input class="edit-field" id="ef-h" type="number" placeholder="60"></div>
+        </div>
+        <div class="edit-row"><span class="edit-label">Material</span><input class="edit-field" id="ef-material" placeholder="e.g. White Vinyl"></div>
+        <div class="edit-row"><span class="edit-label">Laminate</span>
+          <select class="edit-field" id="ef-lam">
+            <option value="">— select —</option>
+            <option value="None">None</option>
+            <option value="Gloss">Gloss</option>
+            <option value="Matte">Matte</option>
+            <option value="Soft Touch">Soft Touch</option>
+          </select>
+        </div>
+        <div class="edit-row"><span class="edit-label">Dispatch method</span>
+          <select class="edit-field" id="ef-dispatch">
+            <option value="road">Road dispatch</option>
+            <option value="pickup">Pickup</option>
+          </select>
+        </div>
+        <div class="edit-row"><span class="edit-label">Due date</span><input class="edit-field" id="ef-due" type="date"></div>
+        <div class="edit-row"><span class="edit-label">Notes</span><input class="edit-field" id="ef-notes" placeholder="Special instructions"></div>
+        <div class="edit-actions">
+          <button class="btn-discard" onclick="toggleEditMode()">Discard</button>
+          <button class="btn-save" onclick="saveJobEdits()">Save changes</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- FILES TAB -->
+    <div class="tab-pane" id="tab-artwork">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <span class="section-label" style="margin:0">All files</span>
+        <span style="font-size:11px;color:var(--ink3)" id="fileCountLabel"></span>
+      </div>
+      <div id="artVersionList" style="background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:0 14px;margin-bottom:14px">
+        <div style="padding:24px;text-align:center;color:var(--ink3);font-size:13px">No files yet</div>
+      </div>
+      <div class="divider"></div>
+      <div class="section-label">Upload new file</div>
+      <!-- Proof thumbnails (shows uploaded proofs) -->
+      <div id="proofThumbArea" style="display:none;margin-bottom:10px">
+        <div class="section-label">Uploaded proofs</div>
+        <div class="proof-thumb-row" id="proofThumbs"></div>
+      </div>
+
+      <div class="proof-section">
+        <div class="proof-title">📋 Proof / prepress</div>
+        <div id="proofStatusMsg" style="font-size:13px;color:var(--ink2);margin-bottom:10px">No proof sent yet</div>
+        <div class="proof-upload-zone" id="proofDropZone" onclick="document.getElementById('proofFileIn').click()">
+          <div style="font-size:24px;margin-bottom:6px">📎</div>
+          <div style="font-size:13px;font-weight:600;color:var(--ink2)">Click to upload — PDF, PNG, JPG</div>
+          <div style="font-size:11px;color:var(--ink3);margin-top:4px">PDF, PNG, JPG up to 20MB</div>
+        </div>
+        <input type="file" id="proofFileIn" style="display:none" accept=".pdf,.png,.jpg,.jpeg" onchange="handleProofFile(this.files[0])">
+        <div id="proofFileName" style="font-size:13px;font-weight:600;color:var(--ink);margin-top:8px;display:none;padding:8px;background:#F9FAFB;border-radius:8px"></div>
+        <div style="display:flex;gap:8px;margin-top:10px" id="proofActionBtns" style="display:none">
+          <button onclick="uploadArtworkOnly()" id="uploadArtBtn" style="flex:1;background:var(--card);color:var(--navy);border:1.5px solid var(--navy);border-radius:9px;padding:10px;font-size:13px;font-weight:700;display:none">💾 Save artwork only</button>
+          <button onclick="previewProofEmail()" id="previewEmailBtn" style="background:#F9FAFB;color:var(--navy);border:1.5px solid var(--line);border-radius:9px;padding:10px 14px;font-size:13px;font-weight:700;display:none;white-space:nowrap">👁 Preview</button><button onclick="sendProof()" id="sendProofBtn" style="flex:1;background:var(--green);color:#fff;border:none;border-radius:9px;padding:10px;font-size:13px;font-weight:700;display:none">📧 Send proof to customer</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- DISPATCH TAB -->
+    <div class="tab-pane" id="tab-dispatch">
+      <!-- Road dispatch -->
+      <div class="tracking-section" id="roadSection">
+        <div class="tracking-title">🚚 Road dispatch</div>
+        <div class="tracking-grid">
+          <input class="tracking-input" id="trackingNum" placeholder="Tracking number">
+          <select class="courier-sel" id="courierSel">
+            <option value="">Select courier…</option>
+            <option value="StarTrack">StarTrack</option>
+            <option value="TNT">TNT</option>
+            <option value="Titan Couriers">Titan Couriers</option>
+            <option value="NTS">NTS</option>
+            <option value="Uber Courier">Uber Courier</option>
+            <option value="Australia Post">Australia Post</option>
+          </select>
+        </div>
+        <button class="btn-dispatch" onclick="sendRoadTracking()">Send tracking email → mark dispatched</button>
+      </div>
+      <!-- Pickup -->
+      <div class="pickup-section" id="pickupSection">
+        <div class="proof-title">📦 Pickup</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button onclick="markReady()" style="background:var(--green);color:#fff;border:none;border-radius:9px;padding:10px 16px;font-size:13px;font-weight:700">✓ Mark ready for pickup</button>
+          <button onclick="markPickedUp()" style="background:#fff;border:1.5px solid var(--green);color:#166534;border-radius:9px;padding:10px 16px;font-size:13px;font-weight:700">Picked up ✓</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- NOTES TAB -->
+    <div class="tab-pane" id="tab-notes">
+      <div class="notes-area">
+        <div class="section-label">Internal notes</div>
+        <div id="notesList" style="min-height:60px"></div>
+        <div class="divider"></div>
+        <div class="note-input-row">
+          <textarea class="note-textarea" id="noteInput" placeholder="Add a note… visible to the whole team"></textarea>
+          <button class="btn-add-note" onclick="addNote()">Add note</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /panel-body -->
+</div><!-- /job-panel -->
+
+<!-- ══ NEW JOB MODAL ══════════════════════════════════════════ -->
+<div class="modal-overlay" id="newJobModal">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">＋ New job</div>
+      <button class="modal-close" onclick="closeNewJob()">✕</button>
+    </div>
+    <div class="modal-tabs">
+      <button class="modal-tab active" id="tabABtn" onclick="switchNewJobTab('a')">✨ Paste email or invoice</button>
+      <button class="modal-tab" id="tabBBtn" onclick="switchNewJobTab('b')">✏️ Fill manually</button>
+    </div>
+    <div class="modal-body">
+
+      <!-- Tab A: AI Extract -->
+      <div id="newJobTabA">
+        <div style="font-size:13px;color:var(--ink2);margin-bottom:10px">Paste the customer email or order details below and we'll extract the job information automatically.</div>
+        <textarea class="ai-paste-area" id="aiPasteText" placeholder="Paste email text here…&#10;&#10;e.g. Hi, I'd like to order 500 roll labels, 90×60mm, gloss laminate, white vinyl…"></textarea>
+        <div class="ai-or">— or —</div>
+        <div class="pdf-drop" id="pdfDrop" onclick="document.getElementById('pdfFileIn').click()">
+          <div class="pdf-drop-icon">📄</div>
+          <div class="pdf-drop-text">Upload PDF invoice or image</div>
+          <div style="font-size:11px;color:var(--ink3);margin-top:4px">PDF, PNG, JPG</div>
+        </div>
+        <input type="file" id="pdfFileIn" style="display:none" accept=".pdf,.png,.jpg,.jpeg" onchange="handlePdfUpload(this.files[0])">
+        <div id="pdfFileName" style="font-size:13px;color:var(--ink2);margin-top:8px;text-align:center;display:none"></div>
+        <button class="btn-extract" id="extractBtn" onclick="extractFromText()">
+          <span id="extractBtnText">✨ Extract details</span>
+        </button>
+        <div class="extract-result" id="extractResult"></div>
+        <div style="margin-top:14px;font-size:12px;color:var(--ink3);text-align:center" id="extractHint" style="display:none">✓ Details extracted — review below then create the job</div>
+      </div>
+
+      <!-- Tab B / Shared form (always rendered, AI fills it) -->
+      <div id="newJobTabB" style="display:none"></div>
+
+      <!-- Shared form fields (shown in both tabs after AI extract) -->
+      <div id="newJobForm" style="margin-top:16px">
+        <div class="divider"></div>
+        <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ink3);margin-bottom:12px">Job details</div>
+        <div class="form-grid">
+          <!-- Customer -->
+          <div class="form-field full"><span class="form-label">Business name</span><input class="form-input" id="fBiz" placeholder="e.g. The May's Collective"></div>
+          <div class="form-field"><span class="form-label">Contact name</span><input class="form-input" id="fContact" placeholder="Full name"></div>
+          <div class="form-field"><span class="form-label">Email</span><input class="form-input" id="fEmail" type="email" placeholder="customer@email.com"></div>
+          <div class="form-field"><span class="form-label">Phone</span><input class="form-input" id="fPhone" placeholder="+61 4xx xxx xxx"></div>
+          <div class="form-field full"><span class="form-label">Delivery address</span><input class="form-input" id="fAddr" placeholder="Street, Suburb, State, Postcode"></div>
+
+          <!-- Product -->
+          <div class="form-field"><span class="form-label">Product</span>
+            <select class="form-sel" id="fProduct">
+              <option value="rolls">Roll labels</option>
+              <option value="sheets">Sticker sheets</option>
+              <option value="individual">Individual stickers</option>
+              <option value="bumper">Bumper stickers</option>
+            </select>
+          </div>
+          <div class="form-field"><span class="form-label">Quantity</span><input class="form-input" id="fQty" type="number" placeholder="e.g. 500"></div>
+          <div class="form-field"><span class="form-label">Shape</span><input class="form-input" id="fShape" placeholder="e.g. Circle, Rectangle"></div>
+          <div class="form-field"><span class="form-label">Width (mm)</span><input class="form-input" id="fW" type="number" placeholder="e.g. 90"></div>
+          <div class="form-field"><span class="form-label">Height (mm)</span><input class="form-input" id="fH" type="number" placeholder="e.g. 60"></div>
+          <div class="form-field"><span class="form-label">Material</span><input class="form-input" id="fMaterial" placeholder="e.g. White Vinyl"></div>
+          <div class="form-field"><span class="form-label">Laminate</span>
+            <select class="form-sel" id="fLam">
+              <option value="">— select —</option>
+              <option value="None">None</option>
+              <option value="Gloss">Gloss</option>
+              <option value="Matte">Matte</option>
+              <option value="Soft Touch">Soft Touch</option>
+            </select>
+          </div>
+          <div class="form-field"><span class="form-label">Dispatch method</span>
+            <select class="form-sel" id="fDispatch">
+              <option value="road">Road dispatch</option>
+              <option value="pickup">Pickup</option>
+            </select>
+          </div>
+          <div class="form-field"><span class="form-label">Source / how received</span>
+            <select class="form-sel" id="fSource">
+              <option value="email">Email</option>
+              <option value="phone">Phone</option>
+              <option value="instagram">Instagram</option>
+              <option value="facebook">Facebook</option>
+              <option value="walkin">Walk-in</option>
+              <option value="manual">Manual entry</option>
+              <option value="website">Website</option>
+            </select>
+          </div>
+          <div class="form-field"><span class="form-label">Due date</span><input class="form-input" id="fDue" type="date"></div>
+          <div class="form-field full"><span class="form-label">Notes</span><input class="form-input" id="fNotes" placeholder="Any special instructions…"></div>
+
+          <!-- Artwork upload -->
+          <div class="form-field full">
+            <span class="form-label">Artwork file</span>
+            <div class="art-upload-btn" onclick="document.getElementById('artFileIn').click()">
+              <div style="font-size:20px;margin-bottom:4px">📎</div>
+              <div id="artFileLabel" style="font-size:13px;font-weight:600;color:var(--ink2)">Click to upload artwork</div>
+              <div style="font-size:11px;color:var(--ink3);margin-top:2px">PDF, PNG, JPG up to 50MB</div>
+            </div>
+            <input type="file" id="artFileIn" style="display:none" accept=".pdf,.png,.jpg,.jpeg,.ai,.eps" onchange="handleArtFile(this.files[0])">
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /modal-body -->
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeNewJob()">Cancel</button>
+      <button class="btn-create" onclick="createJob()" id="createJobBtn">Create job</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// ══ CONFIG ═════════════════════════════════════════════════
+const SUPABASE_URL      = 'https://irwgxtnlsssmkjiofhgq.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlyd2d4dG5sc3NzbWtqaW9maGdxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyOTI3MzQsImV4cCI6MjA5Nzg2ODczNH0.38oYSKXw3TiP4VP9g9A3Ghn43f8z8Mt8NYF_zKdwkm0';
+const STATUS_LABELS = {new:'New',prepress:'Prepress',awaiting:'Awaiting Approval',revision:'Artwork Revision',print:'Print',lam:'Laminate',cut:'Cut',qa:'QA & Packing',outsource:'Outsource',ready:'Ready',dispatched:'Dispatched',pickedup:'Picked Up',hold:'On Hold',cancelled:'Cancelled'};
+const PRODUCT_LABELS = {rolls:'Roll labels',sheets:'Sticker sheets',individual:'Individual stickers',bumper:'Bumper stickers'};
+
+// ══ STATE ══════════════════════════════════════════════════
+let db = null, CURRENT_USER = null, CURRENT_ROLE = null;
+let JOB_DATA = {}, CURRENT_JOB_ID = null;
+let selectedJobs = new Set();
+let newJobArtFile = null, proofFile = null;
+
+// ══ INIT ═══════════════════════════════════════════════════
+function getDB(){
+  if(!db && window.supabase) db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  return db;
+}
+
+// ══ AUTH ═══════════════════════════════════════════════════
+async function doLogin(){
+  const username = document.getElementById('loginUser').value.trim();
+  const password = document.getElementById('loginPass').value;
+  const err = document.getElementById('loginErr');
+  err.style.display = 'none';
+  if(!username || !password){ err.textContent='Enter username and password'; err.style.display='block'; return; }
+
+  const db2 = getDB();
+  // Get email from username
+  // Try RPC username lookup
+  let email = null;
+  const {data: emailData, error: rpcErr} = await db2.rpc('get_email_by_username', {p_username: username});
+  if(!rpcErr && emailData) {
+    email = typeof emailData === 'string' ? emailData : (emailData[0]?.email || emailData.email || null);
+  }
+  // Fallback: if username contains @, try as email directly
+  if(!email && username.includes('@')) email = username;
+  if(!email){ err.textContent='Username not found. Try again.'; err.style.display='block'; return; }
+
+  const {data: authData, error: authErr} = await db2.auth.signInWithPassword({email, password});
+  if(authErr){ err.textContent='Incorrect password. Try again.'; err.style.display='block'; return; }
+
+  const {data: profile} = await db2.from('profiles').select('*').eq('id', authData.user.id).single();
+  CURRENT_USER = profile || {name: username, role:'staff'};
+  CURRENT_ROLE = CURRENT_USER.role || 'staff';
+
+  document.getElementById('userAvatar').textContent = (CURRENT_USER.name||username)[0].toUpperCase();
+  document.getElementById('userName').textContent = CURRENT_USER.name || username;
+  document.getElementById('screen-login').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  loadBoard();
+}
+
+function doLogout(){
+  const db2 = getDB();
+  if(db2) db2.auth.signOut();
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('screen-login').style.display = 'flex';
+  document.getElementById('loginUser').value = '';
+  document.getElementById('loginPass').value = '';
+  JOB_DATA = {}; selectedJobs = new Set();
+}
+
+document.getElementById('loginPass').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+
+// ══ BOARD ══════════════════════════════════════════════════
+function normaliseLaminate(raw){
+  if(!raw) return '';
+  const s = raw.trim();
+  if(/matte/i.test(s)) return 'Matte';
+  if(/gloss/i.test(s)) return 'Gloss';
+  if(/soft.?touch/i.test(s)) return 'Soft Touch';
+  if(/no.?lam|none|uncoated/i.test(s)) return 'None';
+  return s;
+}
+function fmtDate(d){ if(!d) return '—'; const dt=new Date(d); return dt.getDate()+' '+'JanFebMarAprMayJunJulAugSepOctNovDec'.substr(dt.getMonth()*3,3); }
+function fmtSize(w,h){ return (w&&h) ? w+'×'+h+' mm' : '—'; }
+function chipClass(s){ const m={new:'new',prepress:'prepress',awaiting:'awaiting',revision:'revision',print:'print',lam:'lam',cut:'cut',qa:'qa',outsource:'outsource',ready:'ready',dispatched:'dispatched',pickedup:'pickedup',hold:'hold',cancelled:'cancelled'}; return m[s]||'new'; }
+function fmtDispatch(m, courier){ if(!m) return '—'; return m==='pickup'?'Pickup':`Road${courier?' · '+courier:''}`; }
+
+async function loadBoard(){
+  const db2 = getDB(); if(!db2) return;
+  const {data:jobs, error} = await db2.from('active_jobs').select('*').order('due_date',{ascending:true});
+  if(error){ console.error('loadBoard:', error); return; }
+
+  // Fetch job_items separately
+  const jobIds = (jobs||[]).map(j=>j.id);
+  let itemsByJob = {};
+  if(jobIds.length){
+    const {data:items} = await db2.from('job_items').select('*').in('job_id', jobIds);
+    (items||[]).forEach(it=>{ if(!itemsByJob[it.job_id]) itemsByJob[it.job_id]=[]; itemsByJob[it.job_id].push(it); });
+  }
+  (jobs||[]).forEach(j=>{ j.job_items = itemsByJob[j.id]||[]; });
+
+  JOB_DATA = {};
+  (jobs||[]).forEach(job=>{
+    const item = (job.job_items||[])[0]||{};
+    const mat = item.material||'';
+    let lam = normaliseLaminate(item.laminate);
+    if(!lam){ const m=mat.match(/\b(matte lam(?:inate)?|gloss lam(?:inate)?|soft touch|matte|gloss)\b/i); if(m) lam=normaliseLaminate(m[1]); }
+    JOB_DATA[job.id] = {
+      id: job.id, shopify: job.shopify_order_number ? String(job.shopify_order_number).replace(/^#/,'') : null, paid: true,
+      src: job.source||'manual',
+      name: job.business_name||'Unknown', contact: job.contact_name||'',
+      email: job.customer_email||'', phone: job.customer_phone||'',
+      addr: job.address_full||'',
+      product: PRODUCT_LABELS[item.product_type]||item.product_type||'',
+      productKey: item.product_type||'',
+      qty: item.quantity?item.quantity.toLocaleString():'—',
+      shape: item.shape||'', size: fmtSize(item.width_mm,item.height_mm),
+      material: mat.replace(/\b(matte lam(?:inate)?|gloss lam(?:inate)?|soft touch|matte|gloss)\b/gi,'').trim()||mat,
+      lam, dispatch: fmtDispatch(job.dispatch_method,job.courier),
+      dispatchMethod: job.dispatch_method||'road', courier: job.courier||'',
+      placed: fmtDate(job.placed_at), due: fmtDate(job.due_date),
+      dueRaw: job.due_date||'', status: job.status||'new',
+      artUrl: job.artwork_url||'', artFilename: job.artwork_filename||'',
+      tracking: job.outsource_tracking||'',
+    };
+  });
+
+  renderBoard(jobs||[]);
+}
+
+function renderBoard(jobs){
+  renderTable(jobs);
+  renderCards(jobs);
+  renderStatusCards(jobs);
+  setTimeout(applyPdfThumbs, 100);
+}
+
+function renderTable(jobs){
+  const tbody = document.getElementById('jobTbody');
+  if(!jobs.length){ tbody.innerHTML='<tr><td colspan="11"><div class="empty-state"><div class="empty-icon">📋</div><div class="empty-text">No active jobs</div></div></td></tr>'; return; }
+  const today = new Date(); today.setHours(0,0,0,0);
+  const tomorrow = new Date(today); tomorrow.setDate(today.getDate()+1);
+  const DAYS=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+  let html='', lastDue='';
+  jobs.forEach(job=>{
+    const d = JOB_DATA[job.id]; if(!d) return;
+    const dueKey = d.dueRaw||'none';
+    if(dueKey !== lastDue){
+      lastDue = dueKey;
+      let dueDt=null,isToday=false,isTomorrow=false,isOverdue=false;
+      if(d.dueRaw){ dueDt=new Date(d.dueRaw); dueDt.setHours(0,0,0,0); isToday=dueDt.getTime()===today.getTime(); isTomorrow=dueDt.getTime()===tomorrow.getTime(); isOverdue=dueDt<today&&!isToday; }
+      const cls=isToday?'date-header today':isOverdue?'date-header overdue':'date-header';
+      const pill=isToday?'<span class="date-pill today-pill">TODAY</span>':isTomorrow?'<span class="date-pill tomorrow-pill">TOMORROW</span>':isOverdue?'<span class="date-pill overdue-pill">OVERDUE</span>':'';
+      const label=dueDt?DAYS[dueDt.getDay()]+' · '+dueDt.getDate()+' '+MONTHS[dueDt.getMonth()]+' '+dueDt.getFullYear():'No due date';
+      const jobCount = jobs.filter(j=>JOB_DATA[j.id]&&(JOB_DATA[j.id].dueRaw||'none')===dueKey).length;
+      const sub=isOverdue?jobCount+' jobs · needs attention':jobCount+' job'+(jobCount===1?'':'s');
+      html+=`<tr class="date-row"><td colspan="11" style="padding:0;border:none"><div class="${cls}" style="border-radius:12px;margin:12px 0 3px"><div class="date-label">${label}${pill}</div><div class="date-sub">${sub}</div></div></td></tr>`;
+    }
+    const st = d.status;
+    var thumbEmoji = d.productKey==='rolls'?'🏷️':d.productKey==='sheets'?'📋':d.productKey==='bumper'?'🚗':'✂️';
+    var thumbHtml;
+    if(d.artUrl) {
+      var isImg = /\.(png|jpg|jpeg|gif|webp)$/i.test(d.artFilename||d.artUrl||'');
+      if(isImg) {
+        thumbHtml = '<img src="' + d.artUrl + '" style="width:100%;height:100%;object-fit:cover;border-radius:0" onerror="this.parentNode.innerHTML=\''+thumbEmoji+'\'">';
+      } else {
+        // PDF — use canvas placeholder, rendered after row insertion
+        thumbHtml = '<canvas data-pdf="' + d.artUrl + '" style="width:100%;height:100%;object-fit:contain;border-radius:7px"></canvas>';
+      }
+    } else {
+      thumbHtml = thumbEmoji;
+    }
+    html+=`<tr data-job-id="${job.id}" data-status="${st}" onclick="openJob('${job.id}')">
+      <td class="col-check" onclick="event.stopPropagation()"><input type="checkbox" class="row-check" value="${job.id}" onchange="handleRowCheck(this)"></td>
+      <td class="col-prio"><button class="prio-btn" onclick="event.stopPropagation();togglePrio(this)" style="background:none;border:none;font-size:16px;opacity:.3;cursor:pointer">⚡</button></td>
+      <td class="col-thumb"><div class="row-thumb" style="${d.artUrl?'background:#eee;padding:0;overflow:hidden':''}">${thumbHtml}</div></td>
+      <td class="col-order"><div class="job-id">${d.id}</div>${d.shopify?`<div class="shopify-ref">#${d.shopify}</div>`:''}</td>
+      <td class="col-customer"><div class="cust-name">${d.name}</div><div class="cust-sub">${d.contact||d.email}</div></td>
+      <td class="col-product">${d.product||'—'}</td>
+      <td class="col-size">${d.size}</td>
+      <td class="col-qty" style="text-align:right">${d.qty}</td>
+      <td class="col-placed">${d.placed}</td>
+      <td class="col-status"><select class="stat-pill ${chipClass(st)}" onclick="event.stopPropagation()" onchange="event.stopPropagation();rowChangeStatus('${job.id}',this)">${statusOptions(st)}</select></td>
+      <td class="col-dispatch" style="font-size:13px;color:var(--ink2)">${d.dispatch}</td>
+    </tr>`;
+  });
+  tbody.innerHTML = html;
+}
+
+function statusOptions(current){
+  return Object.entries(STATUS_LABELS).map(([v,l])=>`<option value="${v}"${v===current?' selected':''}>${l}</option>`).join('');
+}
+
+function renderCards(jobs){
+  const grid = document.getElementById('cardGrid');
+  if(!jobs.length){ grid.innerHTML=''; return; }
+  let html='';
+  jobs.forEach(job=>{
+    const d=JOB_DATA[job.id]; if(!d) return;
+    const st=d.status;
+    html+=`<div class="job-card" data-job-id="${job.id}" onclick="openJob('${job.id}')">
+      <div class="card-top">
+        <div><div class="card-id">${d.id}${d.shopify?` · #${d.shopify}`:''}</div><div class="card-name">${d.name}</div><div class="card-sub">${d.contact||d.email}</div></div>
+        <select class="stat-pill ${chipClass(st)}" onclick="event.stopPropagation()" onchange="event.stopPropagation();rowChangeStatus('${job.id}',this)" style="font-size:11px">${statusOptions(st)}</select>
+      </div>
+      <div class="card-specs">
+        <div><div class="card-spec-label">Product</div><div class="card-spec-val">${d.product||'—'}</div></div>
+        <div><div class="card-spec-label">Size</div><div class="card-spec-val">${d.size}</div></div>
+        <div><div class="card-spec-label">Qty</div><div class="card-spec-val">${d.qty}</div></div>
+        <div><div class="card-spec-label">Dispatch</div><div class="card-spec-val">${d.dispatchMethod==='pickup'?'Pickup':'Road'}</div></div>
+      </div>
+      <div class="card-footer">
+        <span class="card-date">Due ${d.due}</span>
+        <span style="font-size:11px;color:var(--ink3)">${d.placed}</span>
+      </div>
+    </div>`;
+  });
+  grid.innerHTML = html;
+}
+
+// ══ FILTERS ════════════════════════════════════════════════
+function applyFilters(){
+  const q=(document.getElementById('boardSearch').value||'').toLowerCase();
+  const st=document.getElementById('filterStatus').value;
+  const pr=document.getElementById('filterProduct').value;
+  document.querySelectorAll('#jobTbody tr[data-job-id]').forEach(row=>{
+    const id=row.dataset.jobId; const d=JOB_DATA[id]||{};
+    const text=(d.name+' '+d.email+' '+d.id+' '+(d.shopify||'')).toLowerCase();
+    const show=(!q||text.includes(q))&&(!st||d.status===st)&&(!pr||d.productKey===pr);
+    row.style.display=show?'':'none';
+  });
+  document.querySelectorAll('.job-card[data-job-id]').forEach(card=>{
+    const id=card.dataset.jobId; const d=JOB_DATA[id]||{};
+    const text=(d.name+' '+d.email+' '+d.id).toLowerCase();
+    card.style.display=(!q||text.includes(q))&&(!st||d.status===st)&&(!pr||d.productKey===pr)?'':'none';
+  });
+}
+
+// ══ ROW STATUS CHANGE ══════════════════════════════════════
+async function rowChangeStatus(jobId, sel){
+  const newStatus = sel.value;
+  sel.className = 'stat-pill ' + chipClass(newStatus);
+  const row = document.querySelector(`tr[data-job-id="${jobId}"]`);
+  if(row) row.dataset.status = newStatus;
+  const card = document.querySelector(`.job-card[data-job-id="${jobId}"]`);
+  if(card){ const s=card.querySelector('select'); if(s){s.value=newStatus;s.className='stat-pill '+chipClass(newStatus)+' stat-pill';s.style.fontSize='11px';} }
+  if(JOB_DATA[jobId]) JOB_DATA[jobId].status = newStatus;
+  const db2=getDB();
+  if(db2){ const {error}=await db2.from('jobs').update({status:newStatus}).eq('id',jobId); if(error) showToast('Save failed'); else showToast(STATUS_LABELS[newStatus]+' ✓'); }
+}
+
+// ══ SELECTION ══════════════════════════════════════════════
+function handleRowCheck(cb){
+  if(cb.checked) selectedJobs.add(cb.value); else selectedJobs.delete(cb.value);
+  updateBulkBar();
+}
+function toggleSelectAll(cb){
+  document.querySelectorAll('.row-check').forEach(c=>{ c.checked=cb.checked; if(cb.checked) selectedJobs.add(c.value); else selectedJobs.delete(c.value); });
+  updateBulkBar();
+}
+function updateBulkBar(){
+  const bar=document.getElementById('bulkBar'); const cnt=document.getElementById('bulkCount');
+  if(selectedJobs.size>0){bar.classList.add('show');cnt.textContent=selectedJobs.size+' selected';}else{bar.classList.remove('show');}
+}
+function clearSelection(){
+  selectedJobs.clear(); document.querySelectorAll('.row-check').forEach(c=>c.checked=false);
+  document.getElementById('selectAll').checked=false; updateBulkBar();
+}
+async function bulkChangeStatus(newStatus){
+  if(!newStatus||!selectedJobs.size) return;
+  const db2=getDB(); if(!db2) return;
+  const ids=Array.from(selectedJobs);
+  await db2.from('jobs').update({status:newStatus}).in('id',ids);
+  showToast(ids.length+' jobs → '+STATUS_LABELS[newStatus]+' ✓');
+  clearSelection(); loadBoard();
+}
+function togglePrio(btn){ btn.style.opacity=btn.style.opacity==='1'?'0.3':'1'; }
+
+// ══ SYNC ═══════════════════════════════════════════════════
+async function manualSync(){
+  const btn=document.getElementById('syncBtn');
+  btn.textContent='↻ Syncing…'; btn.disabled=true;
+  try{
+    const r=await fetch('/api/sync-shopify-orders?secret=stickysitch2024');
+    const d=await r.json();
+    showToast((d.created||0)+' new jobs synced ✓');
+  }catch(e){ showToast('Sync failed'); }
+  btn.textContent='↻ Sync'; btn.disabled=false;
+  setTimeout(()=>loadBoard(),1000);
+}
+
+// ══ JOB PANEL ══════════════════════════════════════════════
+function openJob(jobId){
+  CURRENT_JOB_ID = jobId;
+  document.getElementById('panelOverlay').classList.add('open');
+  document.getElementById('jobPanel').classList.add('open');
+  populateJobDetail(jobId);
+  loadNotes(jobId);
+  loadArtworkVersions(jobId);
+}
+
+function closePanel(){
+  document.getElementById('panelOverlay').classList.remove('open');
+  document.getElementById('jobPanel').classList.remove('open');
+  // Reset tabs
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',i===0));
+  document.querySelectorAll('.tab-pane').forEach((p,i)=>p.classList.toggle('active',i===0));
+}
+
+function switchTab(name, btn){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-'+name).classList.add('active');
+}
+
+function set(id,val){ const el=document.getElementById(id); if(el) el.textContent=val||'—'; }
+
+function populateJobDetail(jobId){
+  const d = JOB_DATA[jobId]; if(!d) return;
+  document.getElementById('panelJobId').textContent = d.id;
+  document.getElementById('panelShopifyRef').textContent = d.shopify?'· Shopify #'+d.shopify:'';
+  document.getElementById('panelPaid').textContent = 'Paid ✓';
+  // Customer
+  set('pdName', d.name); set('pdContact', d.contact||d.email);
+  set('pdEmail', d.email); set('pdPhone', d.phone||'—');
+  set('pdAddr', d.addr||'—');
+  // Status
+  const st=document.getElementById('pdStatus');
+  st.value=d.status; st.className='stat-pill-lg stat-pill '+chipClass(d.status);
+  // Specs
+  set('pd-product', d.product); set('pd-qty', d.qty);
+  set('pd-shape', d.shape||'—'); set('pd-size', d.size);
+  set('pd-material', d.material||'—');
+  set('pd-dispatch', d.dispatch); set('pd-placed', d.placed); set('pd-due', d.due);
+  // Laminate dropdown
+  const lamSel=document.getElementById('pd-lam');
+  if(lamSel){ lamSel.value=d.lam||''; if(!lamSel.value) lamSel.value=''; }
+  // Artwork display is handled by loadArtworkVersions() — nothing to set here
+  // Dispatch section
+  const isPickup=d.dispatchMethod==='pickup';
+  document.getElementById('roadSection').style.display=isPickup?'none':'block';
+  document.getElementById('pickupSection').style.display=isPickup?'block':'none';
+  if(!isPickup&&d.tracking){ document.getElementById('trackingNum').value=d.tracking; }
+}
+
+// ══ STATUS CHANGE (from panel) ═════════════════════════════
+async function changeJobStatus(newStatus){
+  const jobId=CURRENT_JOB_ID; if(!jobId) return;
+  const sel=document.getElementById('pdStatus');
+  sel.className='stat-pill-lg stat-pill '+chipClass(newStatus);
+  if(JOB_DATA[jobId]) JOB_DATA[jobId].status=newStatus;
+  // Update table/card row too
+  const row=document.querySelector(`tr[data-job-id="${jobId}"]`);
+  if(row){ const s=row.querySelector('select.stat-pill'); if(s){s.value=newStatus;s.className='stat-pill '+chipClass(newStatus);} }
+  const card=document.querySelector(`.job-card[data-job-id="${jobId}"]`);
+  if(card){ const s=card.querySelector('select'); if(s){s.value=newStatus;s.className='stat-pill '+chipClass(newStatus)+' stat-pill';s.style.fontSize='11px';} }
+  const db2=getDB();
+  if(db2){ await db2.from('jobs').update({status:newStatus}).eq('id',jobId); showToast(STATUS_LABELS[newStatus]+' ✓'); }
+}
+
+// ══ LAMINATE SAVE ══════════════════════════════════════════
+async function saveLaminate(val){
+  const jobId=CURRENT_JOB_ID; if(!jobId) return;
+  if(JOB_DATA[jobId]) JOB_DATA[jobId].lam=val;
+  const db2=getDB();
+  if(db2){
+    const {data:items}=await db2.from('job_items').select('id').eq('job_id',jobId).limit(1);
+    if(items&&items.length){ await db2.from('job_items').update({laminate:val||null}).eq('id',items[0].id); showToast('Laminate: '+val+' ✓'); }
+  }
+}
+
+// ══ PROOF ══════════════════════════════════════════════════
+async function sendProof(){
+  if(!proofFile){ showToast('Select a proof file first'); return; }
+  if(!CURRENT_JOB_ID){ showToast('No job open — close and reopen the job'); return; }
+  const btn=document.getElementById('sendProofBtn');
+  btn.textContent='Sending…'; btn.disabled=true;
+
+  try{
+    // 1. Upload proof file to Supabase Storage
+    const db2=getDB();
+    const ext=proofFile.name.split('.').pop();
+    const path=CURRENT_JOB_ID+'_proof_'+Date.now()+'.'+ext;
+    const {error:upErr}=await db2.storage.from('proofs').upload(path,proofFile,{contentType:proofFile.type,upsert:false});
+    if(upErr) throw new Error('Upload failed: '+upErr.message);
+
+    const {data:{publicUrl}}=db2.storage.from('proofs').getPublicUrl(path);
+
+    // 2. Save proof record
+    await db2.from('proofs').insert({
+      job_id:CURRENT_JOB_ID, file_url:publicUrl,
+      filename:proofFile.name, status:'sent'
+    });
+
+    // 3. Try sending email via API endpoint
+    try{
+      const form=new FormData();
+      form.append('proof',proofFile);
+      form.append('jobId',CURRENT_JOB_ID);
+      form.append('proofUrl',publicUrl);
+      const r=await fetch('/api/send-proof',{method:'POST',body:form});
+      const d=await r.json().catch(()=>({}));
+      if(!r.ok) throw new Error(d.error||'API error '+r.status);
+      showToast('Proof sent to customer ✓');
+    }catch(apiErr){
+      // API might not be set up — proof is saved, just alert
+      console.warn('send-proof API:', apiErr.message);
+      showToast('Proof saved — email send needs /api/send-proof configured');
+    }
+
+    // Update status to awaiting approval
+    await db2.from('jobs').update({status:'awaiting'}).eq('id',CURRENT_JOB_ID);
+    const statusSel=document.getElementById('pdStatus');
+    if(statusSel){statusSel.value='awaiting';statusSel.className='stat-pill-lg stat-pill awaiting';}
+    if(JOB_DATA[CURRENT_JOB_ID]) JOB_DATA[CURRENT_JOB_ID].status='awaiting';
+
+    document.getElementById('proofStatusMsg').textContent='Proof sent — awaiting customer response';
+    loadArtworkVersions(CURRENT_JOB_ID);
+
+  }catch(e){
+    console.error('sendProof error:',e);
+    showToast('Error: '+e.message);
+  }
+  btn.textContent='📧 Send proof to customer'; btn.disabled=false; proofFile=null;
+  document.getElementById('proofFileName').style.display='none';
+  document.getElementById('uploadArtBtn').style.display='none';
+  btn.style.display='none';
+}
+
+// ══ DISPATCH ═══════════════════════════════════════════════
+async function sendRoadTracking(){
+  const tracking=document.getElementById('trackingNum').value.trim();
+  const courier=document.getElementById('courierSel').value;
+  if(!tracking){ showToast('Enter tracking number first'); return; }
+  if(!CURRENT_JOB_ID) return;
+  try{
+    const r=await fetch('/api/send-tracking-email',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({jobId:CURRENT_JOB_ID,tracking,courier})});
+    const d=await r.json();
+    if(d.ok){ await changeJobStatus('dispatched'); showToast('Tracking sent to customer ✓'); }
+    else showToast('Failed: '+(d.error||'unknown'));
+  }catch(e){ showToast('Error sending tracking'); }
+}
+async function markReady(){ await changeJobStatus('ready'); showToast('Job marked ready for pickup ✓'); }
+async function markPickedUp(){ await changeJobStatus('pickedup'); showToast('Job marked picked up ✓'); }
+
+// ══ NOTES ══════════════════════════════════════════════════
+async function loadNotes(jobId){
+  const db2=getDB(); if(!db2) return;
+  const {data:notes}=await db2.from('job_notes').select('*').eq('job_id',jobId).order('created_at',{ascending:true});
+  const list=document.getElementById('notesList');
+  if(!notes||!notes.length){ list.innerHTML='<div style="padding:12px 0;font-size:13px;color:var(--ink3)">No notes yet.</div>'; return; }
+  list.innerHTML=notes.map(n=>`<div class="note-entry"><div class="note-meta">${n.author_name||'Team'} · ${fmtDate(n.created_at)}</div><div class="note-text">${n.content}</div></div>`).join('');
+}
+async function addNote(){
+  const text=document.getElementById('noteInput').value.trim();
+  if(!text||!CURRENT_JOB_ID) return;
+  const db2=getDB();
+  await db2.from('job_notes').insert({job_id:CURRENT_JOB_ID,content:text,author_name:CURRENT_USER?.name||'Team'});
+  document.getElementById('noteInput').value='';
+  loadNotes(CURRENT_JOB_ID);
+  showToast('Note added ✓');
+}
+
+// ══ NEW JOB MODAL ══════════════════════════════════════════
+function openNewJob(){
+  // Set default due date to 2 days from now
+  const due=new Date(); due.setDate(due.getDate()+2);
+  document.getElementById('fDue').value=due.toISOString().split('T')[0];
+  document.getElementById('newJobModal').classList.add('open');
+}
+function closeNewJob(){
+  document.getElementById('newJobModal').classList.remove('open');
+  // Reset form
+  ['fBiz','fContact','fEmail','fPhone','fAddr','fQty','fShape','fW','fH','fMaterial','fNotes'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+  ['fProduct','fLam','fDispatch'].forEach(id=>{ const el=document.getElementById(id); if(el) el.selectedIndex=0; });
+  document.getElementById('aiPasteText').value='';
+  document.getElementById('extractResult').style.display='none';
+  document.getElementById('artFileLabel').textContent='Click to upload artwork';
+  newJobArtFile=null;
+  switchNewJobTab('a');
+}
+function switchNewJobTab(tab){
+  document.getElementById('newJobTabA').style.display=tab==='a'?'block':'none';
+  document.getElementById('newJobTabB').style.display=tab==='b'?'block':'none';
+  document.getElementById('tabABtn').classList.toggle('active',tab==='a');
+  document.getElementById('tabBBtn').classList.toggle('active',tab==='b');
+}
+function handleArtFile(file){
+  if(!file) return; newJobArtFile=file;
+  document.getElementById('artFileLabel').textContent='📎 '+file.name;
+}
+async function handlePdfUpload(file){
+  if(!file) return;
+  document.getElementById('pdfFileName').style.display='block';
+  document.getElementById('pdfFileName').textContent='📄 '+file.name+' — click Extract to read it';
+  // Store for extraction
+  window._pdfFile = file;
+}
+
+async function extractFromText() {
+  const text     = document.getElementById('aiPasteText').value.trim();
+  const pdfFile  = window._pdfFile;
+  const resultEl = document.getElementById('extractResult');
+  const btnText  = document.getElementById('extractBtnText');
+  const btn      = document.getElementById('extractBtn');
+
+  if (!pdfFile && !text) {
+    resultEl.style.display = 'block';
+    resultEl.innerHTML = '<span style="color:var(--red)">Paste email text or upload a PDF first.</span>';
+    return;
+  }
+  if (!pdfFile && text.startsWith('http')) {
+    resultEl.style.display = 'block';
+    resultEl.innerHTML = '<span style="color:var(--red)">That looks like a URL. Open the HelpScout conversation, copy the email text and paste that here instead.</span>';
+    return;
+  }
+
+  btnText.textContent = '✨ Extracting…';
+  btn.disabled = true;
+  resultEl.style.display = 'none';
+
+  try {
+    const payload = { text };
+
+    if (pdfFile) {
+      const b64 = await new Promise((res, rej) => {
+        const r = new FileReader();
+        r.onload  = () => res(r.result.split(',')[1]);
+        r.onerror = rej;
+        r.readAsDataURL(pdfFile);
+      });
+      payload.fileBase64 = b64;
+      payload.fileType   = pdfFile.type || 'application/pdf';
+      payload.fileName   = pdfFile.name || 'file';
+    }
+
+    let resp;
+    try {
+      resp = await fetch('/api/extract-job', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify(payload),
+      });
+    } catch(netErr) {
+      throw new Error('Network error — check your connection and try again.');
+    }
+
+    if (resp.status === 404) {
+      throw new Error('extract-job.js is not deployed yet. Add it to the api/ folder in GitHub.');
+    }
+
+    let data;
+    try { data = await resp.json(); } catch(e) { throw new Error('Server returned invalid response (status ' + resp.status + ')'); }
+
+    if (!resp.ok) {
+      throw new Error(data.error || ('Server error ' + resp.status));
+    }
+
+    const ex = data.extracted;
+    if (!ex) throw new Error('No data extracted from the document.');
+
+    const fill = (id, val) => { const el = document.getElementById(id); if (el && val != null) el.value = val; };
+    fill('fBiz',      ex.biz);
+    fill('fContact',  ex.contact);
+    fill('fEmail',    ex.email);
+    fill('fPhone',    ex.phone);
+    fill('fAddr',     ex.addr);
+    fill('fQty',      ex.qty);
+    fill('fShape',    ex.shape);
+    fill('fW',        ex.width_mm);
+    fill('fH',        ex.height_mm);
+    fill('fMaterial', ex.material);
+    fill('fNotes',    ex.notes);
+    if (ex.product)  { const s = document.getElementById('fProduct');  if (s) s.value = ex.product; }
+    if (ex.laminate) { const s = document.getElementById('fLam');      if (s) s.value = ex.laminate; }
+    if (ex.dispatch) { const s = document.getElementById('fDispatch'); if (s) s.value = ex.dispatch; }
+
+    resultEl.style.display = 'block';
+    resultEl.innerHTML = '<b style="color:var(--purple)">✓ Details extracted</b> — review below and make any changes before creating the job.';
+    showToast('Details extracted ✓');
+
+  } catch(e) {
+    console.error('extractFromText:', e);
+    resultEl.style.display = 'block';
+    resultEl.innerHTML = '<span style="color:var(--red)">' + (e.message || 'Unknown error') + '</span>';
+  }
+
+  btnText.textContent = '✨ Extract details';
+  btn.disabled = false;
+  window._pdfFile = null;
+}
+
+async function createJob(){
+  const email=document.getElementById('fEmail').value.trim();
+  const biz=document.getElementById('fBiz').value.trim();
+  if(!email&&!biz){ showToast('At least email or business name required'); return; }
+
+  const btn=document.getElementById('createJobBtn'); btn.textContent='Creating…'; btn.disabled=true;
+  const db2=getDB();
+
+  try{
+    // Upsert customer
+    let customerId=null;
+    if(email){
+      const {data:existing}=await db2.from('customers').select('id').eq('email',email).single();
+      if(existing){ customerId=existing.id; }
+      else{
+        const {data:newCust}=await db2.from('customers').insert({
+          business_name:biz||email, contact_name:document.getElementById('fContact').value.trim()||null,
+          email, phone:document.getElementById('fPhone').value.trim()||null,
+          address_full:document.getElementById('fAddr').value.trim()||null,
+        }).select('id').single();
+        customerId=newCust?.id;
+      }
+    }
+
+    // Create job
+    const dispatchMethod=document.getElementById('fDispatch').value||'road';
+    const jobSource = document.getElementById('fSource')?.value || 'email';
+    const {data:job,error:jobErr}=await db2.from('jobs').insert({
+      customer_id:customerId, source:jobSource, status:'new',
+      dispatch_method:dispatchMethod,
+      placed_at:new Date().toISOString(),
+      due_date:document.getElementById('fDue').value||null,
+    }).select('id').single();
+
+    if(jobErr) throw jobErr;
+
+    // Create job_item
+    const w=parseFloat(document.getElementById('fW').value)||null;
+    const h=parseFloat(document.getElementById('fH').value)||null;
+    const qty=parseInt(document.getElementById('fQty').value)||null;
+    await db2.from('job_items').insert({
+      job_id:job.id, product_type:document.getElementById('fProduct').value||'rolls',
+      quantity:qty, shape:document.getElementById('fShape').value.trim()||null,
+      width_mm:w, height_mm:h, material:document.getElementById('fMaterial').value.trim()||null,
+      laminate:document.getElementById('fLam').value||null,
+    });
+
+    // Upload artwork if provided
+    if(newJobArtFile){
+      const ext=newJobArtFile.name.split('.').pop();
+      const path=`${job.id}_${Date.now()}.${ext}`;
+      const {error:upErr}=await db2.storage.from('artwork').upload(path,newJobArtFile,{contentType:newJobArtFile.type,upsert:false});
+      if(!upErr){
+        const {data:{publicUrl}}=db2.storage.from('artwork').getPublicUrl(path);
+        await db2.from('jobs').update({artwork_url:publicUrl,artwork_filename:newJobArtFile.name}).eq('id',job.id);
+      }
+    }
+
+    showToast('Job '+job.id+' created ✓');
+    closeNewJob(); loadBoard();
+  }catch(e){
+    console.error('createJob error:',e);
+    showToast('Failed to create job: '+(e.message||'unknown error'));
+  }
+  btn.textContent='Create job'; btn.disabled=false;
+}
+
+// ══ TOAST ══════════════════════════════════════════════════
+let toastTimer=null;
+function showToast(msg){
+  const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
+  if(toastTimer) clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+// ══ LOGIN ON ENTER ══════════════════════════════════════════
+document.getElementById('loginUser').addEventListener('keydown',e=>{ if(e.key==='Enter') document.getElementById('loginPass').focus(); });
+// ══ STATUS CARDS STRIP ════════════════════════════════════
+const STATUS_COLORS = {
+  new:'#4C1D95',prepress:'#1E40AF',awaiting:'#92400E',revision:'#991B1B',
+  print:'#065F46',lam:'#065F46',cut:'#065F46',qa:'#065F46',
+  outsource:'#6B21A8',ready:'#047857',dispatched:'#155E75',pickedup:'#155E75',hold:'#713F12'
+};
+const STATUS_BG = {
+  new:'#EDE9FD',prepress:'#DBEAFE',awaiting:'#FEF3C7',revision:'#FEE2E2',
+  print:'#D1FAE5',lam:'#D1FAE5',cut:'#D1FAE5',qa:'#D1FAE5',
+  outsource:'#F3E8FF',ready:'#ECFDF5',dispatched:'#CFFAFE',pickedup:'#CFFAFE',hold:'#FEF9C3'
+};
+
+let stripVisible = true;
+let activeCardFilter = null;
+
+function renderStatusCards(jobs) {
+  var counts = {};
+  (jobs||[]).forEach(function(j) {
+    var s = (JOB_DATA[j.id] && JOB_DATA[j.id].status) || 'new';
+    counts[s] = (counts[s]||0) + 1;
+  });
+  var container = document.getElementById('statusCards');
+  if(!container) return;
+  var order = ['new','prepress','awaiting','revision','print','lam','cut','qa','outsource','ready','hold'];
+  var dots = {new:'#4C1D95',prepress:'#1E40AF',awaiting:'#92400E',revision:'#991B1B',print:'#065F46',lam:'#047857',cut:'#047857',qa:'#047857',outsource:'#6B21A8',ready:'#059669',hold:'#713F12'};
+  container.innerHTML = '';
+  order.forEach(function(s) {
+    var count = counts[s] || 0;
+    var active = (activeCardFilter === s);
+    var bg = active ? '#F5F3FF' : (count > 0 ? '#fff' : '#F9FAFB');
+    var bd = active ? '#7C3AED' : (count > 0 ? '#E5E7EB' : '#F3F4F6');
+    var nc = active ? '#7C3AED' : (count > 0 ? '#1E1B4B' : '#D1D5DB');
+    var lc = active ? '#7C3AED' : (count > 0 ? '#6B7280' : '#D1D5DB');
+    var dc = dots[s] || '#9CA3AF';
+    var lbl = STATUS_LABELS[s] || s;
+    var op = count > 0 ? '1' : '0.45';
+    var div = document.createElement('div');
+    div.setAttribute('onclick', "filterByCard('" + s + "')");
+    div.setAttribute('style',
+      'background:' + bg + ';border:1.5px solid ' + bd + ';border-radius:10px;' +
+      'padding:8px 14px;cursor:pointer;transition:.12s;display:inline-flex;flex-direction:column;' +
+      'gap:3px;min-width:84px;user-select:none;opacity:' + op
+    );
+    div.innerHTML =
+      '<div style="width:8px;height:8px;border-radius:50%;background:' + dc + ';margin-bottom:1px"></div>' +
+      '<div style="font-family:Inter Tight,sans-serif;font-size:22px;font-weight:800;color:' + nc + ';line-height:1">' + count + '</div>' +
+      '<div style="font-size:10px;font-weight:700;color:' + lc + ';text-transform:uppercase;letter-spacing:.05em;white-space:nowrap">' + lbl + '</div>';
+    container.appendChild(div);
+  });
+}
+
+function filterByCard(status) {
+  if(activeCardFilter === status) {
+    activeCardFilter = null;
+  } else {
+    activeCardFilter = status;
+  }
+  // Update card highlights
+  document.querySelectorAll('.scard').forEach(c => {
+    const isActive = c.getAttribute('onclick')===`filterByCard('${activeCardFilter}')`;
+    c.classList.toggle('active', isActive);
+  });
+  // Show/hide clear button
+  const clearBtn = document.getElementById('clearCardFilter');
+  if(clearBtn) clearBtn.style.display = activeCardFilter ? 'block' : 'none';
+  // Apply filter — override status dropdown filter
+  const statusSel = document.getElementById('filterStatus');
+  if(statusSel) statusSel.value = activeCardFilter || '';
+  applyFilters();
+}
+
+function clearStatusFilter() {
+  activeCardFilter = null;
+  document.querySelectorAll('.scard').forEach(c => c.classList.remove('active'));
+  const clearBtn = document.getElementById('clearCardFilter');
+  if(clearBtn) clearBtn.style.display = 'none';
+  const statusSel = document.getElementById('filterStatus');
+  if(statusSel) statusSel.value = '';
+  applyFilters();
+}
+
+function toggleStatusStrip() {
+  stripVisible = !stripVisible;
+  const cards = document.getElementById('statusCards');
+  const btn = document.getElementById('stripToggleBtn');
+  if(cards) cards.style.display = stripVisible ? 'flex' : 'none';
+  if(btn) btn.textContent = stripVisible ? '📊 Hide overview' : '📊 Show overview';
+}
+
+// ══ COMPLETED JOBS ════════════════════════════════════════
+let completedVisible = false;
+let completedLoaded = false;
+
+function toggleCompletedSection() {
+  completedVisible = !completedVisible;
+  const section = document.getElementById('completedSection');
+  const btn = document.getElementById('completedToggleBtn');
+  if(section) section.style.display = completedVisible ? 'block' : 'none';
+  if(btn) btn.textContent = completedVisible ? '✕ Hide completed jobs' : '✅ Show completed jobs';
+  if(completedVisible && !completedLoaded) {
+    loadCompletedJobs();
+    completedLoaded = true;
+  }
+}
+
+function toggleCompleted() {
+  const body = document.getElementById('completedBody');
+  const chevron = document.getElementById('completedChevron');
+  const isOpen = body.style.display !== 'none';
+  body.style.display = isOpen ? 'none' : 'block';
+  if(chevron) chevron.classList.toggle('open', !isOpen);
+}
+
+async function loadCompletedJobs() {
+  const db2 = getDB(); if(!db2) return;
+  const tbody = document.getElementById('completedTbody');
+  if(tbody) tbody.innerHTML = '<tr><td colspan="8" style="padding:20px;text-align:center;color:var(--ink3)">Loading…</td></tr>';
+
+  const {data:jobs} = await db2.from('jobs')
+    .select('*, customers(business_name,contact_name,email)')
+    .in('status',['dispatched','pickedup','cancelled'])
+    .order('updated_at',{ascending:false})
+    .limit(50);
+
+  if(!jobs||!jobs.length) {
+    if(tbody) tbody.innerHTML = '<tr><td colspan="8" style="padding:20px;text-align:center;color:var(--ink3)">No completed jobs yet</td></tr>';
+    return;
+  }
+
+  const jobIds = jobs.map(j=>j.id);
+  const {data:items} = await db2.from('job_items').select('*').in('job_id',jobIds);
+  const itemMap = {};
+  (items||[]).forEach(it=>{ itemMap[it.job_id]=it; });
+
+  let html = '';
+  jobs.forEach(job => {
+    const it = itemMap[job.id]||{};
+    const w=it.width_mm,h=it.height_mm;
+    const size=w&&h?w+'×'+h+' mm':'—';
+    const product = PRODUCT_LABELS[it.product_type]||it.product_type||'—';
+    const name = job.customers?.business_name||'Unknown';
+    const statusClass = chipClass(job.status);
+    const needsPickup = job.status==='dispatched'&&job.dispatch_method==='pickup';
+    html += `<tr style="cursor:pointer" onclick="openJob('${job.id}')">
+      <td><div style="font-size:20px">${it.product_type==='rolls'?'🏷️':it.product_type==='sheets'?'📋':'✂️'}</div></td>
+      <td><div class="job-id">${job.id}</div>${job.shopify_order_number?`<div class="shopify-ref">#${job.shopify_order_number}</div>`:''}</td>
+      <td><div class="cust-name">${name}</div></td>
+      <td>${product}</td>
+      <td>${size}</td>
+      <td style="text-align:right">${it.quantity?.toLocaleString()||'—'}</td>
+      <td><span class="stat-pill ${statusClass}" style="font-size:12px;padding:4px 12px;border-radius:999px;font-weight:700">${STATUS_LABELS[job.status]||job.status}</span></td>
+      <td>${job.outsource_tracking||'—'}${needsPickup?` <button onclick="event.stopPropagation();markJobPickedUp('${job.id}')" style="margin-left:8px;background:var(--green);color:#fff;border:none;border-radius:6px;padding:3px 8px;font-size:11px;font-weight:700;cursor:pointer">Mark picked up</button>`:''}</td>
+    </tr>`;
+  });
+  if(tbody) tbody.innerHTML = html;
+}
+
+async function markJobPickedUp(jobId) {
+  const db2 = getDB(); if(!db2) return;
+  await db2.from('jobs').update({status:'pickedup'}).eq('id',jobId);
+  showToast('Marked as picked up ✓');
+  loadCompletedJobs();
+}
+
+// ══ EXPAND TO FULL VIEW ═══════════════════════════════════
+function expandJob() {
+  const jobId = CURRENT_JOB_ID; if(!jobId) return;
+  const d = JOB_DATA[jobId]; if(!d) return;
+  // Open in a new tab showing all details full screen
+  const url = `/customer?token=internal&job=${jobId}`;
+  // Instead: make panel full screen
+  const panel = document.getElementById('jobPanel');
+  if(panel.style.width === '100vw') {
+    panel.style.width = '';
+    panel.style.maxWidth = '';
+  } else {
+    panel.style.width = '100vw';
+    panel.style.maxWidth = '100vw';
+  }
+}
+
+// ══ PROOF UPLOAD (SPLIT) ══════════════════════════════════
+
+async function uploadArtworkOnly() {
+  if(!proofFile||!CURRENT_JOB_ID) { showToast('Select a file first'); return; }
+  const btn = document.getElementById('uploadArtBtn');
+  btn.textContent = 'Saving…'; btn.disabled = true;
+  const db2 = getDB();
+  try {
+    const ext = proofFile.name.split('.').pop();
+    const path = `${CURRENT_JOB_ID}_${Date.now()}.${ext}`;
+    const {error:upErr} = await db2.storage.from('artwork').upload(path, proofFile, {contentType:proofFile.type,upsert:false});
+    if(upErr) throw upErr;
+    const {data:{publicUrl}} = db2.storage.from('artwork').getPublicUrl(path);
+    await db2.from('jobs').update({artwork_url:publicUrl, artwork_filename:proofFile.name}).eq('id', CURRENT_JOB_ID);
+    if(JOB_DATA[CURRENT_JOB_ID]) { JOB_DATA[CURRENT_JOB_ID].artUrl=publicUrl; JOB_DATA[CURRENT_JOB_ID].artFilename=proofFile.name; }
+    showToast('Artwork saved ✓');
+    populateJobDetail(CURRENT_JOB_ID);
+    loadArtworkVersions(CURRENT_JOB_ID);
+  } catch(e) { showToast('Upload failed: '+(e.message||'error')); }
+  btn.textContent = '💾 Save artwork only'; btn.disabled = false;
+  proofFile = null;
+  document.getElementById('proofFileName').style.display = 'none';
+  document.getElementById('uploadArtBtn').style.display = 'none';
+  document.getElementById('sendProofBtn').style.display = 'none';
+}
+
+function addProofThumb(url, filename) {
+  const area = document.getElementById('proofThumbArea');
+  const thumbs = document.getElementById('proofThumbs');
+  if(!area||!thumbs) return;
+  area.style.display = 'block';
+  const isImg = /\.(png|jpg|jpeg|gif|webp)$/i.test(filename||'');
+  if(isImg) {
+    thumbs.innerHTML += `<img class="proof-thumb" src="${url}" title="${filename}" onclick="window.open('${url}')">`;
+  } else {
+    thumbs.innerHTML += `<div class="proof-thumb-placeholder" onclick="window.open('${url}')" title="${filename}">📄</div>`;
+  }
+}
+
+async function loadProofThumbs_OLD(jobId) {
+  const db2 = getDB(); if(!db2) return;
+  const {data:proofs} = await db2.from('proofs').select('*').eq('job_id',jobId).order('created_at',{ascending:false});
+  const area = document.getElementById('proofThumbArea');
+  const thumbs = document.getElementById('proofThumbs');
+  if(!area||!thumbs) return;
+  if(proofs&&proofs.length) {
+    area.style.display = 'block';
+    thumbs.innerHTML = proofs.map(p => {
+      const isImg = /\.(png|jpg|jpeg|gif|webp)$/i.test(p.filename||p.file_url||'');
+      return isImg
+        ? `<img class="proof-thumb" src="${p.file_url}" title="${p.filename||'Proof'}" onclick="window.open('${p.file_url}')">`
+        : `<div class="proof-thumb-placeholder" onclick="window.open('${p.file_url}')" title="${p.filename||'Proof'}">📄</div>`;
+    }).join('');
+  } else {
+    area.style.display = 'none';
+  }
+}
+
+// ══ ARTWORK VERSIONING ════════════════════════════════════════════
+
+
+async function deleteVersion(proofId, jobId) {
+  if(!confirm('Remove this version?')) return;
+  const db2 = getDB(); if(!db2) return;
+  await db2.from('proofs').delete().eq('id', proofId);
+  showToast('Version removed ✓');
+  loadArtworkVersions(jobId);
+}
+
+async function removeJobArtwork(jobId) {
+  if(!confirm('Remove the original artwork?')) return;
+  const db2 = getDB(); if(!db2) return;
+  await db2.from('jobs').update({artwork_url: null, artwork_filename: null}).eq('id', jobId);
+  if(JOB_DATA[jobId]) { JOB_DATA[jobId].artUrl = ''; JOB_DATA[jobId].artFilename = ''; }
+  showToast('Artwork removed ✓');
+  loadArtworkVersions(jobId);
+}
+
+// Show preview immediately after file is selected
+function handleProofFile(file) {
+  if(!file) return;
+  proofFile = file;
+  var nameDiv = document.getElementById('proofFileName');
+  if(nameDiv) { nameDiv.textContent = '📎 ' + file.name; nameDiv.style.display = 'block'; }
+  document.getElementById('uploadArtBtn').style.display = 'block';
+  document.getElementById('previewEmailBtn').style.display = 'block';
+  document.getElementById('sendProofBtn').style.display = 'block';
+
+  // Show inline preview if image
+  var isImg = /\.(png|jpg|jpeg|gif|webp)$/i.test(file.name);
+  if(isImg) {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var preview = document.getElementById('uploadPreview');
+      if(!preview) {
+        preview = document.createElement('img');
+        preview.id = 'uploadPreview';
+        preview.setAttribute('style','max-width:100%;max-height:160px;border-radius:8px;margin-top:8px;object-fit:contain;border:1px solid var(--line)');
+        nameDiv.parentNode.insertBefore(preview, nameDiv.nextSibling);
+      }
+      preview.src = e.target.result;
+      preview.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  }
+}
+
+// ══ PDF PREVIEW RENDERING ═════════════════════════════════════════
+// Set PDF.js worker
+if(typeof pdfjsLib !== 'undefined') {
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+}
+
+// Render first page of PDF into a container div as a canvas
+async function renderPdfThumb(url, container, size) {
+  size = size || 52;
+  try {
+    if(typeof pdfjsLib === 'undefined') { container.innerHTML = '<div style="font-size:24px;color:#9CA3AF">📄</div>'; return; }
+    var loadingTask = pdfjsLib.getDocument({url: url, withCredentials: false});
+    var pdf = await loadingTask.promise;
+    var page = await pdf.getPage(1);
+    var viewport = page.getViewport({scale: 1});
+    // Scale to fit the container
+    var scale = size / Math.max(viewport.width, viewport.height);
+    var scaledViewport = page.getViewport({scale: scale});
+    var canvas = document.createElement('canvas');
+    canvas.width  = scaledViewport.width;
+    canvas.height = scaledViewport.height;
+    canvas.style.width  = '100%';
+    canvas.style.height = '100%';
+    canvas.style.objectFit = 'contain';
+    var ctx = canvas.getContext('2d');
+    await page.render({canvasContext: ctx, viewport: scaledViewport}).promise;
+    container.innerHTML = '';
+    container.appendChild(canvas);
+  } catch(e) {
+    console.warn('PDF thumb failed:', e.message);
+    container.innerHTML = '<div style="font-size:24px;color:#9CA3AF">📄</div>';
+  }
+}
+
+// Create a thumb container that auto-renders based on file type
+function makeThumbEl(url, name, size, extraStyle) {
+  size = size || 52;
+  var isImg  = /\.(png|jpg|jpeg|gif|webp)$/i.test(name || '');
+  var isPdf  = /\.pdf$/i.test(name || '') || (!isImg && url);
+  var wrap = document.createElement('div');
+  wrap.setAttribute('style',
+    'width:' + size + 'px;height:' + size + 'px;border-radius:8px;border:1.5px solid #E5E7EB;' +
+    'overflow:hidden;background:#F9FAFB;display:flex;align-items:center;justify-content:center;' +
+    'cursor:pointer;flex-shrink:0;position:relative;' + (extraStyle||'')
+  );
+  wrap.setAttribute('onclick', "window.open('" + url + "')");
+  if(isImg) {
+    var img = document.createElement('img');
+    img.src = url;
+    img.setAttribute('style', 'width:100%;height:100%;object-fit:cover');
+    img.onerror = function(){ wrap.innerHTML = '<div style="font-size:24px">🖼️</div>'; };
+    wrap.appendChild(img);
+  } else if(isPdf) {
+    wrap.innerHTML = '<div style="font-size:20px;color:#9CA3AF">⏳</div>';
+    renderPdfThumb(url, wrap, size);
+  } else {
+    wrap.innerHTML = '<div style="font-size:24px">📎</div>';
+  }
+  return wrap;
+}
+
+// Render PDF thumbnails in table rows after they're inserted into DOM
+async function applyPdfThumbs() {
+  var canvases = document.querySelectorAll('canvas[data-pdf]');
+  canvases.forEach(function(canvas) {
+    var url = canvas.getAttribute('data-pdf');
+    if(url && typeof pdfjsLib !== 'undefined') {
+      canvas.removeAttribute('data-pdf');
+      var size = 56;
+      pdfjsLib.getDocument({url: url, withCredentials: false}).promise.then(function(pdf) {
+        return pdf.getPage(1);
+      }).then(function(page) {
+        var vp = page.getViewport({scale: 1});
+        var scale = size / Math.max(vp.width, vp.height);
+        var svp = page.getViewport({scale: scale});
+        canvas.width  = svp.width;
+        canvas.height = svp.height;
+        page.render({canvasContext: canvas.getContext('2d'), viewport: svp});
+      }).catch(function(){ canvas.parentNode.innerHTML = '📄'; });
+    }
+  });
+}
+
+// ══ EDIT MODE ═════════════════════════════════════════════════════════
+var _editMode = false;
+
+function toggleEditMode() {
+  _editMode = !_editMode;
+  var viewEl = document.getElementById('specViewMode');
+  var editEl = document.getElementById('specEditMode');
+  var btn    = document.getElementById('editModeBtn');
+  if(!viewEl || !editEl) return;
+
+  if(_editMode) {
+    viewEl.style.display = 'none';
+    editEl.style.display = 'block';
+    btn.textContent = '✕ Cancel edit';
+    btn.style.borderColor = 'var(--red)';
+    btn.style.color = 'var(--red)';
+    // Pre-fill edit fields from current job data
+    var d = JOB_DATA[CURRENT_JOB_ID] || {};
+    var sf = function(id, val) { var el=document.getElementById(id); if(el) el.value=val||''; };
+    sf('ef-biz', d.name); sf('ef-contact', d.contact);
+    sf('ef-email', d.email); sf('ef-phone', d.phone); sf('ef-addr', d.addr);
+    sf('ef-qty', (d.qty||'').replace(/,/g,'')); sf('ef-shape', d.shape);
+    sf('ef-material', d.material); sf('ef-notes', d.notes||'');
+    // Size — parse from "90×60 mm"
+    var sizeParts = (d.size||'').match(/(\d+)[×x](\d+)/);
+    if(sizeParts) { sf('ef-w', sizeParts[1]); sf('ef-h', sizeParts[2]); }
+    // Selects
+    var ps=document.getElementById('ef-product'); if(ps) ps.value=d.productKey||'rolls';
+    var ls=document.getElementById('ef-lam'); if(ls) ls.value=d.lam||'';
+    var ds=document.getElementById('ef-dispatch'); if(ds) ds.value=d.dispatchMethod||'road';
+    // Due date — convert from "3 Jul" back to YYYY-MM-DD using raw if available
+    if(d.dueRaw) { sf('ef-due', d.dueRaw); }
+  } else {
+    viewEl.style.display = 'block';
+    editEl.style.display = 'none';
+    btn.textContent = '✏ Edit job';
+    btn.style.borderColor = '';
+    btn.style.color = '';
+  }
+}
+
+async function saveJobEdits() {
+  var jobId = CURRENT_JOB_ID; if(!jobId) return;
+  var db2 = getDB(); if(!db2) return;
+
+  var btn = document.querySelector('.btn-save'); if(btn) { btn.textContent='Saving…'; btn.disabled=true; }
+
+  try {
+    var gf = function(id) { var el=document.getElementById(id); return el?el.value.trim():''; };
+
+    // Update customer record
+    var d = JOB_DATA[jobId] || {};
+    if(d.customerId || true) {
+      // Get customer_id from jobs table
+      var {data:jobRow} = await db2.from('jobs').select('customer_id').eq('id',jobId).single();
+      if(jobRow && jobRow.customer_id) {
+        await db2.from('customers').update({
+          business_name: gf('ef-biz') || null,
+          contact_name:  gf('ef-contact') || null,
+          email:         gf('ef-email') || null,
+          phone:         gf('ef-phone') || null,
+          address_full:  gf('ef-addr') || null,
+        }).eq('id', jobRow.customer_id);
+      }
+    }
+
+    // Update job record
+    var dueVal = gf('ef-due');
+    await db2.from('jobs').update({
+      dispatch_method: gf('ef-dispatch') || 'road',
+      due_date:        dueVal || null,
+    }).eq('id', jobId);
+
+    // Update job_items
+    var w = parseFloat(gf('ef-w')) || null;
+    var h = parseFloat(gf('ef-h')) || null;
+    var qty = parseInt(gf('ef-qty')) || null;
+    var {data:items} = await db2.from('job_items').select('id').eq('job_id',jobId).limit(1);
+    if(items && items.length) {
+      await db2.from('job_items').update({
+        product_type: gf('ef-product') || null,
+        quantity:     qty,
+        shape:        gf('ef-shape') || null,
+        width_mm:     w,
+        height_mm:    h,
+        material:     gf('ef-material') || null,
+        laminate:     gf('ef-lam') || null,
+      }).eq('id', items[0].id);
+    }
+
+    // Update local cache
+    if(JOB_DATA[jobId]) {
+      JOB_DATA[jobId].name   = gf('ef-biz');
+      JOB_DATA[jobId].contact = gf('ef-contact');
+      JOB_DATA[jobId].email  = gf('ef-email');
+      JOB_DATA[jobId].phone  = gf('ef-phone');
+      JOB_DATA[jobId].addr   = gf('ef-addr');
+      JOB_DATA[jobId].lam    = gf('ef-lam');
+      JOB_DATA[jobId].dispatchMethod = gf('ef-dispatch');
+      JOB_DATA[jobId].dueRaw = dueVal;
+    }
+
+    showToast('Job updated ✓');
+    _editMode = true; // force toggle off
+    toggleEditMode();
+    populateJobDetail(jobId);
+
+  } catch(e) {
+    showToast('Save failed: ' + e.message);
+    console.error('saveJobEdits:', e);
+  }
+  if(btn) { btn.textContent='Save changes'; btn.disabled=false; }
+}
+
+// ══ FILE TIMELINE ══════════════════════════════════════════════════════
+async function loadArtworkVersions(jobId) {
+  var db2 = getDB(); if(!db2) return;
+  var list = document.getElementById('artVersionList');
+  var strip = document.getElementById('artVersionStrip');
+  var stripWrap = document.getElementById('artQuickStrip');
+  var countLbl = document.getElementById('fileCountLabel');
+
+  // Fetch proofs
+  var {data:proofs} = await db2.from('proofs').select('*').eq('job_id',jobId).order('created_at',{ascending:false});
+  var job = JOB_DATA[jobId] || {};
+  var allFiles = [];
+
+  if(proofs && proofs.length) {
+    proofs.forEach(function(p) {
+      allFiles.push({ id:p.id, url:p.file_url, name:p.filename||'Proof', type:'proof',
+        status:p.status||'sent', date:p.created_at, table:'proofs' });
+    });
+  }
+  if(job.artUrl) {
+    allFiles.push({ id:'job-art', url:job.artUrl, name:job.artFilename||'Original artwork',
+      type:'artwork', status:'original', date:null, table:'jobs' });
+  }
+
+  if(countLbl) countLbl.textContent = allFiles.length ? allFiles.length + ' file' + (allFiles.length===1?'':'s') : '';
+
+  // Quick strip
+  if(stripWrap) stripWrap.style.display = allFiles.length ? 'block' : 'none';
+  if(strip) {
+    strip.innerHTML = '';
+    allFiles.forEach(function(f) {
+      var label = f.type==='proof'?'PROOF':'ART';
+      var wrap = document.createElement('div');
+      wrap.style.cssText = 'position:relative;flex-shrink:0';
+      var thumb = makeThumbEl(f.url, f.name, 90, 'border:1.5px solid #DDD6FE;');
+      thumb.title = f.name;
+      var badge = document.createElement('div');
+      badge.style.cssText = 'position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.55);font-size:8px;color:#fff;padding:2px;text-align:center;font-weight:700;border-radius:0 0 6px 6px;pointer-events:none';
+      badge.textContent = label;
+      wrap.appendChild(thumb); wrap.appendChild(badge);
+      strip.appendChild(wrap);
+    });
+  }
+
+  // Full timeline list
+  if(!list) return;
+  if(!allFiles.length) {
+    list.innerHTML = '<div style="padding:24px;text-align:center;color:var(--ink3);font-size:13px">No files yet</div>';
+    return;
+  }
+
+  list.innerHTML = '';
+  allFiles.forEach(function(f, i) {
+    var isImg = /\.(png|jpg|jpeg|gif|webp)$/i.test(f.name||'');
+    var statusMap = { original:'art', proof:'proof', sent:'proof', approved:'approved', revision_requested:'revision' };
+    var badgeClass = statusMap[f.status] || 'proof';
+    var badgeLabel = f.status==='approved'?'✓ Approved':f.status==='revision_requested'?'↩ Revision':f.status==='original'?'Original artwork':f.status==='sent'?'Sent to customer':'Proof';
+
+    var entry = document.createElement('div');
+    entry.className = 'file-entry';
+
+    // Thumb
+    var thumbDiv = document.createElement('div');
+    thumbDiv.className = 'file-thumb-sm';
+    thumbDiv.onclick = function() { window.open(f.url); };
+    if(isImg) {
+      var img = document.createElement('img');
+      img.src = f.url; img.style.cssText = 'width:100%;height:100%;object-fit:cover';
+      thumbDiv.appendChild(img);
+    } else {
+      thumbDiv.innerHTML = '<div style="font-size:22px">📄</div>';
+      renderPdfThumb(f.url, thumbDiv, 46);
+    }
+
+    // Info
+    var info = document.createElement('div');
+    info.className = 'file-info';
+    var versionNum = allFiles.length - i;
+    info.innerHTML = '<div class="file-name" title="' + f.name + '">v' + versionNum + ' — ' + f.name + '</div>'
+      + '<div class="file-meta">'
+      + '<span class="file-badge ' + badgeClass + '">' + badgeLabel + '</span>'
+      + (f.date ? '<span>' + fmtDate(f.date) + '</span>' : '')
+      + '</div>';
+
+    // Actions
+    var acts = document.createElement('div');
+    acts.className = 'file-actions';
+    var dl = document.createElement('a');
+    dl.href=f.url; dl.target='_blank'; dl.rel='noopener';
+    dl.className='file-btn'; dl.textContent='⬇'; dl.title='Download';
+    var del = document.createElement('button');
+    del.className='file-btn del'; del.textContent='✕'; del.title='Remove';
+    if(f.table==='proofs') {
+      del.onclick = function() { deleteVersion(f.id, jobId); };
+    } else {
+      del.onclick = function() { removeJobArtwork(jobId); };
+    }
+    acts.appendChild(dl); acts.appendChild(del);
+
+    entry.appendChild(thumbDiv); entry.appendChild(info); entry.appendChild(acts);
+    list.appendChild(entry);
+  });
+}
+
+
+async function archiveFulfilled() {
+  // Preview first
+  var btn = event.target;
+  btn.textContent = '⏳ Checking…'; btn.disabled = true;
+  try {
+    var r = await fetch('/api/archive-fulfilled?secret=stickysitch2024');
+    var d = await r.json();
+    if(d.jobs_to_archive === 0) {
+      showToast(d.message || 'Board is already clean ✓');
+    } else {
+      var msg = d.jobs_to_archive + ' fulfilled job(s) will be archived: ' +
+        (d.preview||[]).slice(0,3).map(function(j){return j.order;}).join(', ') +
+        (d.jobs_to_archive > 3 ? ' +' + (d.jobs_to_archive-3) + ' more' : '') +
+        '. Confirm?';
+      if(confirm(msg)) {
+        var r2 = await fetch('/api/archive-fulfilled?secret=stickysitch2024&run=1');
+        var d2 = await r2.json();
+        showToast(d2.archived + ' job(s) archived ✓');
+        setTimeout(loadBoard, 800);
+      }
+    }
+  } catch(e) { showToast('Archive failed: ' + e.message); }
+  btn.textContent = '✅ Archive fulfilled'; btn.disabled = false;
+}
+
+async function syncArtwork() {
+  var btn = event.target;
+  btn.textContent = '🖼 Syncing…';
+  btn.disabled = true;
+  try {
+    var r = await fetch('/api/sync-artwork?secret=stickysitch2024&missing=1');
+    var d = await r.json();
+    showToast(d.linked + ' artwork' + (d.linked===1?'':'s') + ' linked from Shopify ✓');
+    if(d.linked > 0) setTimeout(loadBoard, 1000);
+  } catch(e) {
+    showToast('Artwork sync failed: ' + e.message);
+  }
+  btn.textContent = '🖼 Sync artwork';
+  btn.disabled = false;
+}
+
+function previewProofEmail() {
+  var jobId = CURRENT_JOB_ID; if(!jobId) return;
+  var d = JOB_DATA[jobId] || {};
+  var fname = proofFile ? proofFile.name : 'your proof file';
+  var contact = d.contact || d.name || 'there';
+  var html = '<div style="background:#f4f4f0;padding:24px;font-family:sans-serif"><div style="max-width:560px;margin:0 auto">'
+    + '<div style="background:#1E1B4B;border-radius:12px 12px 0 0;padding:28px 32px;text-align:center"><div style="font-size:26px;font-weight:800;color:#fff">Sticky<span style="color:#A78BFA">Sitch</span></div></div>'
+    + '<div style="background:#fff;border-radius:0 0 12px 12px;padding:32px;border:1px solid #E5E7EB;border-top:none">'
+    + '<h2 style="color:#1E1B4B;font-size:20px;margin:0 0 8px">Your proof is ready to review</h2>'
+    + '<p style="color:#6B7280;font-size:14px;margin:0 0 20px">Hi ' + contact + ', your artwork proof for your StickySitch order is ready.</p>'
+    + '<div style="background:#F5F3FF;border:1.5px solid #DDD6FE;border-radius:10px;padding:16px;margin-bottom:20px">'
+    + '<div style="font-size:12px;font-weight:700;text-transform:uppercase;color:#7C3AED;margin-bottom:8px">Order details</div>'
+    + '<table style="width:100%;font-size:14px">'
+    + '<tr><td style="padding:3px 0;color:#6B7280;width:100px">Product</td><td style="font-weight:600">' + (d.product||'—') + '</td></tr>'
+    + '<tr><td style="padding:3px 0;color:#6B7280">Size</td><td style="font-weight:600">' + (d.size||'—') + '</td></tr>'
+    + '<tr><td style="padding:3px 0;color:#6B7280">Quantity</td><td style="font-weight:600">' + (d.qty||'—') + '</td></tr>'
+    + '<tr><td style="padding:3px 0;color:#6B7280">File</td><td>' + fname + '</td></tr>'
+    + '</table></div>'
+    + '<div style="background:#ECFDF5;border:1.5px solid #86EFAC;border-radius:10px;padding:20px;text-align:center;margin-bottom:20px">'
+    + '<p style="color:#166534;font-size:14px;margin:0 0 14px">Review your proof and let us know if you approve or need changes.</p>'
+    + '<a href="#" style="background:#059669;color:#fff;padding:13px 28px;border-radius:9px;font-weight:700;font-size:15px;text-decoration:none;display:inline-block">Check Proof &amp; Approve</a>'
+    + '</div>'
+    + '<div style="background:#FEF3C7;border:1px solid #FCD34D;border-radius:8px;padding:12px 14px;font-size:13px;color:#92400E">'
+    + '<b>Nothing prints until you approve.</b> Please check all text, colours and layout carefully.'
+    + '</div>'
+    + '<div style="margin-top:24px;padding-top:20px;border-top:1px solid #E5E7EB;font-size:12px;color:#9CA3AF;text-align:center">StickySitch &middot; Braybrook VIC 3019 &middot; info@stickysitch.com.au</div>'
+    + '</div></div></div>';
+  document.getElementById('emailPreviewContent').innerHTML = html;
+  document.getElementById('emailPreviewModal').style.display = 'flex';
+}
+
+</script>
+
+<!-- Email Preview Modal -->
+<div class="modal-overlay" id="emailPreviewModal" style="display:none">
+  <div class="modal" style="max-width:700px">
+    <div class="modal-head">
+      <div class="modal-title">📧 Customer proof email preview</div>
+      <button class="modal-close" onclick="document.getElementById('emailPreviewModal').style.display='none'">✕</button>
+    </div>
+    <div style="padding:20px 24px">
+      <div style="font-size:12px;color:var(--ink3);margin-bottom:12px;padding:8px 12px;background:#F9FAFB;border-radius:8px">
+        This is what the customer will see in their inbox when you send a proof.
+      </div>
+      <div id="emailPreviewContent" style="border:1.5px solid var(--line);border-radius:10px;padding:0;overflow:hidden"></div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

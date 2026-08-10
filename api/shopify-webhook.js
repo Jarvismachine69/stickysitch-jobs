@@ -153,6 +153,88 @@ async function upsertCustomer(order) {
   return newCust.id;
 }
 
+// ── Artwork↔order matching helpers ───────────────────────────────────
+function digitsOnly(s) { return (s || '').replace(/\D/g, ''); }
+
+function orderCustomerName(order) {
+  return `${order.customer?.first_name || ''} ${order.customer?.last_name || ''}`.trim().toLowerCase();
+}
+
+function orderRefs(order, specs) {
+  const refs = new Set();
+  if (specs.draftOrderRef) refs.add(String(specs.draftOrderRef).replace(/^#/, ''));
+  if (order.name)          refs.add(String(order.name).replace(/^#/, ''));
+  if (order.order_number)  refs.add(String(order.order_number));
+  return [...refs].filter(r => r && r.length >= 3);
+}
+
+// Score how likely a pending_orders submission belongs to this order.
+function scorePending(p, ctx) {
+  let score = 0; const reasons = [];
+  const pEmail = (p.email || '').toLowerCase().trim();
+  if (pEmail && ctx.email && pEmail === ctx.email)                                { score += 100; reasons.push('email'); }
+  else if (pEmail && ctx.email && pEmail.split('@')[0] === ctx.email.split('@')[0]){ score += 45;  reasons.push('email local-part'); }
+  const pPhone = digitsOnly(p.phone);
+  if (pPhone && ctx.phone && pPhone.length >= 8 && pPhone.slice(-8) === ctx.phone.slice(-8)) { score += 55; reasons.push('phone'); }
+  const pName = (p.name || '').toLowerCase().trim();
+  if (pName && ctx.name && pName.length > 3 &&
+      (pName === ctx.name || ctx.name.includes(pName) || pName.includes(ctx.name)))  { score += 40; reasons.push('name'); }
+  const hay = (JSON.stringify(p.raw_fields || {}) + ' ' + (p.artwork_filename || '')).toLowerCase();
+  if (ctx.refs.some(r => hay.includes(r.toLowerCase())))                            { score += 60; reasons.push('order/draft ref'); }
+  if (p.product_type && ctx.productType && String(p.product_type).toLowerCase().includes(ctx.productType)) { score += 10; reasons.push('product'); }
+  if (p.quantity && ctx.qty && Number(p.quantity) === Number(ctx.qty))              { score += 12; reasons.push('qty'); }
+  if (p.created_at) { const days = (new Date(ctx.placedAt) - new Date(p.created_at)) / 86400000; if (days >= -1 && days <= 30) { score += 8; reasons.push('recent'); } }
+  return { score, reasons };
+}
+
+// Does this order indicate the customer uploaded artwork (so a missing
+// link is a real problem, not just "they haven't sent it yet")?
+function artworkExpected(order, specs) {
+  if (order.source_name === 'shopify_draft_order') return true;
+  const attrKeys = Object.keys(specs.rawAttrs || {}).join(' ');
+  if (/artwork|design|upload|proof|file/i.test(attrKeys)) return true;
+  if (specs.artworkStatus && /upload|receiv|attach|sent|yes|done|complete/i.test(specs.artworkStatus)) return true;
+  if (specs.draftOrderRef) return true;
+  return false;
+}
+
+// Add a visible flag when a paid order has no matched artwork:
+//   1) an internal job note (shows on the board),
+//   2) a Shopify order tag + note (shows in Shopify admin).
+async function flagUnmatchedArtwork(jobId, order, orderNumber, email, orphans) {
+  const orphanTxt = (orphans && orphans.length)
+    ? ' Possible unmatched upload(s): ' + orphans.map(o => `${o.artwork_filename || 'artwork'} <${o.email || '?'}>`).join('; ') + '.'
+    : ' No uploaded file found on record — customer may not have uploaded, or used a different email.';
+  const content = `⚠ ARTWORK NOT MATCHED — Order #${orderNumber} is paid but no uploaded artwork was linked by email (${email || 'no email on order'}).${orphanTxt} Link it on the Artwork Matching page before it reaches production.`;
+
+  try { await supabase.from('job_notes').insert({ job_id: jobId, content, author_name: 'System' }); }
+  catch (e) { console.error('flag note failed:', e.message); }
+
+  // Optional column — silently ignored if it doesn't exist.
+  try { await supabase.from('jobs').update({ artwork_review: true }).eq('id', jobId); } catch (e) {}
+
+  // Shopify order tag + note so it's visible in the Shopify admin too.
+  try { await tagShopifyOrder(order, 'artwork-unmatched', content); }
+  catch (e) { console.error('shopify tag failed:', e.message); }
+}
+
+async function tagShopifyOrder(order, tag, noteLine) {
+  const SHOP  = process.env.SHOPIFY_STORE_URL;
+  const TOKEN = process.env.SHOPIFY_ACCESS_TOKEN;
+  if (!SHOP || !TOKEN || !order.id) return;
+  const tags = (order.tags || '').split(',').map(t => t.trim()).filter(Boolean);
+  if (!tags.includes(tag)) tags.push(tag);
+  const existingNote = order.note || '';
+  const note = existingNote.includes('ARTWORK NOT MATCHED')
+    ? existingNote
+    : (existingNote ? existingNote + '\n\n' : '') + noteLine;
+  await fetch(`https://${SHOP}/admin/api/2024-01/orders/${order.id}.json`, {
+    method: 'PUT',
+    headers: { 'X-Shopify-Access-Token': TOKEN, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ order: { id: order.id, tags: tags.join(', '), note } }),
+  });
+}
+
 // ── Main handler ─────────────────────────────────────────────────────
 export const config = { api: { bodyParser: false } };
 
@@ -259,38 +341,73 @@ export default async function handler(req, res) {
     const { error: itemsError } = await supabase.from('job_items').insert(jobItems);
     if (itemsError) console.error('job_items insert error:', itemsError.message);
 
-    // ── Match pending_orders by email for artwork linking ────────────
-    if (!artworkUrl && customerEmail) {
-      const { data: pendingRecords } = await supabase
-        .from('pending_orders')
-        .select('*')
-        .eq('email', customerEmail)
-        .is('matched_job_id', null)
-        .order('created_at', { ascending: false });
+    // ── Match a pending artwork submission to this paid order ────────
+    // Primary signal is email, but customers often pay under a different
+    // email than they uploaded with. So we score every recent unmatched
+    // submission on email / phone / name / order-ref / specs and auto-link
+    // the best confident candidate. If none matches but artwork was
+    // expected (or a likely orphan exists), we FLAG it visibly instead of
+    // failing silently. Wrapped so a matching error never breaks the 200.
+    if (!artworkUrl) {
+      try {
+        const ctx = {
+          email:       customerEmail,
+          phone:       digitsOnly(order.phone || order.billing_address?.phone || order.shipping_address?.phone),
+          name:        orderCustomerName(order),
+          refs:        orderRefs(order, specs),
+          productType, qty: specs.qty, placedAt,
+        };
 
-      const pending = pendingRecords || [];
-      if (pending.length > 0) {
-        // Match by product type if possible, otherwise take most recent
-        const match = pending.find(p =>
-          !p.product_type || (p.product_type || '').toLowerCase().includes(productType)
-        ) || pending[0];
+        // Candidate pool: unmatched submissions from the last 90 days.
+        const since = new Date(Date.now() - 90 * 86400000).toISOString();
+        const { data: cands } = await supabase
+          .from('pending_orders')
+          .select('*')
+          .is('matched_job_id', null)
+          .gte('created_at', since)
+          .order('created_at', { ascending: false })
+          .limit(200);
 
-        if (match && match.artwork_url) {
+        const scored = (cands || [])
+          .map(p => ({ p, ...scorePending(p, ctx) }))
+          .sort((a, b) => b.score - a.score);
+        const best = scored[0];
+        const AUTO_THRESHOLD = 50;   // confident enough to auto-link
+
+        if (best && best.score >= AUTO_THRESHOLD && best.p.artwork_url) {
           await supabase.from('jobs').update({
-            artwork_url:      match.artwork_url,
-            artwork_filename: match.artwork_filename || 'artwork',
+            artwork_url:      best.p.artwork_url,
+            artwork_filename: best.p.artwork_filename || 'artwork',
           }).eq('id', job.id);
-
           await supabase.from('pending_orders')
             .update({ matched_job_id: job.id, matched_at: new Date().toISOString() })
-            .eq('id', match.id);
-
-          console.log(`✓ Linked artwork from pending_orders ${match.id} to job ${job.id}`);
+            .eq('id', best.p.id);
+          artworkUrl = best.p.artwork_url;
+          console.log(`✓ Auto-linked artwork ${best.p.id} → job ${job.id} (score ${best.score}: ${best.reasons.join(', ')})`);
+          // If the link relied on a non-email signal, leave a note so staff
+          // can eyeball the match on a job the system linked "loosely".
+          if (!best.reasons.includes('email')) {
+            await supabase.from('job_notes').insert({
+              job_id: job.id, author_name: 'System',
+              content: `Artwork auto-linked by ${best.reasons.join(' + ')} (not email). File: ${best.p.artwork_filename || 'artwork'} <${best.p.email || '?'}>. Please confirm it's the right file.`,
+            }).catch(() => {});
+          }
+        } else {
+          // No confident match. Flag when artwork was expected, or when a
+          // plausible orphan submission exists that a human should check.
+          const orphans  = scored.filter(s => s.score >= 20).slice(0, 3).map(s => s.p);
+          const expected = artworkExpected(order, specs);
+          if (expected || orphans.length) {
+            await flagUnmatchedArtwork(job.id, order, orderNumber, customerEmail, orphans);
+            console.log(`⚠ Flagged order #${orderNumber} (job ${job.id}) — artwork expected but not matched. ${orphans.length} orphan candidate(s).`);
+          }
         }
+      } catch (matchErr) {
+        console.error('artwork match/flag error (non-fatal):', matchErr.message);
       }
     }
 
-    return res.status(200).json({ success: true, job: job.id, order: orderNumber });
+    return res.status(200).json({ success: true, job: job.id, order: orderNumber, artwork_linked: !!artworkUrl });
 
   } catch (err) {
     console.error(`Webhook error for order #${orderNumber}:`, err.message);
