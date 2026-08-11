@@ -285,6 +285,37 @@ table.list tbody tr:hover{background:var(--purple-soft)}
 #toast .ok{color:#7BD8A6}
 .empty{padding:44px;text-align:center;color:var(--faint);font-size:12.5px}
 
+/* ── Artwork thumbnails / preview / viewer ── */
+.artthumb{position:relative;border-radius:6px;overflow:hidden;background:#F4F5F7;border:2px solid var(--ring,#E5E7EB);display:flex;align-items:center;justify-content:center;flex:0 0 auto;cursor:zoom-in}
+.artthumb.noart{border-style:dashed;cursor:default}
+.artthumb img,.artthumb canvas{width:100%;height:100%;object-fit:cover;display:block}
+.artthumb .pdfthumb{width:100%;height:100%;display:flex;align-items:center;justify-content:center}
+.artthumb .pdfthumb img,.artthumb .pdfthumb canvas{width:100%;height:100%;object-fit:cover}
+.art-corner{position:absolute;top:2px;right:2px;min-width:15px;height:15px;padding:0 3px;border-radius:8px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;box-shadow:0 1px 3px rgba(0,0,0,.25);line-height:1}
+.art-tile{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:repeating-linear-gradient(45deg,#F6F6F8 0 6px,#EEF0F3 6px 12px);color:var(--muted2);font-size:9px;font-weight:600;text-align:center;padding:2px}
+.fmt-tile{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px;font-weight:600;color:var(--muted);background:#F4F5F7}
+#artHover{position:fixed;z-index:400;pointer-events:none;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 14px 44px rgba(16,18,29,.24);padding:8px;width:284px;display:none}
+#artHover .ph{width:100%;height:224px;background:#F4F5F7;border-radius:6px;overflow:hidden;display:flex;align-items:center;justify-content:center;margin-bottom:7px}
+#artHover .ph img,#artHover .ph canvas{width:100%;height:100%;object-fit:contain}
+#artHover .hmeta{padding:0 2px 2px}
+.viewer-scrim{position:fixed;inset:0;z-index:120;display:none;flex-direction:column;background:rgba(16,18,29,.9)}
+.viewer-scrim.open{display:flex}
+.viewer-bar{display:flex;align-items:center;gap:8px;padding:11px 14px;color:#fff;flex:0 0 auto;flex-wrap:wrap}
+.viewer-stage{flex:1;min-height:0;overflow:auto;display:flex;align-items:center;justify-content:center;padding:14px}
+.viewer-img{max-width:100%;max-height:100%;transform-origin:center center;user-select:none}
+.vbtn{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:#fff;border-radius:6px;padding:6px 11px;font-size:12px;font-weight:600;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center}
+.vbtn:hover{background:rgba(255,255,255,.22)}
+.vbtn[disabled]{opacity:.4;cursor:default}
+.pack-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}
+.pack-card{background:#fff;border:1px solid var(--line);border-radius:8px;overflow:hidden;cursor:pointer}
+.pack-card:hover{border-color:#C9CDD6;box-shadow:0 2px 12px rgba(16,18,29,.09)}
+.pack-art{width:100%;aspect-ratio:1/1;background:#F4F5F7;position:relative;border-bottom:1px solid var(--line2);cursor:zoom-in}
+.pack-art .artthumb{border:0;border-radius:0}
+.pack-art .artthumb img,.pack-art .artthumb canvas,.pack-art .pdfthumb img,.pack-art .pdfthumb canvas{object-fit:contain}
+.pack-status{position:absolute;left:8px;bottom:8px;font-size:11px;font-weight:700;padding:3px 8px;border-radius:6px;background:rgba(255,255,255,.92);box-shadow:0 1px 4px rgba(0,0,0,.12)}
+.jc-main{display:flex;gap:10px;margin-bottom:7px}
+.jc-info{min-width:0;flex:1}
+
 @media(max-width:960px){
   aside.sidebar{position:fixed;left:0;top:0;bottom:0;z-index:50;transform:translateX(-100%);transition:.2s;box-shadow:6px 0 30px rgba(0,0,0,.12)}
   aside.sidebar.open{transform:none}
@@ -411,6 +442,11 @@ table.list tbody tr:hover{background:var(--purple-soft)}
     <div class="modal-body"><div id="emailPreviewContent" style="border:1px solid var(--line);border-radius:10px;overflow:hidden"></div></div>
   </div>
 </div>
+
+<!-- Artwork hover quick-preview -->
+<div id="artHover"><div class="ph"></div><div class="hmeta"></div></div>
+<!-- Full artwork viewer -->
+<div class="viewer-scrim" id="artViewer"></div>
 
 <div id="toast"><span class="ok">✓</span><span id="toastMsg"></span></div>
 
@@ -803,6 +839,7 @@ const VIEWS = {
   dashboard:{title:'Dashboard',sub:'What needs to happen next'},
   board:{title:'Production board',sub:'Kanban — drag a card to change stage'},
   list:{title:'All jobs',sub:'Search, sort and bulk-update'},
+  packing:{title:'Packing / quick scan',sub:'Match printed products to artwork by sight'},
   schedule:{title:'Production queue',sub:'Today & upcoming by stage'},
   calendar:{title:'Calendar',sub:'Jobs by due date'},
   matching:{title:'Artwork matching',sub:'Submissions → paid orders'},
@@ -816,6 +853,7 @@ function renderNav(){
     ['dashboard','Dashboard', APP.jobs.filter(j=>j.flags.length).length],
     ['board','Board', activeJobs().length],
     ['list','List', APP.jobs.length],
+    ['packing','Packing view', activeJobs().length],
     ['schedule','Production', APP.jobs.filter(j=>['approved','printing','finishing','qc','ready'].includes(j.stage)).length],
     ['calendar','Calendar', activeJobs().filter(j=>j.dueRaw).length],
     ['matching','Artwork matching', APP.pending.filter(p=>!p.matched_job_id).length],
@@ -927,6 +965,7 @@ function render(){
   if(APP.view==='dashboard') b.innerHTML=viewDashboard();
   else if(APP.view==='board') b.innerHTML=viewBoard();
   else if(APP.view==='list') b.innerHTML=viewList();
+  else if(APP.view==='packing') b.innerHTML=viewPacking();
   else if(APP.view==='schedule') b.innerHTML=viewSchedule();
   else if(APP.view==='calendar') b.innerHTML=viewCalendar();
   else if(APP.view==='matching') b.innerHTML=viewMatching();
@@ -1018,9 +1057,15 @@ function jobCard(j){
   const prog=(j.stage==='printing'||j.stage==='finishing')?`<div class="progress"><i style="width:${j.progress}%"></i></div>`:'';
   return `<article class="jcard" draggable="true" data-id="${j.id}" ondragstart="cardDragStart(event,'${j.id}')" ondragend="cardDragEnd(event)" onclick="openDrawer('${j.id}')" style="border-left-color:${j.stageDot}">
     <div class="jc-top"><span class="jc-id">${j.id}</span>${priBadge(j.priority)}<span style="margin-left:auto;font-size:11px;color:var(--red)">${flagIcons}</span></div>
-    <div class="jc-co">${esc(j.co)}</div>
-    <div class="jc-spec">${esc(j.product)} · ${esc(j.size)} · ${fmtQty(j.qty)}</div>
-    <div class="jc-mat">${esc(j.material||j.shape||'—')}${j.laminate?' · '+esc(j.laminate):''}</div>
+    <div class="jc-main">
+      ${artThumbHTML(j,58)}
+      <div class="jc-info">
+        <div class="jc-co">${esc(j.co)}</div>
+        <div class="jc-spec">${fmtQty(j.qty)} · ${esc(j.product)}</div>
+        <div class="jc-spec">${esc(j.size)}</div>
+        <div class="jc-mat">${esc(j.material||j.shape||'—')}${j.laminate?' · '+esc(j.laminate):''}</div>
+      </div>
+    </div>
     <div class="jc-badges">${artBadgeFor(j)}${payBadge(j.pay)}<span style="font-size:10px;color:var(--faint);margin-left:auto">${j.dispatchMethod==='pickup'?'Pickup':'Courier'}</span></div>
     ${prog}
     <div class="jc-foot"><span class="jc-next">→ ${esc(j.next)}</span><span class="mono" style="font-size:10.5px;color:${ds.fg};font-weight:${ds.fw}">${fmtDue(j.dueRaw)}</span><span class="avatar">${initials(j.owner||j.role)}</span></div>
@@ -1034,7 +1079,7 @@ function colDragLeave(e){ e.currentTarget.classList.remove('drop'); }
 function colDrop(e,k){ e.preventDefault(); e.currentTarget.classList.remove('drop'); const id=APP.drag; APP.drag=null; if(id) setStage(id,k); }
 
 /* ══ LIST ══ */
-const LIST_COLS=[['id','Job','left'],['co','Customer','left'],['product','Product','left'],['qty','Qty','right'],['stage','Stage','left'],['art','Artwork','left'],['priority','Priority','left'],['due','Due','left'],['owner','Owner','left'],['pay','Payment','left'],['next','Next action','left']];
+const LIST_COLS=[['id','Job','left'],['co','Customer','left'],['product','Product','left'],['qty','Qty','right'],['stage','Stage','left'],['art','Art','left'],['priority','Priority','left'],['due','Due','left'],['owner','Owner','left'],['pay','Payment','left'],['next','Next action','left']];
 function sortJobs(list){
   const {k,dir}=APP.sort;
   const val=j=>({id:j.id,co:j.co,product:j.product,qty:j.qty||0,stage:stageIdx(j.stage),art:j.art,priority:({urgent:0,high:1,normal:2}[j.priority]??2),due:daysUntil(j.dueRaw)??99999,owner:j.owner||j.role,pay:j.pay,next:j.next}[k]);
@@ -1055,11 +1100,12 @@ function viewList(){
       <button class="clr" onclick="APP.sel=new Set();render()">Clear</button></div>`;
   }
   const allSel=jobs.length&&jobs.every(j=>APP.sel.has(j.id));
-  const head=`<tr><th style="width:34px;cursor:default"><input type="checkbox" ${allSel?'checked':''} onchange="toggleAll(this.checked)" style="accent-color:var(--purple);cursor:pointer"></th>`+
+  const head=`<tr><th style="width:34px;cursor:default"><input type="checkbox" ${allSel?'checked':''} onchange="toggleAll(this.checked)" style="accent-color:var(--purple);cursor:pointer"></th><th style="width:52px;cursor:default">Artwork</th>`+
     LIST_COLS.map(([k,n,al])=>`<th style="text-align:${al}" onclick="setSort('${k}')">${n}${APP.sort.k===k?(APP.sort.dir>0?' ↑':' ↓'):''}</th>`).join('')+`</tr>`;
   const rows=jobs.map(j=>{ const ds=dueStyle(j); const stB=stageBadgeStyle(j.stage); const ab=ART_BADGE[j.art]||ART_BADGE.missing; const pb=PAY_BADGE[j.pay]||PAY_BADGE.paid;
     return `<tr>
       <td style="cursor:default"><input type="checkbox" ${APP.sel.has(j.id)?'checked':''} onchange="toggleSel('${j.id}',this.checked)" style="accent-color:var(--purple);cursor:pointer"></td>
+      <td style="cursor:default;padding:6px 12px">${artThumbHTML(j,40)}</td>
       <td onclick="openDrawer('${j.id}')" style="cursor:pointer;white-space:nowrap"><span class="acc-id" style="border-left-color:${j.stageDot}">${j.id}</span>${j.ref?`<div style="font-size:10px;color:var(--faint);margin-left:11px" class="mono">#${j.ref}</div>`:''}</td>
       <td onclick="openDrawer('${j.id}')" style="cursor:pointer"><div style="font-weight:600">${esc(j.co)}</div><div style="font-size:11px;color:var(--muted2)">${esc(j.contact||j.email)}</div></td>
       <td onclick="openDrawer('${j.id}')" style="cursor:pointer"><div>${esc(j.product)}</div><div style="font-size:11px;color:var(--muted2)">${esc(j.size)} · ${esc(j.material||'—')}</div></td>
@@ -1296,6 +1342,180 @@ async function setDue(id,val){
 }
 
 /* ══════════════════════════════════════════════════════════════
+   ARTWORK PREVIEW SUBSYSTEM
+   Reuses the existing artwork data (jobs.artwork_url + proofs versions).
+   No new storage/tables. Thumbnails on cards + list, hover quick-preview,
+   full zoom/compare viewer, and a Packing view. Lazy + cached for speed.
+   ══════════════════════════════════════════════════════════════ */
+const IMG_RE=/\.(png|jpe?g|webp|gif|svg)(\?|#|$)/i;
+const PDF_RE=/\.pdf(\?|#|$)/i;
+const VEC_RE=/\.(ai|eps)(\?|#|$)/i;
+function fileKind(name,url){ const s=(name||'')+' '+(url||''); if(IMG_RE.test(s)) return 'img'; if(PDF_RE.test(s)) return 'pdf'; if(VEC_RE.test(s)) return 'vector'; return url?'img':'none'; }
+// Rewrite a Supabase public object URL to the on-the-fly image-resize endpoint
+// (low-res board previews). Non-Supabase / non-image URLs pass through; the
+// <img onerror> falls back to the original if transforms aren't enabled.
+function thumbUrl(url,w){
+  if(!url) return url;
+  if(/\/storage\/v1\/object\/public\//.test(url)){
+    const t=url.replace('/storage/v1/object/public/','/storage/v1/render/image/public/');
+    return t+(t.includes('?')?'&':'?')+'width='+(w||200)+'&quality=60&resize=contain';
+  }
+  return url;
+}
+// Ordered version list (oldest→newest): original artwork = base, proofs after.
+function artVersions(job){
+  const v=[];
+  if(job.artwork_url) v.push({url:job.artwork_url,filename:job.artwork_filename||'Original artwork',status:'original',date:job.placed,id:'job-art',table:'jobs'});
+  (job.proofs||[]).slice().reverse().forEach(p=>v.push({url:p.file_url,filename:p.filename||'Proof',status:p.status||'sent',date:p.created_at,id:p.id,table:'proofs'}));
+  return v;
+}
+// The CURRENT/ACTIVE version — approved wins, else the newest.
+function activeArt(job){
+  const list=artVersions(job); if(!list.length) return null;
+  let idx=-1; for(let i=list.length-1;i>=0;i--){ if(list[i].status==='approved'){ idx=i; break; } }
+  if(idx<0) idx=list.length-1;
+  return {list, idx, cur:list[idx]};
+}
+function artStatusInfo(job){
+  if(job.artUnmatched) return {g:'⚠',t:'Not matched',c:'var(--red)'};
+  if(job.art==='approved') return {g:'✓',t:'Approved',c:'var(--green)'};
+  if(job.art==='revision') return {g:'⚠',t:'Revision required',c:'var(--red)'};
+  if(job.art==='proofed'||job.stage==='proof_sent'||job.stage==='awaiting') return {g:'⏳',t:'Awaiting approval',c:'var(--amber)'};
+  if(job.art==='received') return {g:'●',t:'Artwork in',c:'var(--blue)'};
+  return {g:'⚠',t:'Artwork required',c:'var(--amber)'};
+}
+function artRing(job){
+  if(job.artUnmatched) return 'var(--red)';
+  return {approved:'var(--green)',proofed:'var(--purple)',revision:'var(--red)',received:'var(--blue)',missing:'var(--amber)'}[job.art]||'#E5E7EB';
+}
+function artCorner(job){ const si=artStatusInfo(job); return `<div class="art-corner" style="color:${si.c}" title="${esc(si.t)}">${si.g}</div>`; }
+// Thumbnail HTML. size = px number or 'fill'. opts.fit 'cover'|'contain'.
+function artThumbHTML(job,size,opts){
+  opts=opts||{};
+  const fit=opts.fit||'cover';
+  const dim = size==='fill' ? 'width:100%;height:100%' : `width:${size}px;height:${size}px`;
+  const ring=artRing(job);
+  const hn=`data-jobid="${job.id}" onmouseenter="artHoverIn(event,'${job.id}')" onmousemove="artHoverMove(event)" onmouseleave="artHoverOut()" onclick="event.stopPropagation();openArtViewer('${job.id}')"`;
+  const a=activeArt(job);
+  if(!a){
+    const si=artStatusInfo(job); const big=(size==='fill'||size>=88);
+    return `<div class="artthumb noart" style="${dim};--ring:${ring}"><div class="art-tile"><div style="font-size:${big?26:14}px;color:${si.c}">${si.g}</div>${big?`<div>${esc(si.t)}</div>`:''}</div>${artCorner(job)}</div>`;
+  }
+  const v=a.cur, kind=fileKind(v.filename,v.url), px=(size==='fill'?520:Math.round(size*2));
+  let inner;
+  if(kind==='img') inner=`<img loading="lazy" src="${thumbUrl(v.url,px)}" style="object-fit:${fit}" onerror="this.onerror=null;this.src='${v.url}'">`;
+  else if(kind==='pdf') inner=`<div class="pdfthumb" data-pdfthumb="${v.url}" data-size="${px}"></div>`;
+  else inner=`<div class="fmt-tile">${esc((v.filename.split('.').pop()||'FILE').toUpperCase())}</div>`;
+  return `<div class="artthumb" style="${dim};--ring:${ring}" ${hn}>${inner}${artCorner(job)}</div>`;
+}
+
+/* ── Hover quick-preview (desktop) ── */
+function isTouch(){ return window.matchMedia && window.matchMedia('(hover: none)').matches; }
+function artHoverIn(e,jobId){
+  if(isTouch()) return;
+  const job=APP.jobsById[jobId]; if(!job) return;
+  const a=activeArt(job); const si=artStatusInfo(job);
+  const el=document.getElementById('artHover');
+  let media;
+  if(a){ const v=a.cur, kind=fileKind(v.filename,v.url);
+    if(kind==='img') media=`<img src="${thumbUrl(v.url,640)}" onerror="this.onerror=null;this.src='${v.url}'">`;
+    else if(kind==='pdf') media=APP.pdfCache[v.url]?`<img src="${APP.pdfCache[v.url]}">`:`<div class="pdfthumb" data-pdfthumb="${v.url}" data-size="560" style="width:100%;height:100%"></div>`;
+    else media=`<div class="fmt-tile">${esc((v.filename.split('.').pop()||'FILE').toUpperCase())}</div>`;
+  } else media=`<div style="font-size:38px;color:${si.c}">${si.g}</div>`;
+  el.querySelector('.ph').innerHTML=media;
+  el.querySelector('.hmeta').innerHTML=`<div style="font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(job.co)}</div><div class="mono" style="font-size:11px;color:var(--muted2)">${job.id}${job.ref?' · #'+job.ref:''}</div><div style="font-size:11px;margin-top:3px"><span style="color:${si.c};font-weight:700">${si.g} ${si.t}</span>${a?` · v${a.idx+1} of ${a.list.length}`:''}</div>`;
+  el.style.display='block'; artHoverMove(e); applyPdfThumbs();
+}
+function artHoverMove(e){ const el=document.getElementById('artHover'); if(el.style.display!=='block') return; const w=el.offsetWidth||284,h=el.offsetHeight||300; let x=e.clientX+18,y=e.clientY+18; if(x+w>innerWidth) x=e.clientX-w-18; if(y+h>innerHeight) y=Math.max(8,innerHeight-h-10); el.style.left=Math.max(8,x)+'px'; el.style.top=y+'px'; }
+function artHoverOut(){ document.getElementById('artHover').style.display='none'; }
+
+/* ── Full viewer (zoom / fit / prev-next version / compare / download) ── */
+function openArtViewer(jobId,idx){
+  const job=APP.jobsById[jobId]; if(!job) return;
+  artHoverOut();
+  const a=activeArt(job);
+  if(!a){ toast('No artwork on this job yet'); return; }
+  APP.viewer={jobId,idx:(idx!=null?idx:a.idx),zoom:1,compare:false};
+  document.getElementById('artViewer').classList.add('open');
+  renderViewer();
+}
+function closeArtViewer(){ document.getElementById('artViewer').classList.remove('open'); if(APP.viewer) APP.viewer.jobId=null; }
+function openArtViewerUrl(jobId,url){ const vs=artVersions(APP.jobsById[jobId]||{}); const i=vs.findIndex(v=>v.url===url); openArtViewer(jobId, i>=0?i:undefined); }
+function viewerMediaHTML(ver){
+  const kind=fileKind(ver.filename,ver.url);
+  if(kind==='img') return `<img class="viewer-img zoomable" src="${ver.url}" style="transform:scale(${APP.viewer.zoom})" ondblclick="viewerZoom('fit')">`;
+  if(kind==='pdf') return `<div class="pdfbig" data-pdfbig="${ver.url}" style="display:flex;align-items:center;justify-content:center"><div style="color:#fff;font-size:12px">Rendering…</div></div>`;
+  return `<div style="color:#fff;text-align:center"><div style="font-size:44px">📄</div><div style="margin-top:6px">${esc(ver.filename)}</div><div style="opacity:.7;font-size:12px;margin-top:4px">No inline preview for this format — use Download</div></div>`;
+}
+function renderViewer(){
+  const v=APP.viewer, job=APP.jobsById[v.jobId]; if(!job){ closeArtViewer(); return; }
+  const versions=artVersions(job); if(!versions.length){ closeArtViewer(); return; }
+  v.idx=Math.max(0,Math.min(versions.length-1,v.idx));
+  const cur=versions[v.idx], si=artStatusInfo(job);
+  const approved=cur.status==='approved';
+  const canPrev=v.idx>0, canNext=v.idx<versions.length-1;
+  const cCol = si.c==='var(--amber)'?'#FCD34D':si.c==='var(--red)'?'#FCA5A5':si.c==='var(--green)'?'#7BD8A6':si.c==='var(--blue)'?'#93C5FD':'#fff';
+  let stage;
+  if(v.compare && v.idx>0){
+    const prev=versions[v.idx-1];
+    stage=`<div style="display:flex;gap:10px;width:100%;height:100%">
+      <div style="flex:1;display:flex;flex-direction:column;min-width:0"><div style="color:#fff;text-align:center;font-size:12px;margin-bottom:6px;font-weight:600">Current · v${v.idx+1}${approved?' · ✓ APPROVED':''}</div><div class="viewer-stage" style="flex:1;background:rgba(255,255,255,.03);border-radius:8px">${viewerMediaHTML(cur)}</div></div>
+      <div style="flex:1;display:flex;flex-direction:column;min-width:0"><div style="color:#fff;text-align:center;font-size:12px;margin-bottom:6px;font-weight:600">Previous · v${v.idx}</div><div class="viewer-stage" style="flex:1;background:rgba(255,255,255,.03);border-radius:8px">${viewerMediaHTML(prev)}</div></div>
+    </div>`;
+  } else {
+    stage=`<div class="viewer-stage" onwheel="viewerWheel(event)">${viewerMediaHTML(cur)}</div>`;
+  }
+  document.getElementById('artViewer').innerHTML=`
+    <div class="viewer-bar">
+      <div style="min-width:0;max-width:230px"><div style="font-weight:700;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(job.co)}</div><div class="mono" style="font-size:11px;color:rgba(255,255,255,.7)">${job.id}${job.ref?' · #'+job.ref:''}</div></div>
+      <div style="font-size:12px;color:rgba(255,255,255,.9);min-width:0"><span style="color:${cCol};font-weight:700">${si.g} ${si.t}</span> · v${v.idx+1}/${versions.length} · <span style="opacity:.8">${esc(cur.filename)}</span></div>
+      <span style="flex:1"></span>
+      <button class="vbtn" ${canPrev?'':'disabled'} onclick="viewerNav(-1)">‹ Prev</button>
+      <button class="vbtn" ${canNext?'':'disabled'} onclick="viewerNav(1)">Next ›</button>
+      <button class="vbtn" ${v.idx>0?'':'disabled'} onclick="viewerCompare()">${v.compare?'Single':'Compare'}</button>
+      <button class="vbtn" onclick="viewerZoom(-1)">−</button>
+      <button class="vbtn" onclick="viewerZoom('fit')">Fit</button>
+      <button class="vbtn" onclick="viewerZoom(1)">+</button>
+      <a class="vbtn" href="${cur.url}" target="_blank" rel="noopener" download>⬇ Download</a>
+      <button class="vbtn" onclick="closeArtViewer()">✕</button>
+    </div>${stage}`;
+  renderPdfBig();
+}
+function viewerNav(d){ APP.viewer.idx+=d; APP.viewer.zoom=1; renderViewer(); }
+function viewerCompare(){ APP.viewer.compare=!APP.viewer.compare; renderViewer(); }
+function viewerZoom(d){ const v=APP.viewer; if(!v) return; v.zoom=(d==='fit')?1:Math.max(0.2,Math.min(6,v.zoom*(d>0?1.25:0.8))); document.querySelectorAll('#artViewer .zoomable').forEach(el=>el.style.transform='scale('+v.zoom+')'); }
+function viewerWheel(e){ e.preventDefault(); viewerZoom(e.deltaY<0?1:-1); }
+function renderPdfBig(){
+  document.querySelectorAll('[data-pdfbig]').forEach(el=>{
+    const url=el.getAttribute('data-pdfbig'); el.removeAttribute('data-pdfbig');
+    if(typeof pdfjsLib==='undefined'){ el.innerHTML='<div style="color:#fff">PDF</div>'; return; }
+    pdfjsLib.getDocument({url,withCredentials:false}).promise.then(pdf=>pdf.getPage(1)).then(page=>{
+      const vp=page.getViewport({scale:1}); const scale=Math.min(1800/vp.width,1300/vp.height,3); const svp=page.getViewport({scale});
+      const canvas=document.createElement('canvas'); canvas.width=svp.width; canvas.height=svp.height; canvas.className='viewer-img zoomable'; canvas.style.transform='scale('+APP.viewer.zoom+')';
+      page.render({canvasContext:canvas.getContext('2d'),viewport:svp}); el.innerHTML=''; el.appendChild(canvas);
+    }).catch(()=>{ el.innerHTML='<div style="color:#fff;font-size:12px">Could not render PDF — use Download</div>'; });
+  });
+}
+
+/* ── Packing / Quick-scan view ── */
+function viewPacking(){
+  const jobs=sortJobs(filteredJobs());
+  if(!jobs.length) return '<div class="pad"><div class="empty">No jobs match this search or filter.</div></div>';
+  const cards=jobs.map(j=>{ const si=artStatusInfo(j);
+    return `<div class="pack-card" onclick="openDrawer('${j.id}')">
+      <div class="pack-art" onclick="event.stopPropagation();openArtViewer('${j.id}')">${artThumbHTML(j,'fill',{fit:'contain',corner:false})}<div class="pack-status" style="color:${si.c}">${si.g} ${si.t}</div></div>
+      <div style="padding:10px 12px">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px"><span class="mono" style="font-size:11.5px;font-weight:600">${j.id}</span>${j.ref?`<span class="mono" style="font-size:10px;color:var(--faint)">#${j.ref}</span>`:''}<span style="margin-left:auto">${priBadge(j.priority)}</span></div>
+        <div style="font-size:14px;font-weight:700;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(j.co)}</div>
+        <div style="font-size:12px;color:var(--ink2);margin-top:1px">${fmtQty(j.qty)} · ${esc(j.product)}</div>
+        <div style="font-size:11px;color:var(--muted2)">${esc(j.size)}${j.material?' · '+esc(j.material):''}</div>
+      </div>
+    </div>`;
+  }).join('');
+  return `<div class="pad"><div style="font-size:11.5px;color:var(--muted2);margin-bottom:12px">Quick-scan view — compare a printed label against its artwork. Click artwork to enlarge.</div><div class="pack-grid">${cards}</div></div>`;
+}
+
+/* ══════════════════════════════════════════════════════════════
    JOB DRAWER
    ══════════════════════════════════════════════════════════════ */
 function openDrawer(id){ APP.drawerId=id; APP.drawerTab='overview'; document.getElementById('drawerScrim').classList.add('open'); renderDrawer(); loadNotes(id); }
@@ -1403,7 +1623,7 @@ function drawerArtwork(j){
   if(j.artwork_url) files.push({id:'job-art',url:j.artwork_url,name:j.artwork_filename||'Original artwork',status:'original',date:null,table:'jobs'});
   const statusBadge=s=>({original:['Original','var(--purple-bg)','var(--purple)'],sent:['Sent to customer','var(--blue-bg)','var(--blue)'],proof:['Proof','var(--blue-bg)','var(--blue)'],approved:['✓ Approved','var(--green-bg)','var(--green)'],revision_requested:['↩ Revision','var(--red-bg)','var(--red)'],revision:['↩ Revision','var(--red-bg)','var(--red)'],artwork:['Artwork','var(--purple-bg)','var(--purple)']}[s]||['Proof','var(--blue-bg)','var(--blue)']);
   let versionsHtml=files.map((f,i)=>{ const sb=statusBadge(f.status); const isImg=/\.(png|jpg|jpeg|gif|webp)$/i.test(f.name||''); const ext=(f.name.split('.').pop()||'FILE').toUpperCase().slice(0,4);
-    const thumb=isImg?`<div class="art-thumb" onclick="window.open('${f.url}')"><img src="${f.url}"></div>`:`<div class="art-thumb" data-pdfthumb="${f.url}" onclick="window.open('${f.url}')"><span class="mono" style="font-size:9px;color:var(--muted2)">${ext}</span></div>`;
+    const thumb=isImg?`<div class="art-thumb" style="cursor:zoom-in" onclick="openArtViewerUrl('${j.id}','${f.url}')"><img src="${thumbUrl(f.url,140)}" onerror="this.onerror=null;this.src='${f.url}'"></div>`:`<div class="art-thumb" style="cursor:zoom-in" data-pdfthumb="${f.url}" data-size="120" onclick="openArtViewerUrl('${j.id}','${f.url}')"><span class="mono" style="font-size:9px;color:var(--muted2)">${ext}</span></div>`;
     const approveBtn = f.status==='original'
       ? `<button class="mini-btn" onclick="approveArtwork('${j.id}','${f.id}','${f.table}')">Mark approved</button>`
       : f.status==='approved' ? `<button class="mini-btn" style="color:var(--green)" disabled>Approved ✓</button>`
@@ -1763,19 +1983,54 @@ function toast(msg){ const t=document.getElementById('toast'); document.getEleme
 
 /* ══ PDF THUMBNAILS (preserved) ══ */
 if(typeof pdfjsLib!=='undefined'){ pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'; }
+APP.pdfCache = APP.pdfCache || {};   // url → rendered dataURL (thumbnail)
+let _pdfObserver=null;
+function ensurePdfObserver(){
+  if(_pdfObserver || !('IntersectionObserver' in window)) return _pdfObserver;
+  _pdfObserver=new IntersectionObserver((entries,obs)=>{ entries.forEach(en=>{ if(en.isIntersecting){ obs.unobserve(en.target); renderPdfInto(en.target); } }); },{rootMargin:'250px'});
+  return _pdfObserver;
+}
+function pdfCachedImg(url){ return `<img src="${APP.pdfCache[url]}" style="width:100%;height:100%;object-fit:cover">`; }
+function renderPdfInto(el){
+  const url=el.getAttribute('data-pdfthumb'); if(!url){ return; }
+  el.removeAttribute('data-pdfthumb');
+  if(APP.pdfCache[url]){ el.innerHTML=pdfCachedImg(url); return; }
+  if(typeof pdfjsLib==='undefined'){ el.innerHTML='<div class="fmt-tile">PDF</div>'; return; }
+  const size=parseInt(el.getAttribute('data-size')||'120')||120;
+  pdfjsLib.getDocument({url,withCredentials:false}).promise.then(pdf=>pdf.getPage(1)).then(page=>{
+    const vp=page.getViewport({scale:1}); const scale=size/Math.max(vp.width,vp.height); const svp=page.getViewport({scale});
+    const canvas=document.createElement('canvas'); canvas.width=svp.width; canvas.height=svp.height;
+    return page.render({canvasContext:canvas.getContext('2d'),viewport:svp}).promise.then(()=>{
+      try{ APP.pdfCache[url]=canvas.toDataURL('image/jpeg',0.72); el.innerHTML=pdfCachedImg(url); }
+      catch(e){ canvas.style.width='100%'; canvas.style.height='100%'; canvas.style.objectFit='cover'; el.innerHTML=''; el.appendChild(canvas); }
+    });
+  }).catch(()=>{ el.innerHTML='<div class="fmt-tile">PDF</div>'; });
+}
+// Lazy: cached thumbs render instantly; the rest render as they scroll into view.
 function applyPdfThumbs(){
+  const obs=ensurePdfObserver();
   document.querySelectorAll('[data-pdfthumb]').forEach(el=>{
-    const url=el.getAttribute('data-pdfthumb'); el.removeAttribute('data-pdfthumb'); if(typeof pdfjsLib==='undefined') return;
-    pdfjsLib.getDocument({url,withCredentials:false}).promise.then(pdf=>pdf.getPage(1)).then(page=>{
-      const vp=page.getViewport({scale:1}); const size=el.clientWidth||56; const scale=size/Math.max(vp.width,vp.height); const svp=page.getViewport({scale});
-      const canvas=document.createElement('canvas'); canvas.width=svp.width; canvas.height=svp.height; canvas.style.width='100%'; canvas.style.height='100%'; canvas.style.objectFit='contain';
-      page.render({canvasContext:canvas.getContext('2d'),viewport:svp}); el.innerHTML=''; el.appendChild(canvas);
-    }).catch(()=>{});
+    const url=el.getAttribute('data-pdfthumb');
+    if(url && APP.pdfCache[url]){ el.removeAttribute('data-pdfthumb'); el.innerHTML=pdfCachedImg(url); }
+    else if(obs){ obs.observe(el); }
+    else { renderPdfInto(el); }
   });
 }
 
-/* keyboard: Esc closes drawer/modals */
-document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ if(document.getElementById('genModal').classList.contains('open'))closeGen(); else if(document.getElementById('newJobModal').classList.contains('open'))closeNewJob(); else if(APP.drawerId)closeDrawer(); } });
+/* keyboard: viewer nav/zoom, then Esc closes drawer/modals */
+document.addEventListener('keydown',e=>{
+  const viewerOpen=document.getElementById('artViewer').classList.contains('open');
+  if(viewerOpen){
+    if(e.key==='Escape'){ closeArtViewer(); return; }
+    if(e.key==='ArrowLeft'){ if(APP.viewer.idx>0) viewerNav(-1); return; }
+    if(e.key==='ArrowRight'){ const n=artVersions(APP.jobsById[APP.viewer.jobId]||{}).length; if(APP.viewer.idx<n-1) viewerNav(1); return; }
+    if(e.key==='+'||e.key==='='){ viewerZoom(1); return; }
+    if(e.key==='-'){ viewerZoom(-1); return; }
+    if(e.key==='0'){ viewerZoom('fit'); return; }
+    return;
+  }
+  if(e.key==='Escape'){ if(document.getElementById('genModal').classList.contains('open'))closeGen(); else if(document.getElementById('newJobModal').classList.contains('open'))closeNewJob(); else if(APP.drawerId)closeDrawer(); }
+});
 </script>
 </body>
 </html>
